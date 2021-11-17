@@ -13,23 +13,89 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Card(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const SizedBox(
-              height: 20.0,
-            ),
-            Column(
+    return MaterialApp(
+      home: Scaffold(
+        backgroundColor: Color(0xFF303f9f),
+        body: SafeArea(
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                // 8010
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(15.0),
+                  child: const Image(
+                    image: AssetImage('images/robot_arms_260x208.jpg'),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20.0,
+                ),
+                const Text('iUp_MES Login',
+                  style: TextStyle(
+                    fontSize: 40.0,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(
+                  height: 20.0,
+                  width: 150.0,
+                ),
+                // const Card(
+                //   color: Color(0xFFC5CAE9),
+                //   margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
+                //   child: SizedBox(
+                //     width: 300.0,
+                //     child: ListTile(
+                //       leading: Icon(
+                //         Icons.account_box,
+                //         color: Color(0xFF536dfe),
+                //       ),
+                //       title: Text('jpim',
+                //         style: TextStyle(
+                //           color: Color(0xFF212121),
+                //           fontSize: 20.0,
+                //         ),
+                //       ),
+                //     ),
+                //   ),
+                // ),
+                const SizedBox(
+                  width: 300.0,
+                  child: TextField(
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        fillColor: Color(0xFFC5CAE9),
+                        filled: true,
+                        prefixIcon: Icon(Icons.account_box),
+                        hintText: 'jpim'
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20.0,
+                ),
+                const SizedBox(
+                  width: 300.0,
+                  child: TextField(
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        fillColor: Color(0xFFC5CAE9),
+                        filled: true,
+                        prefixIcon: Icon(Icons.vpn_key),
+                        hintText: '********'
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20.0,
+                ),
                 SizedBox(
-                  height: 80, //height of button
-                  width: 220, //width of button
+                  height: 50, //height of button
+                  width: 120, //width of button
                   child: ElevatedButton(
                     child: const Text(
-                      '입고 등록',
+                      'Login',
                       style: TextStyle(
                         fontSize: 22.0,
                         fontWeight: FontWeight.bold,
@@ -38,141 +104,14 @@ class LoginPage extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const EightyTen()),
+                        MaterialPageRoute(builder: (context) => const MenuPage()),
                       );
                     },
                   ),
                 ),
               ],
             ),
-            const SizedBox(
-              width: 25.0,
-            ),
-            Column(
-              children: [
-                // 8070
-                SizedBox(
-                  height: 80, //height of button
-                  width: 220, //width of button
-                  child: ElevatedButton(
-                    child: const Text(
-                      '생산실적 등록',
-                      style: TextStyle(
-                        fontSize: 22.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    onPressed: () {
-                      // Navigate to second route when tapped.
-                    },
-                  ),
-                ),
-                const SizedBox(
-                  height: 20.0,
-                ),
-                // 8080
-                SizedBox(
-                  height: 80, //height of button
-                  width: 220, //width of button
-                  child: ElevatedButton(
-                    child: const Text(
-                      '포장실적 등록',
-                      style: TextStyle(
-                        fontSize: 22.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    onPressed: () {
-                      // Navigate to second route when tapped.
-                    },
-                  ),
-                ),
-                const SizedBox(
-                  height: 20.0,
-                ),
-                // 8060
-                SizedBox(
-                  height: 80, //height of button
-                  width: 220, //width of button
-                  child: ElevatedButton(
-                    child: const Text(
-                      '생산작업 가동',
-                      style: TextStyle(
-                        fontSize: 22.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    onPressed: () {
-                      // Navigate to second route when tapped.
-                    },
-                  ),
-                ),
-                const SizedBox(
-                  height: 20.0,
-                ),
-                // 8040
-                SizedBox(
-                  height: 80, //height of button
-                  width: 220, //width of button
-                  child: ElevatedButton(
-                    child: const Text(
-                      '생산/포장 실적 등록',
-                      style: TextStyle(
-                        fontSize: 22.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    onPressed: () {
-                      // Navigate to second route when tapped.
-                    },
-                  ),
-                ),
-                const SizedBox(
-                  height: 20.0,
-                ),
-                // 8020
-                SizedBox(
-                  height: 80, //height of button
-                  width: 220, //width of button
-                  child: ElevatedButton(
-                    child: const Text(
-                      '원재료투입 등록',
-                      style: TextStyle(
-                        fontSize: 22.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    onPressed: () {
-                      // Navigate to second route when tapped.
-                    },
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              width: 25.0,
-            ),
-            Column(
-              children: [
-                SizedBox(
-                  height: 80, //height of button
-                  width: 220, //width of button
-                  child: ElevatedButton(
-                    child: const Text(
-                        '출고검수 등록',
-                        style: TextStyle(
-                        fontSize: 22.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    onPressed: () {
-                      // Navigate to second route when tapped.
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -380,15 +319,116 @@ class _EightyTenState extends State<EightyTen> {
             child: ListView(
               children: [
                 UserAccountsDrawerHeader(
-                  accountName: Text(accountName),
-                  accountEmail: Text(accountEmail),
+                  accountName: Text(accountName,
+                    style: const TextStyle(
+                      fontSize: 20.0,
+                    ),
+                  ),
+                  accountEmail: Text(accountEmail,
+                    style: const TextStyle(
+                      fontSize: 20.0,
+                    ),
+                  ),
                   currentAccountPicture: ClipOval(
                       child: Image.asset('images/429x417_worker.jpg'),
                   ),
                 ),
-                ListTile(),
-                ListTile(),
-                ListTile(),
+                const ListTile(
+                  leading: Icon(
+                    Icons.home,
+                    color: Color(0xFF536dfe),
+                  ),
+                  title: Text('Home',
+                    style: TextStyle(
+                      color: Color(0xFF212121),
+                      fontSize: 20.0,
+                    ),
+                  ),
+                ),
+                const ListTile(
+                  leading: Icon(
+                    Icons.pageview,
+                    color: Color(0xFF536dfe),
+                  ),
+                  title: Text('입고 등록 (8010F)',
+                    style: TextStyle(
+                      color: Color(0xFF212121),
+                      fontSize: 20.0,
+                    ),
+                  ),
+                ),
+                const ListTile(
+                  leading: Icon(
+                    Icons.assignment,
+                    color: Color(0xFF536dfe),
+                  ),
+                  title: Text('원재료투입 등록 (8020F)',
+                    style: TextStyle(
+                      color: Color(0xFF212121),
+                      fontSize: 20.0,
+                    ),
+                  ),
+                ),
+                const ListTile(
+                  leading: Icon(
+                    Icons.assessment,
+                    color: Color(0xFF536dfe),
+                  ),
+                  title: Text('생산/포장 실적 등록 (8040F)',
+                    style: TextStyle(
+                      color: Color(0xFF212121),
+                      fontSize: 20.0,
+                    ),
+                  ),
+                ),
+                const ListTile(
+                  leading: Icon(
+                    Icons.view_comfy,
+                    color: Color(0xFF536dfe),
+                  ),
+                  title: Text('출고검수 등록 (8050F)',
+                    style: TextStyle(
+                      color: Color(0xFF212121),
+                      fontSize: 20.0,
+                    ),
+                  ),
+                ),
+                const ListTile(
+                  leading: Icon(
+                    Icons.settings_input_component,
+                    color: Color(0xFF536dfe),
+                  ),
+                  title: Text('생산작업 가동 (8060F)',
+                    style: TextStyle(
+                      color: Color(0xFF212121),
+                      fontSize: 20.0,
+                    ),
+                  ),
+                ),
+                const ListTile(
+                  leading: Icon(
+                    Icons.chrome_reader_mode,
+                    color: Color(0xFF536dfe),
+                  ),
+                  title: Text('생산실적 등록 (8070F)',
+                    style: TextStyle(
+                      color: Color(0xFF212121),
+                      fontSize: 20.0,
+                    ),
+                  ),
+                ),
+                const ListTile(
+                  leading: Icon(
+                    Icons.description,
+                    color: Color(0xFF536dfe),
+                  ),
+                  title: Text('포장실적 등록 (8080F)',
+                    style: TextStyle(
+                      color: Color(0xFF212121),
+                      fontSize: 20.0,
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
