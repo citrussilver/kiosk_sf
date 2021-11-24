@@ -79,15 +79,22 @@ class _EightyTenState extends State<EightyTen> {
       ];
     }
     List<DataRow> _createRows() {
-      return _lotWarehousing
-          .map((item) => DataRow(cells: [
-        DataCell(Text(item['no'])),
-        DataCell(Text(item['queue'])),
-        DataCell(Text(item['expiryDate'])),
-        DataCell(Text(item['lot'])),
-        DataCell(Text(item['inspectQty'])),
-      ]))
-          .toList();
+      return [
+        DataRow(cells: [
+          DataCell(Text('#100')),
+          DataCell(Text('Flutter Basics', style: TextStyle(fontWeight: FontWeight.bold))),
+          DataCell(Text('David John')),
+          DataCell(Text('David John')),
+          DataCell(Text('David John'))
+        ]),
+        DataRow(cells: [
+          DataCell(Text('#101')),
+          DataCell(Text('Dart Internals')),
+          DataCell(Text('Alex Wick')),
+          DataCell(Text('David John')),
+          DataCell(Text('David John')),
+        ])
+      ];
     }
 
     DataTable _createDataTable() {
@@ -499,279 +506,362 @@ class _EightyTenState extends State<EightyTen> {
                 ),
                 Row(
                   children: [
-                    DataTable(
-                      columns: const <DataColumn>[
-                        DataColumn(
-                          label: Text(
-                            'No',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 22.0,
+                    // DataTable(
+                    //   columns: const <DataColumn>[
+                    //     DataColumn(
+                    //       label: Text(
+                    //         'No',
+                    //         style: TextStyle(
+                    //           fontWeight: FontWeight.bold,
+                    //           fontSize: 22.0,
+                    //         ),
+                    //       ),
+                    //     ),
+                    //     DataColumn(
+                    //       label: Icon(Icons.indeterminate_check_box),
+                    //     ),
+                    //     DataColumn(
+                    //       label: Text(
+                    //         '입고순번',
+                    //         style: TextStyle(
+                    //           fontWeight: FontWeight.bold,
+                    //           fontSize: 22.0,
+                    //         ),
+                    //       ),
+                    //     ),
+                    //     DataColumn(
+                    //       label: Text(
+                    //         '진행상태',
+                    //         style: TextStyle(
+                    //           fontWeight: FontWeight.bold,
+                    //           fontSize: 22.0,
+                    //         ),
+                    //       ),
+                    //     ),
+                    //     DataColumn(
+                    //       label: Text(
+                    //         '품목코드',
+                    //         style: TextStyle(
+                    //           fontWeight: FontWeight.bold,
+                    //           fontSize: 22.0,
+                    //         ),
+                    //       ),
+                    //     ),
+                    //     DataColumn(
+                    //       label: Text(
+                    //         '품목명',
+                    //         style: TextStyle(
+                    //           fontWeight: FontWeight.bold,
+                    //           fontSize: 22.0,
+                    //         ),
+                    //       ),
+                    //     ),
+                    //     DataColumn(
+                    //       label: Text(
+                    //         '규격',
+                    //         style: TextStyle(
+                    //           fontWeight: FontWeight.bold,
+                    //           fontSize: 22.0,
+                    //         ),
+                    //       ),
+                    //     ),
+                    //     DataColumn(
+                    //       label: Text(
+                    //         '단위',
+                    //         style: TextStyle(
+                    //           fontWeight: FontWeight.bold,
+                    //           fontSize: 22.0,
+                    //         ),
+                    //       ),
+                    //     ),
+                    //     DataColumn(
+                    //       label: Text(
+                    //         '관리일수',
+                    //         style: TextStyle(
+                    //           fontWeight: FontWeight.bold,
+                    //           fontSize: 22.0,
+                    //         ),
+                    //       ),
+                    //     ),
+                    //     DataColumn(
+                    //       label: Text(
+                    //         '발주수량',
+                    //         style: TextStyle(
+                    //           fontWeight: FontWeight.bold,
+                    //           fontSize: 22.0,
+                    //         ),
+                    //       ),
+                    //     ),
+                    //     // DataColumn(
+                    //     //   label: Text(
+                    //     //     '입고수량',
+                    //     //     style: TextStyle(
+                    //     //       fontWeight: FontWeight.bold,
+                    //     //       fontSize: 22.0,
+                    //     //     ),
+                    //     //   ),
+                    //     // ),
+                    //     // DataColumn(
+                    //     //   label: Text(
+                    //     //     '검수수량',
+                    //     //     style: TextStyle(
+                    //     //       fontWeight: FontWeight.bold,
+                    //     //       fontSize: 22.0,
+                    //     //     ),
+                    //     //   ),
+                    //     // ),
+                    //     // DataColumn(
+                    //     //   label: Text(
+                    //     //     '입고위치',
+                    //     //     style: TextStyle(
+                    //     //       fontWeight: FontWeight.bold,
+                    //     //       fontSize: 22.0,
+                    //     //     ),
+                    //     //   ),
+                    //     // ),
+                    //   ],
+                    //   rows: const <DataRow>[
+                    //     DataRow(
+                    //       cells: <DataCell>[
+                    //         DataCell(
+                    //           Text('1',
+                    //             style: TextStyle(
+                    //               fontSize: 22.0,
+                    //             ),
+                    //           ),
+                    //         ),
+                    //         DataCell(Icon(Icons.check_box)),
+                    //         DataCell(
+                    //           Text('1',
+                    //             style: TextStyle(
+                    //               fontSize: 22.0,
+                    //             ),
+                    //           ),
+                    //         ),
+                    //         DataCell(
+                    //           Text('21000033',
+                    //             style: TextStyle(
+                    //               fontSize: 22.0,
+                    //             ),
+                    //           ),
+                    //         ),
+                    //         DataCell(
+                    //           Text('두릅',
+                    //             style: TextStyle(
+                    //               fontSize: 22.0,
+                    //             ),
+                    //           ),
+                    //         ),
+                    //         DataCell(
+                    //           Text('100g x 50ea',
+                    //             style: TextStyle(
+                    //               fontSize: 22.0,
+                    //             ),
+                    //           ),
+                    //         ),
+                    //         DataCell(
+                    //           Text('kg',
+                    //             style: TextStyle(
+                    //               fontSize: 22.0,
+                    //             ),
+                    //           ),
+                    //         ),
+                    //         DataCell(
+                    //           Text('유통기한',
+                    //             style: TextStyle(
+                    //               fontSize: 22.0,
+                    //             ),
+                    //           ),
+                    //         ),
+                    //         DataCell(
+                    //           Text('365',
+                    //             style: TextStyle(
+                    //               fontSize: 22.0,
+                    //             ),
+                    //           ),
+                    //         ),
+                    //         DataCell(
+                    //           Text('0',
+                    //             style: TextStyle(
+                    //               fontSize: 22.0,
+                    //             ),
+                    //           ),
+                    //         ),
+                    //         // DataCell(
+                    //         //   Text('19',
+                    //         //     style: TextStyle(
+                    //         //       fontSize: 22.0,
+                    //         //     ),
+                    //         //   ),
+                    //         // ),
+                    //         // DataCell(
+                    //         //   Text('4',
+                    //         //     style: TextStyle(
+                    //         //       fontSize: 22.0,
+                    //         //     ),
+                    //         //   ),
+                    //         // ),
+                    //         // DataCell(
+                    //         //   Text('B-1-03',
+                    //         //     style: TextStyle(
+                    //         //       fontSize: 22.0,
+                    //         //     ),
+                    //         //   ),
+                    //         // ),
+                    //       ],
+                    //     ),
+                    //     DataRow(
+                    //       cells: <DataCell>[
+                    //         DataCell(
+                    //           Text('2',
+                    //             style: TextStyle(
+                    //               fontSize: 22.0,
+                    //             ),
+                    //           ),
+                    //         ),
+                    //         DataCell(Icon(Icons.check_box_outline_blank)),
+                    //         DataCell(
+                    //           Text('1',
+                    //             style: TextStyle(
+                    //               fontSize: 22.0,
+                    //             ),
+                    //           ),
+                    //         ),
+                    //         DataCell(
+                    //           Text('21000001',
+                    //             style: TextStyle(
+                    //               fontSize: 22.0,
+                    //             ),
+                    //           ),
+                    //         ),
+                    //         DataCell(
+                    //           Text('질경이',
+                    //             style: TextStyle(
+                    //               fontSize: 22.0,
+                    //             ),
+                    //           ),
+                    //         ),
+                    //         DataCell(
+                    //           Text('100g x 50ea',
+                    //             style: TextStyle(
+                    //               fontSize: 22.0,
+                    //             ),
+                    //           ),
+                    //         ),
+                    //         DataCell(
+                    //           Text('kg',
+                    //             style: TextStyle(
+                    //               fontSize: 22.0,
+                    //             ),
+                    //           ),
+                    //         ),
+                    //         DataCell(
+                    //           Text('유통기한',
+                    //             style: TextStyle(
+                    //               fontSize: 22.0,
+                    //             ),
+                    //           ),
+                    //         ),
+                    //         DataCell(
+                    //           Text('360',
+                    //             style: TextStyle(
+                    //               fontSize: 22.0,
+                    //             ),
+                    //           ),
+                    //         ),
+                    //         DataCell(
+                    //           Text('0',
+                    //             style: TextStyle(
+                    //               fontSize: 22.0,
+                    //             ),
+                    //           ),
+                    //         ),
+                    //       ],
+                    //     ),
+                    //   ],
+                    // ),
+                    Flexible(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: DataTable(
+                          columns: <DataColumn> [
+                            DataColumn(
+                                label: Text('No.')
                             ),
-                          ),
-                        ),
-                        DataColumn(
-                          label: Icon(Icons.indeterminate_check_box),
-                        ),
-                        DataColumn(
-                          label: Text(
-                            '입고순번',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 22.0,
+                            DataColumn(
+                              label: Checkbox(value: false, onChanged: (bool? value){value = value;}),
                             ),
-                          ),
-                        ),
-                        DataColumn(
-                          label: Text(
-                            '진행상태',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 22.0,
+                            DataColumn(
+                              label: Text('Item Queue'),
                             ),
-                          ),
-                        ),
-                        DataColumn(
-                          label: Text(
-                            '품목코드',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 22.0,
+                            DataColumn(
+                              label: Text('Receiving Status'),
                             ),
-                          ),
-                        ),
-                        DataColumn(
-                          label: Text(
-                            '품목명',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 22.0,
+                            DataColumn(
+                              label: Text('Item Code'),
                             ),
-                          ),
-                        ),
-                        DataColumn(
-                          label: Text(
-                            '규격',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 22.0,
+                            DataColumn(
+                              label: Text('Item Name'),
                             ),
-                          ),
-                        ),
-                        DataColumn(
-                          label: Text(
-                            '단위',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 22.0,
+                            DataColumn(
+                              label: Text('Item Unit'),
                             ),
-                          ),
-                        ),
-                        DataColumn(
-                          label: Text(
-                            '관리일수',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 22.0,
+                            DataColumn(
+                              label: Text('Item Management Unit'),
                             ),
-                          ),
-                        ),
-                        DataColumn(
-                          label: Text(
-                            '발주수량',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 22.0,
+                            DataColumn(
+                              label: Text('Expiration Type'),
                             ),
-                          ),
-                        ),
-                        // DataColumn(
-                        //   label: Text(
-                        //     '입고수량',
-                        //     style: TextStyle(
-                        //       fontWeight: FontWeight.bold,
-                        //       fontSize: 22.0,
-                        //     ),
-                        //   ),
-                        // ),
-                        // DataColumn(
-                        //   label: Text(
-                        //     '검수수량',
-                        //     style: TextStyle(
-                        //       fontWeight: FontWeight.bold,
-                        //       fontSize: 22.0,
-                        //     ),
-                        //   ),
-                        // ),
-                        // DataColumn(
-                        //   label: Text(
-                        //     '입고위치',
-                        //     style: TextStyle(
-                        //       fontWeight: FontWeight.bold,
-                        //       fontSize: 22.0,
-                        //     ),
-                        //   ),
-                        // ),
-                      ],
-                      rows: const <DataRow>[
-                        DataRow(
-                          cells: <DataCell>[
-                            DataCell(
-                              Text('1',
-                                style: TextStyle(
-                                  fontSize: 22.0,
-                                ),
-                              ),
+                            DataColumn(
+                              label: Text('Shelf Life'),
                             ),
-                            DataCell(Icon(Icons.check_box)),
-                            DataCell(
-                              Text('1',
-                                style: TextStyle(
-                                  fontSize: 22.0,
-                                ),
-                              ),
+                          ],
+                          rows: [
+                            DataRow(
+                              cells: <DataCell>[
+                                DataCell(Text('1')),
+                                DataCell(Checkbox(value: false, onChanged: (bool? value){value = value;})),
+                                DataCell(Text('001')),
+                                DataCell(Text('Receiving Registration')),
+                                DataCell(Text('51000001')),
+                                DataCell(Text('Knightmare Frame Shinkirou')),
+                                DataCell(Text('1')),
+                                DataCell(Text('Unit')),
+                                DataCell(Text('Not Managed')),
+                                DataCell(Text('5 Yrs.')),
+                              ],
                             ),
-                            DataCell(
-                              Text('21000033',
-                                style: TextStyle(
-                                  fontSize: 22.0,
-                                ),
-                              ),
+                            DataRow(
+                              cells: <DataCell>[
+                                DataCell(Text('')),
+                                DataCell(Text('')),
+                                DataCell(Text('')),
+                                DataCell(Text('')),
+                                DataCell(Text('')),
+                                DataCell(Text('')),
+                                DataCell(Text('')),
+                                DataCell(Text('')),
+                                DataCell(Text('')),
+                                DataCell(Text('')),
+                              ],
                             ),
-                            DataCell(
-                              Text('두릅',
-                                style: TextStyle(
-                                  fontSize: 22.0,
-                                ),
-                              ),
+                            DataRow(
+                              cells: <DataCell>[
+                                DataCell(Text('')),
+                                DataCell(Text('')),
+                                DataCell(Text('')),
+                                DataCell(Text('')),
+                                DataCell(Text('')),
+                                DataCell(Text('')),
+                                DataCell(Text('')),
+                                DataCell(Text('')),
+                                DataCell(Text('')),
+                                DataCell(Text('')),
+                              ],
                             ),
-                            DataCell(
-                              Text('100g x 50ea',
-                                style: TextStyle(
-                                  fontSize: 22.0,
-                                ),
-                              ),
-                            ),
-                            DataCell(
-                              Text('kg',
-                                style: TextStyle(
-                                  fontSize: 22.0,
-                                ),
-                              ),
-                            ),
-                            DataCell(
-                              Text('유통기한',
-                                style: TextStyle(
-                                  fontSize: 22.0,
-                                ),
-                              ),
-                            ),
-                            DataCell(
-                              Text('365',
-                                style: TextStyle(
-                                  fontSize: 22.0,
-                                ),
-                              ),
-                            ),
-                            DataCell(
-                              Text('0',
-                                style: TextStyle(
-                                  fontSize: 22.0,
-                                ),
-                              ),
-                            ),
-                            // DataCell(
-                            //   Text('19',
-                            //     style: TextStyle(
-                            //       fontSize: 22.0,
-                            //     ),
-                            //   ),
-                            // ),
-                            // DataCell(
-                            //   Text('4',
-                            //     style: TextStyle(
-                            //       fontSize: 22.0,
-                            //     ),
-                            //   ),
-                            // ),
-                            // DataCell(
-                            //   Text('B-1-03',
-                            //     style: TextStyle(
-                            //       fontSize: 22.0,
-                            //     ),
-                            //   ),
-                            // ),
                           ],
                         ),
-                        DataRow(
-                          cells: <DataCell>[
-                            DataCell(
-                              Text('2',
-                                style: TextStyle(
-                                  fontSize: 22.0,
-                                ),
-                              ),
-                            ),
-                            DataCell(Icon(Icons.check_box_outline_blank)),
-                            DataCell(
-                              Text('1',
-                                style: TextStyle(
-                                  fontSize: 22.0,
-                                ),
-                              ),
-                            ),
-                            DataCell(
-                              Text('21000001',
-                                style: TextStyle(
-                                  fontSize: 22.0,
-                                ),
-                              ),
-                            ),
-                            DataCell(
-                              Text('질경이',
-                                style: TextStyle(
-                                  fontSize: 22.0,
-                                ),
-                              ),
-                            ),
-                            DataCell(
-                              Text('100g x 50ea',
-                                style: TextStyle(
-                                  fontSize: 22.0,
-                                ),
-                              ),
-                            ),
-                            DataCell(
-                              Text('kg',
-                                style: TextStyle(
-                                  fontSize: 22.0,
-                                ),
-                              ),
-                            ),
-                            DataCell(
-                              Text('유통기한',
-                                style: TextStyle(
-                                  fontSize: 22.0,
-                                ),
-                              ),
-                            ),
-                            DataCell(
-                              Text('360',
-                                style: TextStyle(
-                                  fontSize: 22.0,
-                                ),
-                              ),
-                            ),
-                            DataCell(
-                              Text('0',
-                                style: TextStyle(
-                                  fontSize: 22.0,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+                      ),
                     ),
                   ],
                 ),

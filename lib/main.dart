@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'route/route.dart' as route;
 
-import 'package:sizer/sizer.dart';
-
 // void main() {
 //   runApp(const MaterialApp(
 //     title: 'Kiosk SmartFactory',

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kiosk_sf/views/dashboard.dart';
-import 'package:kiosk_sf/views/eighty_ten.dart';
+import 'package:kiosk_sf/views/eighty_ten_idea.dart';
+import 'package:kiosk_sf/views/eighty_ten_tablet.dart';
 
 class NavBar extends StatelessWidget {
   const NavBar({Key? key}) : super(key: key);
@@ -37,8 +38,11 @@ class NavBar extends StatelessWidget {
           break;
         case 1:
           Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => const EightyTen(),
+            builder: (context) => const EightyTenIdea(),
           ));
+          break;
+        case 8:
+          print('Logout');
           break;
       }
     }
@@ -130,16 +134,21 @@ class NavBar extends StatelessWidget {
               text: '포장실적 등록 (8080F)',
               icon: Icons.description,
             ),
-            Divider(),
+            const Divider(
+              color: Color(0xffC5CAE9),
+            ),
             buildListTile(
               text: 'Logout',
               icon: Icons.exit_to_app,
+              onClicked: () => selectedItem(context, 8),
             ),
-            Divider(),
+            const Divider(
+              color: Color(0xffC5CAE9),
+            ),
             const Expanded(
               child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 90, horizontal: 10),
-                child: Text('Version v0.0.3',
+                padding: EdgeInsets.symmetric(vertical: 85, horizontal: 10),
+                child: Text('Version v0.0.4',
                   style: TextStyle(
                     color: Color(0xFFffffff),
                     fontWeight: FontWeight.bold,
