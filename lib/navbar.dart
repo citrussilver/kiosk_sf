@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kiosk_sf/views/dashboard.dart';
 import 'package:kiosk_sf/views/eighty_ten_idea.dart';
-import 'package:kiosk_sf/views/eighty_ten_tablet.dart';
+import 'package:kiosk_sf/views/eighty_seventy.dart';
 
 class NavBar extends StatelessWidget {
   const NavBar({Key? key}) : super(key: key);
@@ -39,6 +39,11 @@ class NavBar extends StatelessWidget {
         case 1:
           Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => const EightyTenIdea(),
+          ));
+          break;
+        case 6:
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => const EightySeventy(),
           ));
           break;
         case 8:
@@ -129,6 +134,7 @@ class NavBar extends StatelessWidget {
             buildListTile(
               text: '생산실적 등록 (8070F)',
               icon: Icons.chrome_reader_mode,
+              onClicked: () => selectedItem(context, 6),
             ),
             buildListTile(
               text: '포장실적 등록 (8080F)',

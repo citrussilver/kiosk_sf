@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:kiosk_sf/route/route.dart' as route;
 
 class EightyTenIdea extends StatefulWidget {
-  const EightyTenIdea({Key? key}) : super(key: key);
+
+  const EightyTenIdea({Key? key, Object? arguments}) : super(key: key);
 
   @override
   _EightyTenIdeaState createState() => _EightyTenIdeaState();
@@ -47,7 +48,19 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
     setState(() {
       selectedIndex = val;
       print('selectedIndex is $val');
-      Navigator.pushNamed(context, route.eightyTenTabletPg2);
+      if (val == 2) {
+        Navigator.pushNamed(context, route.eightyTenTabletPg2,
+          arguments: {
+            'no': '1',
+            'date_recvd': '2021-10-11',
+            'recv_no': '1001A20211011001',
+            'recv_status': 'Receiving Registration',
+            'acct_code': '40032',
+            'acct_name': 'Albedos Alchemy',
+            'item_cnt': '3'
+          },);
+      }
+
     });
     // Useful for navigating to different data
     // if(val == 0) {
@@ -130,9 +143,9 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
   List<DataRow> _createRows() {
     return [
       DataRow(
-          selected: 0 == selectedIndex,
+          selected: 1 == selectedIndex,
           onSelectChanged: (val) {
-            handleSelectedIndex(0);
+            handleSelectedIndex(1);
           },
           cells: [
             DataCell(
@@ -194,9 +207,9 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
           ]
       ),
       DataRow(
-          selected: 0 == selectedIndex,
+          selected: 2 == selectedIndex,
           onSelectChanged: (val) {
-            handleSelectedIndex(0);
+            handleSelectedIndex(2);
           },
           cells: [
             DataCell(
@@ -258,9 +271,9 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
           ]
       ),
       DataRow(
-          selected: 0 == selectedIndex,
+          selected: 3 == selectedIndex,
           onSelectChanged: (val) {
-            handleSelectedIndex(0);
+            handleSelectedIndex(3);
           },
           cells: [
             DataCell(
@@ -322,9 +335,9 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
           ]
       ),
       DataRow(
-          selected: 0 == selectedIndex,
+          selected: 4 == selectedIndex,
           onSelectChanged: (val) {
-            handleSelectedIndex(0);
+            handleSelectedIndex(4);
           },
           cells: [
             DataCell(
@@ -386,9 +399,9 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
           ]
       ),
       DataRow(
-          selected: 0 == selectedIndex,
+          selected: 5 == selectedIndex,
           onSelectChanged: (val) {
-            handleSelectedIndex(0);
+            handleSelectedIndex(5);
           },
           cells: [
             DataCell(
@@ -470,6 +483,13 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
       dataRowColor: MaterialStateColor.resolveWith(
               (states) => const Color(0xFFC5CAE9)
       ),
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: const Color(0xFF3F51B5),
+          width: 3,
+        ),
+        borderRadius: BorderRadius.all(const Radius.circular(10)),
+      ),
     );
   }
 
@@ -482,7 +502,7 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
             // Here we take the value from the MyHomePage object that was created by
             // the App.build method, and use it to set our appbar title.
               automaticallyImplyLeading: true,
-              title: const Text('8010 - 입고 검수 등록'),
+              title: const Text('8010 - Receipt Inspection Registration'),
               leading: IconButton(icon: const Icon(Icons.arrow_back),
                 onPressed:() => Navigator.pop(context, false),
               )

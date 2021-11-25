@@ -169,6 +169,13 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
       dataRowColor: MaterialStateColor.resolveWith(
               (states) => const Color(0xFFC5CAE9)
       ),
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: const Color(0xFF3F51B5),
+          width: 3,
+        ),
+        borderRadius: BorderRadius.all(const Radius.circular(10)),
+      ),
     );
   }
 
@@ -518,6 +525,13 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
       dataRowColor: MaterialStateColor.resolveWith(
               (states) => const Color(0xFFC5CAE9)
       ),
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: const Color(0xFF3F51B5),
+          width: 3,
+        ),
+        borderRadius: BorderRadius.all(const Radius.circular(10)),
+      ),
     );
   }
 
@@ -671,6 +685,13 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
       dataRowColor: MaterialStateColor.resolveWith(
               (states) => const Color(0xFFC5CAE9)
       ),
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: const Color(0xFF3F51B5),
+          width: 3,
+        ),
+        borderRadius: BorderRadius.all(const Radius.circular(10)),
+      ),
     );
   }
 
@@ -680,7 +701,7 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
       home: Scaffold(
         appBar: AppBar(
             automaticallyImplyLeading: true,
-            title: const Text('8010 - 입고 검수 등록'),
+            title: const Text('8010 - Receipt Inspection Registration'),
             leading: IconButton(icon: const Icon(Icons.arrow_back),
               onPressed:() => Navigator.pop(context, false),
             )
