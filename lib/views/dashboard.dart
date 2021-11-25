@@ -10,7 +10,7 @@ class Dashboard extends StatelessWidget {
 
     Widget buildCommonBtn({
       required String text,
-      VoidCallback? onClicked
+      VoidCallback? onTap
     }) {
 
       return SizedBox(
@@ -27,7 +27,7 @@ class Dashboard extends StatelessWidget {
           style: ElevatedButton.styleFrom(
             primary: const Color(0xff607D8B),
           ),
-          onPressed: () => Navigator.pushNamed(context, route.eightyTenIdea),
+          onPressed: onTap,
         ),
       );
     }
@@ -35,8 +35,15 @@ class Dashboard extends StatelessWidget {
     void selectedItem(BuildContext context, int index) {
       switch (index) {
         case 1:
+          print('Index is: $index');
           Navigator.pushNamed(context, route.eightyTenIdea);
           break;
+        case 2:
+          print('Index is: $index');
+          Navigator.pushNamed(context, route.eightySeventy);
+          break;
+        default:
+          throw('The route does not exist yet.');
       }
     }
 
@@ -55,8 +62,8 @@ class Dashboard extends StatelessWidget {
               children: <Widget>[
                 // 8010
                 buildCommonBtn(
-                    text: 'Receiving Reg',
-                    onClicked: () => selectedItem(context, 1)
+                    text: '입고 등록',
+                    onTap: () => selectedItem(context, 1)
                 ),
               ],
             ),
@@ -68,7 +75,7 @@ class Dashboard extends StatelessWidget {
                 // 8070
                 buildCommonBtn(
                     text: '생산실적 등록',
-                    onClicked: () => selectedItem(context, 2)
+                    onTap: () => selectedItem(context, 2)
                 ),
                 const SizedBox(
                   height: 20.0,
@@ -76,7 +83,7 @@ class Dashboard extends StatelessWidget {
                 // 8080
                 buildCommonBtn(
                     text: '포장실적 등록',
-                    onClicked: () => selectedItem(context, 3)
+                    onTap: () => selectedItem(context, 3)
                 ),
                 const SizedBox(
                   height: 20.0,
@@ -84,7 +91,7 @@ class Dashboard extends StatelessWidget {
                 // 8060
                 buildCommonBtn(
                     text: '생산작업 가동',
-                    onClicked: () => selectedItem(context, 3)
+                    onTap: () => selectedItem(context, 3)
                 ),
                 const SizedBox(
                   height: 20.0,
@@ -92,7 +99,7 @@ class Dashboard extends StatelessWidget {
                 // 8040
                 buildCommonBtn(
                     text: '생산/포장 실적 등록',
-                    onClicked: () => selectedItem(context, 3)
+                    onTap: () => selectedItem(context, 3)
                 ),
                 const SizedBox(
                   height: 20.0,
@@ -100,7 +107,7 @@ class Dashboard extends StatelessWidget {
                 // 8020
                 buildCommonBtn(
                     text: '원재료투입 등록',
-                    onClicked: () => selectedItem(context, 3)
+                    onTap: () => selectedItem(context, 3)
                 ),
               ],
             ),
@@ -111,7 +118,7 @@ class Dashboard extends StatelessWidget {
               children: [
                 buildCommonBtn(
                     text: '출고검수 등록',
-                    onClicked: () => selectedItem(context, 3)
+                    onTap: () => selectedItem(context, 3)
                 ),
               ],
             ),

@@ -47,26 +47,6 @@ class LoginForm extends StatelessWidget {
           height: 20.0,
           width: 150.0,
         ),
-        // const Card(
-        //   color: Color(0xFFC5CAE9),
-        //   margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
-        //   child: SizedBox(
-        //     width: 300.0,
-        //     child: ListTile(
-        //       leading: Icon(
-        //         Icons.account_box,
-        //         color: Color(0xFF536dfe),
-        //       ),
-        //       title: Text('jpim',
-        //         style: TextStyle(
-        //           color: Color(0xFF212121),
-        //           fontSize: 20.0,
-        //         ),
-        //       ),
-        //     ),
-        //   ),
-        // ),
-        //jpim
         const SizedBox(
           width: 300.0,
           child: TextField(

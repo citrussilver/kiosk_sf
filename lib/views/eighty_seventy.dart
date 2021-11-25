@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kiosk_sf/navbar.dart';
 
-
 class EightySeventy extends StatelessWidget {
   const EightySeventy({Key? key}) : super(key: key);
 
@@ -13,7 +12,11 @@ class EightySeventy extends StatelessWidget {
           appBar: AppBar(
             // Here we take the value from the MyHomePage object that was created by
             // the App.build method, and use it to set our appbar title.
-            title: Text('8070 - 생산실적 등록'),
+              automaticallyImplyLeading: true,
+              title: const Text('8070 - Production Performance Registration'),
+              leading: IconButton(icon: const Icon(Icons.arrow_back),
+                onPressed:() => Navigator.pop(context, false),
+              )
           ),
           body: SafeArea(
             child: Column(
