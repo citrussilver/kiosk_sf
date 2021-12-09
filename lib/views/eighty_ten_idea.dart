@@ -52,12 +52,12 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
         Navigator.pushNamed(context, route.eightyTenTabletPg2,
           arguments: {
             'no': '1',
-            'date_recvd': '2021-10-11',
+            'date_recvd': '2021-09-09',
             'recv_no': '1001A20211011001',
             'recv_status': 'Receiving Registration',
-            'acct_code': '40032',
-            'acct_name': 'Albedos Alchemy',
-            'item_cnt': '3'
+            'acct_code': '70030',
+            'acct_name': 'Xiangling',
+            'item_cnt': '1'
           },);
       }
 
@@ -66,10 +66,6 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
     // if(val == 0) {
     //   Navigator.pushNamed(context, route.eightyTenTabletPg2)
     // }
-  }
-
-  void getSelectedRowInfo() {
-    print('Selected Item Row Name Here...');
   }
 
   List<DataColumn> _createColumns() {
@@ -184,7 +180,7 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
               ),
             ),
             DataCell(
-              Text('40032',
+              Text('72330',
                 style: TextStyle(
                   fontSize: 15.0,
                 ),
@@ -248,7 +244,7 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
               ),
             ),
             DataCell(
-              Text('40030',
+              Text('74740',
                 style: TextStyle(
                   fontSize: 15.0,
                 ),
@@ -312,7 +308,7 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
               ),
             ),
             DataCell(
-              Text('40031',
+              Text('76040',
                 style: TextStyle(
                   fontSize: 15.0,
                 ),
