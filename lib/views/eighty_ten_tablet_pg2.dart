@@ -1,4 +1,48 @@
 import 'package:flutter/material.dart';
+import 'package:kiosk_sf/route/route.dart' as route;
+import 'package:kiosk_sf/widgets/custom_bottom_sheet.dart';
+
+enum ButtonType { normal, delete, someOtherType, someOtherOtherType }
+
+// class Button extends StatelessWidget {
+//   final String title;
+//   final ButtonType buttonType;
+//   final void Function()? onPressed;
+//
+//   const Button({
+//     Key? key,
+//     required this.title,
+//     required this.buttonType,
+//     required this.onPressed,
+//   }) : super(key: key);
+//
+//   static Color buttonColor(ButtonType type) {
+//     switch (type) {
+//       case ButtonType.normal:
+//         return Colors.blue;
+//
+//       case ButtonType.delete:
+//         return Colors.red;
+//
+//       case ButtonType.someOtherType:
+//         return Colors.yellow;
+//
+//       case ButtonType.someOtherOtherType:
+//         return Colors.green;
+//     }
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return ElevatedButton(
+//       child: Text(title),
+//       style: Theme.of(context).elevatedButtonTheme.style!.copyWith(
+//         backgroundColor: MaterialStateProperty.all(buttonColor),
+//       ),
+//       onPressed: onPressed,
+//     );
+//   }
+// }
 
 class EightyTenTabletPg2 extends StatefulWidget {
   const EightyTenTabletPg2({Key? key}) : super(key: key);
@@ -11,6 +55,17 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
 
   String accountName = 'jpim';
   String accountEmail = 'jpim@test.com';
+
+  final managedDateController = TextEditingController();
+  final expiryDateController = TextEditingController();
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is removed
+    managedDateController.dispose();
+    expiryDateController.dispose();
+    super.dispose();
+  }
 
   int selectedIndex = -1;
 
@@ -37,6 +92,7 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
         ),
       ),
       const DataColumn(
+        numeric: true,
         label: Text(
           'Queue',
           style: TextStyle(
@@ -82,6 +138,7 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
         ),
       ),
       const DataColumn(
+        numeric: true,
         label: Text(
           'Count',
           style: TextStyle(
@@ -119,7 +176,7 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
               ),
             ),
             DataCell(
-              Text('40030',
+              Text('74740',
                 style: TextStyle(
                   fontSize: 18.0,
                 ),
@@ -179,10 +236,10 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
     );
   }
 
-
   List<DataColumn> _createItemsDetailColumns() {
     return [
       const DataColumn(
+        numeric: true,
         label: Text(
           'No',
           style: TextStyle(
@@ -197,6 +254,7 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
         ),
       ),
       const DataColumn(
+        numeric: true,
         label: Text(
           'Queue',
           style: TextStyle(
@@ -260,6 +318,7 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
         ),
       ),
       const DataColumn(
+        numeric: true,
         label: Text(
           'Shelf Life',
           style: TextStyle(
@@ -269,6 +328,7 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
         ),
       ),
       const DataColumn(
+        numeric: true,
         label: Text(
           'Order Qty',
           style: TextStyle(
@@ -278,6 +338,7 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
         ),
       ),
       const DataColumn(
+        numeric: true,
         label: Text(
           'Received Qty',
           style: TextStyle(
@@ -287,6 +348,7 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
         ),
       ),
       const DataColumn(
+        numeric: true,
         label: Text(
           'Inspected Qty',
           style: TextStyle(
@@ -538,6 +600,7 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
   List<DataColumn> _createLotWarehousingColumns() {
     return [
       const DataColumn(
+        numeric: true,
         label: Text(
           'No',
           style: TextStyle(
@@ -547,6 +610,7 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
         ),
       ),
       const DataColumn(
+        numeric: true,
         label: Text(
           'Queue',
           style: TextStyle(
@@ -574,6 +638,7 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
         ),
       ),
       const DataColumn(
+        numeric: true,
         label: Text(
           'Received Qty',
           style: TextStyle(
@@ -695,6 +760,78 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
     );
   }
 
+
+  Widget buildCommonBtn({
+    required String text,
+    required String color,
+    VoidCallback? onTap
+  }) {
+
+    MaterialColor appliedColor = Colors.blue;
+
+    if(color == 'red') {
+      appliedColor = Colors.red;
+    }
+
+    return SizedBox(
+      height: 50,
+      child: ElevatedButton(
+        child: Text(
+          text,
+          style: const TextStyle(
+            fontSize: 22.0,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        style: ElevatedButton.styleFrom(
+          primary: appliedColor,
+        ),
+        onPressed: onTap,
+      ),
+    );
+  }
+
+  Widget buildDatePicker({
+    VoidCallback? onTap
+  }) {
+
+    return SizedBox(
+      width: 135,
+      child: TextField(
+        controller: managedDateController,
+        style: const TextStyle(
+          fontSize: 20.0,
+        ),
+        decoration: const InputDecoration(
+          border: OutlineInputBorder(),
+
+        ),
+        onTap: () async {
+          var startDate =  await showDatePicker(
+              context: context,
+              initialDate:DateTime.now(),
+              firstDate:DateTime(1900),
+              lastDate: DateTime(2100));
+          managedDateController.text = startDate.toString().substring(0,10);
+        },
+      ),
+    );
+  }
+
+  void selectedItem(BuildContext context, int index) {
+    switch (index) {
+      case 4:
+        print('Index is: $index');
+        showModalBottomSheet(
+          context: context,
+          builder: (context) => BottomSheetWidget()
+        );
+        break;
+      default:
+        throw('The route does not exist yet.');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -739,53 +876,26 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
-                        SizedBox(
-                          height: 50, //height of button
-                          child: ElevatedButton(
-                            child: const Text(
-                              'Issue LOT Label',
-                              style: TextStyle(
-                                fontSize: 22.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            onPressed: () {},
-                          ),
+                        buildCommonBtn(
+                            text: 'Issue LOT Label',
+                            color: '',
+                            onTap: () => selectedItem(context, 1)
                         ),
                         const SizedBox(
                           width: 80.0,
                         ),
-                        SizedBox(
-                          height: 50, //height of button
-                          child: ElevatedButton(
-                            child: const Text(
-                              'Confirmation',
-                              style: TextStyle(
-                                fontSize: 22.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            onPressed: () {},
-                          ),
+                        buildCommonBtn(
+                            text: 'Confirmation',
+                            color: '',
+                            onTap: () => selectedItem(context, 1)
                         ),
                         const SizedBox(
                           width: 30.0,
                         ),
-                        SizedBox(
-                          height: 50, //height of button
-                          child: ElevatedButton(
-                            child: const Text(
-                              'Insp Cancel',
-                              style: TextStyle(
-                                fontSize: 22.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              primary: Colors.red,
-                            ),
-                            onPressed: () {},
-                          ),
+                        buildCommonBtn(
+                            text: 'Insp Cancel',
+                            color: 'red',
+                            onTap: () => selectedItem(context, 1)
                         ),
                       ],
                     ),
@@ -806,96 +916,66 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
               ),
             ),
             const SizedBox(
-              height: 30.0,
+              height: 15.0,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Column(children: [
-                  SizedBox(
-                    width: 600,
-                    child: Row(
-                      children: const [
-                        Icon(
-                            Icons.star,
-                            color: Colors.red
-                        ),
-                        Text(
-                          'LOT Warehousing',
-                          style: TextStyle(
-                            fontSize: 22.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10.0,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20.0),
-                    child: _createLotWarehousingDataTable(),
-                  ),
-                ],
-                ),
-                const SizedBox(
-                    width: 50.0
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
+            Column(children: [
+              SizedBox(
+                width: 650,
+                child: Row(
                   children: [
-                    SizedBox(
-                      height: 50,
-                      child: ElevatedButton(
-                        child: const Text(
-                          'Add LOT',
-                          style: TextStyle(
-                            fontSize: 22.0,
-                            fontWeight: FontWeight.bold,
+                    Expanded(
+                      child: Row(
+                        children: const [
+                          Icon(
+                              Icons.star,
+                              color: Colors.red
                           ),
-                        ),
-                        onPressed: () {},
+                          Text(
+                            'LOT Warehousing',
+                            style: TextStyle(
+                              fontSize: 22.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    const SizedBox(
-                      height: 10.0,
-                    ),
-                    SizedBox(
-                      height: 50,
-                      child: ElevatedButton(
-                        child: const Text(
-                          'LOT Save',
-                          style: TextStyle(
-                            fontSize: 22.0,
-                            fontWeight: FontWeight.bold,
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          buildCommonBtn(
+                              text: 'Add LOT',
+                              color: '',
+                              onTap: () => selectedItem(context, 4)
                           ),
-                        ),
-                        onPressed: () {},
+                          const SizedBox(
+                              width: 25.0
+                          ),
+                          buildCommonBtn(
+                              text: 'Delete LOT',
+                              color: 'red',
+                              onTap: () => selectedItem(context, 6)
+                          ),
+                          // Button(
+                          //   title: 'Press this button',
+                          //   buttonType: ButtonType.normal,
+                          //   onPressed: () => {},
+                          // )
+                        ],
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(
-                    width: 25.0
-                ),
-                SizedBox(
-                  height: 50,
-                  child: ElevatedButton(
-                    child: const Text(
-                      'Delete LOT',
-                      style: TextStyle(
-                        fontSize: 22.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.red,
-                    ),
-                    onPressed: () {},
-                  ),
-                ),
-              ],
+              ),
+              const SizedBox(
+                height: 10.0,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 20.0),
+                child: _createLotWarehousingDataTable(),
+              ),
+            ],
             )
           ],
         ),

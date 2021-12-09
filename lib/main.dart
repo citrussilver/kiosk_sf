@@ -11,15 +11,14 @@ import 'route/route.dart' as route;
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'Kiosk Smartfactory',
       onGenerateRoute: route.controller,
-      initialRoute: route.loginPage,
+      initialRoute: route.loginMes,
     );
   }
 }

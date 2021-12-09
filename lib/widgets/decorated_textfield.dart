@@ -1,0 +1,22 @@
+import 'package:flutter/material.dart';
+
+class DecoratedTextField extends StatelessWidget {
+  final String hintText;
+  const DecoratedTextField({Key? key, required this.hintText}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        height: 50,
+        alignment: Alignment.center,
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        decoration: BoxDecoration(
+            color: Colors.grey[300], borderRadius: BorderRadius.circular(10)),
+        child: const TextField(
+          decoration: InputDecoration.collapsed(
+            hintText: 'Test',
+          ),
+        ));
+  }
+}
