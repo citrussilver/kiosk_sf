@@ -505,74 +505,77 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
           ),
           body: SafeArea(
             child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: 600.0,
-                    child: Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(15.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget> [
-                            const Expanded(
-                              child: TextField(
-                                style: TextStyle(
-                                  fontSize: 20.0,
-                                ),
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  prefixIcon: Icon(Icons.search),
-                                  hintText: 'Search Receiving No.'
-                                ),
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 15.0,
-                            ),
-                            SizedBox(
-                              height: 50, //height of button
-                              child: ElevatedButton(
-                                onPressed: toggleSearchForm,
-                                child: const Text(
-                                  'Search',
+              child: SingleChildScrollView(
+                padding: EdgeInsets.all(32),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 600.0,
+                      child: Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget> [
+                              const Expanded(
+                                child: TextField(
                                   style: TextStyle(
-                                    fontSize: 22.0,
-                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20.0,
+                                  ),
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    prefixIcon: Icon(Icons.search),
+                                    hintText: 'Search Receiving No.'
                                   ),
                                 ),
                               ),
+                              const SizedBox(
+                                width: 15.0,
+                              ),
+                              SizedBox(
+                                height: 50, //height of button
+                                child: ElevatedButton(
+                                  onPressed: toggleSearchForm,
+                                  child: const Text(
+                                    'Search',
+                                    style: TextStyle(
+                                      fontSize: 22.0,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 30.0,
+                    ),
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Receiving List',
+                              style: TextStyle(
+                                fontSize: 22.0,
+                              ),
                             ),
+                            const SizedBox(
+                              height: 10.0
+                            ),
+                            _createDataTable(),
                           ],
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 30.0,
-                  ),
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Last 5 recent records',
-                            style: TextStyle(
-                              fontSize: 22.0,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 10.0
-                          ),
-                          _createDataTable(),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

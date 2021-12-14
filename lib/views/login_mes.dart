@@ -47,44 +47,47 @@ class _LoginMesState extends State<LoginMes> {
   }
 
   Widget _loginForm() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        ClipRRect(
-          borderRadius: BorderRadius.circular(15.0),
-          child: const Image(
-            image: AssetImage('images/robot_arms_260x208.jpg'),
+    return SingleChildScrollView(
+      padding: EdgeInsets.all(32),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          ClipRRect(
+            borderRadius: BorderRadius.circular(15.0),
+            child: const Image(
+              image: AssetImage('images/robot_arms_260x208.jpg'),
+            ),
           ),
-        ),
-        const SizedBox(
-          height: 20.0,
-        ),
-        _loginLabel(),
-        const SizedBox(
-          height: 20.0,
-          width: 150.0,
-        ),
-        SizedBox(
-          width: 300.0,
-          child: _usernameField(),
-        ),
-        const SizedBox(
-          height: 20.0,
-        ),
-        //password
-        SizedBox(
-          width: 300.0,
-          child: _passwordField(),
-        ),
-        const SizedBox(
-          height: 20.0,
-        ),
-        SizedBox(
-          height: 50,
-          width: 120,
-          child: _loginButton(),
-        ),
-      ],
+          const SizedBox(
+            height: 20.0,
+          ),
+          _loginLabel(),
+          const SizedBox(
+            height: 20.0,
+            width: 150.0,
+          ),
+          SizedBox(
+            width: 300.0,
+            child: _usernameField(),
+          ),
+          const SizedBox(
+            height: 20.0,
+          ),
+          //password
+          SizedBox(
+            width: 300.0,
+            child: _passwordField(),
+          ),
+          const SizedBox(
+            height: 20.0,
+          ),
+          SizedBox(
+            height: 50,
+            width: 120,
+            child: _loginButton(),
+          ),
+        ],
+      ),
     );
   }
 
@@ -146,7 +149,8 @@ class _LoginMesState extends State<LoginMes> {
               _loginBloc.saveSettings();
               Navigator.pushNamed(context, route.dashBoard);
             } else {
-              print(_loginBloc.loginMSG);
+              _loginDialog(_loginBloc.loginMSG);
+              //print(_loginBloc.loginMSG);
             }
           });
         }
@@ -174,22 +178,22 @@ class _LoginMesState extends State<LoginMes> {
   }
 }
 
-class LoginButton extends StatelessWidget {
-  const LoginButton({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      child: const Text(
-        'Login',
-        style: TextStyle(
-          fontSize: 22.0,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      onPressed: () => Navigator.pushNamed(context, route.dashBoard),
-    );
-  }
-}
+// class LoginButton extends StatelessWidget {
+//   const LoginButton({
+//     Key? key,
+//   }) : super(key: key);
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return ElevatedButton(
+//       child: const Text(
+//         'Login',
+//         style: TextStyle(
+//           fontSize: 22.0,
+//           fontWeight: FontWeight.bold,
+//         ),
+//       ),
+//       onPressed: () => Navigator.pushNamed(context, route.dashBoard),
+//     );
+//   }
+// }

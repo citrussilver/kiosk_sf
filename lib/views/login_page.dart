@@ -21,6 +21,7 @@ class LoginPage extends StatelessWidget {
     return Form(
       key: _formKey,
       child: Expanded(
+        flex: 1,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
