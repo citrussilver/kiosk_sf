@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:kiosk_sf/views/dashboard.dart';
 import 'package:kiosk_sf/views/eighty_ten_idea.dart';
 import 'package:kiosk_sf/views/eighty_seventy.dart';
-import 'package:flutter/services.dart';
-import 'package:kiosk_sf/bloc/login_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class NavBar extends StatefulWidget {
   const NavBar({Key? key}) : super(key: key);
@@ -14,28 +11,6 @@ class NavBar extends StatefulWidget {
 }
 
 class _NavBarState extends State<NavBar> {
-
-  late LoginBloc _loginBloc;
-
-  @override
-  void initState() {
-    _loginBloc = LoginBloc();
-
-    if (_loginBloc.settingPref == null) {
-      Future<SharedPreferences?> res = _loginBloc.sharedPrefInit();
-      res.then((value) {
-        _loginBloc.settingPref = value;
-        _loginBloc.loadSaveInfo();
-        setState(() {});
-      });
-    }
-
-    super.initState();
-    SystemChrome.setPreferredOrientations(
-        [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
-  }
-
-  List<String> langItems = ['ENG', 'KOR'];
 
   Widget buildListTile({
     required String text,
@@ -72,7 +47,6 @@ class _NavBarState extends State<NavBar> {
         ));
         break;
       case 8:
-        _loginBloc.logout();
         print('Logout');
         break;
     }

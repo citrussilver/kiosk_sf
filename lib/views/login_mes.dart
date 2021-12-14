@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+
 import 'package:kiosk_sf/route/route.dart' as route;
 import 'package:flutter/services.dart';
 import 'package:kiosk_sf/bloc/login_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
+import 'package:kiosk_sf/services/data_service.dart';
+
 
 class LoginMes extends StatefulWidget {
+  const LoginMes({Key? key}) : super(key: key);
+
 
   @override
   _LoginMesState createState() => _LoginMesState();
@@ -12,27 +17,40 @@ class LoginMes extends StatefulWidget {
 
 class _LoginMesState extends State<LoginMes> {
 
-  late LoginBloc _loginBloc;
+  // late LoginBloc _loginBloc;
+  //
+  // @override
+  // void initState() {
+  //   _loginBloc = LoginBloc();
+  //
+  //   if (_loginBloc.settingPref == null) {
+  //     Future<SharedPreferences?> res = _loginBloc.sharedPrefInit();
+  //     res.then((value) {
+  //       _loginBloc.settingPref = value;
+  //       _loginBloc.loadSaveInfo();
+  //       setState(() {});
+  //     });
+  //   }
+  //
+  //   super.initState();
+  //   SystemChrome.setPreferredOrientations(
+  //       [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
+  // }
+
+  // List<String> langItems = ['ENG', 'KOR'];
+
+  final _dataService = DataService();
+  late int _response;
+  final usernameController = TextEditingController();
+  final passController = TextEditingController();
 
   @override
-  void initState() {
-    _loginBloc = LoginBloc();
-
-    if (_loginBloc.settingPref == null) {
-      Future<SharedPreferences?> res = _loginBloc.sharedPrefInit();
-      res.then((value) {
-        _loginBloc.settingPref = value;
-        _loginBloc.loadSaveInfo();
-        setState(() {});
-      });
-    }
-
-    super.initState();
-    SystemChrome.setPreferredOrientations(
-        [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    usernameController.dispose();
+    passController.dispose();
+    super.dispose();
   }
-
-  List<String> langItems = ['ENG', 'KOR'];
 
   @override
   Widget build(BuildContext context) {
@@ -46,18 +64,24 @@ class _LoginMesState extends State<LoginMes> {
     );
   }
 
+  void _mesLogin(String user, String pass) async {
+    final response = await _dataService.mesLogin(user, pass);
+    if (response == 1) {
+      Navigator.pushNamed(context, route.dashBoard);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(_dataService.loginMSG),
+      ));
+    }
+  }
+
   Widget _loginForm() {
     return SingleChildScrollView(
-      padding: EdgeInsets.all(32),
+      padding: const EdgeInsets.all(32),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          ClipRRect(
-            borderRadius: BorderRadius.circular(15.0),
-            child: const Image(
-              image: AssetImage('images/robot_arms_260x208.jpg'),
-            ),
-          ),
+          _logo(),
           const SizedBox(
             height: 20.0,
           ),
@@ -91,6 +115,15 @@ class _LoginMesState extends State<LoginMes> {
     );
   }
 
+  Widget _logo() {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(15.0),
+      child: const Image(
+        image: AssetImage('images/robot_arms_260x208.jpg'),
+      ),
+    );
+  }
+
   Widget _loginLabel() {
     return const Text(
       'iUp MES Login',
@@ -111,7 +144,7 @@ class _LoginMesState extends State<LoginMes> {
           prefixIcon: Icon(Icons.account_box),
           hintText: 'Username'
       ),
-      controller: _loginBloc.usrnmCntrl,
+      controller: usernameController,
       validator: (value) => null,
     );
   }
@@ -128,7 +161,7 @@ class _LoginMesState extends State<LoginMes> {
         prefixIcon: Icon(Icons.vpn_key),
         hintText: 'Password',
       ),
-      controller: _loginBloc.pwdCntrl,
+      controller: passController,
       validator: (value) => null,
     );
   }
@@ -144,38 +177,41 @@ class _LoginMesState extends State<LoginMes> {
         ),
         // onPressed: () => Navigator.pushNamed(context, route.dashBoard),
         onPressed: () {
-          _loginBloc.login().then((value) {
-            if (value == 1) {
-              _loginBloc.saveSettings();
-              Navigator.pushNamed(context, route.dashBoard);
-            } else {
-              _loginDialog(_loginBloc.loginMSG);
-              //print(_loginBloc.loginMSG);
-            }
-          });
+          // _loginBloc.login().then((value) {
+          //   if (value == 1) {
+          //     _loginBloc.saveSettings();
+          //     Navigator.pushNamed(context, route.dashBoard);
+          //   } else {
+          //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          //       content: Text(_loginBloc.loginMSG),
+          //     ));
+          //     //_loginDialog(_loginBloc.loginMSG);
+          //   }
+          // });
+          _mesLogin( usernameController.text, passController.text);
         }
     );
   }
 
-  void _loginDialog(String msg) {
-    Widget closeBtn = TextButton.icon(
-        onPressed: () {
-          Navigator.pop(context);
-        },
-        icon: Icon(Icons.close_rounded),
-        label: Text("Close"));
-
-    AlertDialog dialog = AlertDialog(
-      title: Text("Login"),
-      content: Text(msg),
-      actions: [closeBtn],
-    );
-
-    showDialog(
-        context: context,
-        builder: (BuildContext context) => dialog,
-        barrierDismissible: false);
-  }
+  // void _loginDialog(String msg) {
+  //   Widget closeBtn = TextButton.icon(
+  //       onPressed: () {
+  //         Navigator.pop(context);
+  //       },
+  //       icon: Icon(Icons.close_rounded),
+  //       label: Text("Close"));
+  //
+  //   AlertDialog dialog = AlertDialog(
+  //     title: Text("Login"),
+  //     content: Text(msg),
+  //     actions: [closeBtn],
+  //   );
+  //
+  //   showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) => dialog,
+  //       barrierDismissible: false);
+  // }
 }
 
 // class LoginButton extends StatelessWidget {
