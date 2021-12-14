@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 // Define Routes
 import 'package:kiosk_sf/views/dashboard.dart';
-import 'package:kiosk_sf/views/login.dart';
+import 'package:kiosk_sf/views/login_page.dart';
 import 'package:kiosk_sf/views/login_mes.dart';
 import 'package:kiosk_sf/views/eighty_ten.dart';
 import 'package:kiosk_sf/views/eighty_ten_tablet.dart';
@@ -12,7 +12,7 @@ import 'package:kiosk_sf/views/eighty_ten_idea.dart';
 import 'package:kiosk_sf/views/eighty_seventy.dart';
 
 // Route Names
-const String loginPage = 'login';
+const String loginPage = 'loginPage';
 const String loginMes = 'loginMes';
 const String dashBoard = 'dashboard';
 const String eightyTen = 'eightyTen';
