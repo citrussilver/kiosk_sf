@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kiosk_sf/cubits/posts_cubit.dart';
 import 'package:kiosk_sf/route/route.dart' as route;
 import 'package:kiosk_sf/navbar.dart';
 
@@ -12,7 +14,6 @@ class Dashboard extends StatelessWidget {
       required String text,
       VoidCallback? onTap
     }) {
-
       return SizedBox(
         height: 80,
         width: 220,
@@ -47,13 +48,8 @@ class Dashboard extends StatelessWidget {
       }
     }
 
-    return Scaffold(
-      backgroundColor: Color(0xFF303f9f),
-      appBar: AppBar(
-        title: const Text('Kiosk SmartFactory'),
-      ),
-      drawer: const NavBar(),
-      body: Padding(
+    Widget _dashboardContent() {
+      return Padding(
         padding: const EdgeInsets.all(80.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -124,7 +120,16 @@ class Dashboard extends StatelessWidget {
             ),
           ],
         ),
+      );
+    }
+
+    return Scaffold(
+      backgroundColor: Color(0xFF303f9f),
+      appBar: AppBar(
+        title: const Text('Kiosk SmartFactory'),
       ),
+      drawer: const NavBar(),
+      body: _dashboardContent(),
     );
   }
 }

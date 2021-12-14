@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:kiosk_sf/cubits/users_cubit.dart';
 import 'package:kiosk_sf/route/route.dart' as route;
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kiosk_sf/cubits/posts_cubit.dart';
+import 'package:kiosk_sf/class/post.dart';
+
+import 'package:kiosk_sf/class/user.dart';
 
 class EightyTenIdea extends StatefulWidget {
 
@@ -460,12 +466,218 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
       ),
     ];
   }
-
-  DataTable _createDataTable() {
+  // Sample Hard-coded DataTable
+  DataTable _createRcvListDataTable() {
     return DataTable(
       showCheckboxColumn: false,
       columns: _createColumns(),
       rows: _createRows(),
+      dividerThickness: 5,
+      dataRowHeight: 80,
+      showBottomBorder: true,
+      headingTextStyle: const TextStyle(
+          fontWeight: FontWeight.bold,
+          color: Colors.white
+      ),
+      headingRowColor: MaterialStateProperty.resolveWith(
+              (states) => const Color(0xFF3F51B5)
+      ),
+      dataRowColor: MaterialStateColor.resolveWith(
+              (states) => const Color(0xFFC5CAE9)
+      ),
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: const Color(0xFF3F51B5),
+          width: 3,
+        ),
+        borderRadius: BorderRadius.all(const Radius.circular(10)),
+      ),
+    );
+  }
+
+  Widget _rcvListCard() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Receiving List',
+              style: TextStyle(
+                fontSize: 22.0,
+              ),
+            ),
+            const SizedBox(
+                height: 10.0
+            ),
+            _createRcvListDataTable(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget eightyTenMainContent() {
+    return SafeArea(
+      child: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(32),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 600.0,
+                child: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget> [
+                        const Expanded(
+                          child: TextField(
+                            style: TextStyle(
+                              fontSize: 20.0,
+                            ),
+                            decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                prefixIcon: Icon(Icons.search),
+                                hintText: 'Search Receiving No.'
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 15.0,
+                        ),
+                        // Search Button
+                        SizedBox(
+                          height: 50, //height of button
+                          child: ElevatedButton(
+                            onPressed: toggleSearchForm,
+                            child: const Text(
+                              'Search',
+                              style: TextStyle(
+                                fontSize: 22.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 30.0,
+              ),
+              _rcvListCard(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _listViewContent(users) {
+    return Center(
+      child: SizedBox(
+        width: 300.0,
+        child: ListView.builder(
+          itemCount: users.length,
+          itemBuilder: (context, index) {
+            return Card(
+                child: ListTile(
+                  title: Text(users[index].username),
+                  subtitle: Text(users[index].website),
+                  trailing: Icon(Icons.more_vert),
+                )
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _dataTableContent(users) {
+    final List<Map<String, String>> listOfColumns = [
+      {"Name": "AAAAAA", "Number": "1", "State": "Yes"},
+      {"Name": "BBBBBB", "Number": "2", "State": "no"},
+      {"Name": "CCCCCC", "Number": "3", "State": "Yes"}
+    ];
+
+    return DataTable(
+      showCheckboxColumn: false,
+      columns: [
+        DataColumn(
+          label: Text(
+            'ID',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 15.0,
+            ),
+          ),
+        ),
+        DataColumn(
+          label: Text(
+            'Name',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 15.0,
+            ),
+          ),
+        ),
+        DataColumn(
+          label: Text(
+            'Username',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 15.0,
+            ),
+          ),
+        ),
+        DataColumn(
+          label: Text(
+            'Email',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 15.0,
+            ),
+          ),
+        ),
+        DataColumn(
+          label: Text(
+            'Phone',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 15.0,
+            ),
+          ),
+        ),
+        DataColumn(
+          label: Text(
+            'Website',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 15.0,
+            ),
+          ),
+        ),
+      ],
+      rows:
+          //users[index].username
+        users.map(
+          ((element) => DataRow(
+            cells: <DataCell>[
+              DataCell(Text(element["id"])),
+              DataCell(Text(element["name"])),
+              DataCell(Text(element["username"])),
+              DataCell(Text(element["email"])),
+              DataCell(Text(element["phone"])),
+              DataCell(Text(element["website"])),
+            ],
+          )),
+        ).toList(),
       dividerThickness: 5,
       dataRowHeight: 80,
       showBottomBorder: true,
@@ -503,83 +715,29 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
                 onPressed:() => Navigator.pop(context, false),
               )
           ),
-          body: SafeArea(
-            child: Center(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.all(32),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: 600.0,
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(15.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget> [
-                              const Expanded(
-                                child: TextField(
-                                  style: TextStyle(
-                                    fontSize: 20.0,
-                                  ),
-                                  decoration: InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    prefixIcon: Icon(Icons.search),
-                                    hintText: 'Search Receiving No.'
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 15.0,
-                              ),
-                              SizedBox(
-                                height: 50, //height of button
-                                child: ElevatedButton(
-                                  onPressed: toggleSearchForm,
-                                  child: const Text(
-                                    'Search',
-                                    style: TextStyle(
-                                      fontSize: 22.0,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
+          body: BlocProvider<UserCubit>(
+            create: (context) => UserCubit()..getUsers(),
+            child: BlocBuilder<UserCubit, List<User>>(
+                builder: (context, users) {
+                  if (users.isEmpty) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          CircularProgressIndicator(),
+                          SizedBox(
+                            height: 10.0,
                           ),
-                        ),
+                          Text('Retrieving data...')
+                        ],
                       ),
-                    ),
-                    const SizedBox(
-                      height: 30.0,
-                    ),
-                    Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Receiving List',
-                              style: TextStyle(
-                                fontSize: 22.0,
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 10.0
-                            ),
-                            _createDataTable(),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+                    );
+                  }
+                  return _listViewContent(users);
+                }
             ),
           ),
-        )
+        ),
     );
   }
 }
