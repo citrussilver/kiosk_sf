@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:kiosk_sf/services/mes_server_connection.dart';
-import 'package:kiosk_sf/model/gms_user.dart';
+import 'package:kiosk_sf/models/gms_user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginBloc {

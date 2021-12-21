@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kiosk_sf/cubits/posts_cubit.dart';
 import 'package:kiosk_sf/route/route.dart' as route;
@@ -49,10 +50,11 @@ class Dashboard extends StatelessWidget {
     }
 
     Widget _dashboardContent() {
-      return Padding(
+      return SingleChildScrollView(
         padding: const EdgeInsets.all(80.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Column(
               children: <Widget>[

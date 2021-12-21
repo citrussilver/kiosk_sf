@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:kiosk_sf/services/mes_server_connection.dart';
-import 'package:kiosk_sf/model/gms_user.dart';
+import 'package:kiosk_sf/models/gms_user.dart';
 
-import 'package:kiosk_sf/class/receiving_list.dart';
-import 'package:kiosk_sf/class/post.dart';
+import 'package:kiosk_sf/models/receiving_list.dart';
+import 'package:kiosk_sf/models/post.dart';
 
-import 'package:kiosk_sf/class/user.dart';
+import 'package:kiosk_sf/models/user.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DataService {
@@ -94,41 +95,51 @@ class DataService {
     });
 
     if (response.statusCode == 200) {
-      print(response.headers['set-cookie']);
       print('Status 200');
     } else {
-      print(response.headers['set-cookie']);
       isSuccess = 0;
     }
 
     return isSuccess;
   }
 
-  Future<int> getRcvWork8011P() async {
-    int isSuccess = 0;
+  Future<List<ReceivingList>> getRcvWork8011P() async {
+    try {
+      // final uri = Uri.https( _baseUrl, '/posts');
+      // final response = await http.get(uri);
+      // final json = jsonDecode(response.body) as List;
+      // final rcvLists = json.map((postJson) => ReceivingList.fromJson(postJson)).toList();
+      // return rcvLists;
 
-    MESServerConnection mesConn = MESServerConnection();
-    String address = "http://192.168.0.188:8081/iUp_MES/rcvwork8011PManagement/getRcvwork8011P_10Q;jsessionid=${jsessionid}";
-    final response = await mesConn.connectAPI(HttpMethod.POST, address, {
-      "paramMap":{},
-      "dataSetMap":{
-        "ds_cond":[{
-          "PD_MODE":"R",
-          "PD_VALUE1":"1001||20210901||20211220||||||||",
-          "PD_VALUE2":"||}"
-        }]
+      SharedPreferences jsessionId = await SharedPreferences.getInstance();
+      String? extractJsessionId = jsessionId.getString('jsessionid');
+
+      MESServerConnection mesConn = MESServerConnection();
+      String address = "http://192.168.0.188:8081/iUp_MES/rcvwork8011PManagement/getRcvwork8011P_10Q;jsessionid=${extractJsessionId}";
+      final response = await mesConn.connectAPI(HttpMethod.POST, address, {
+        "paramMap":{},
+        "dataSetMap":{
+          "ds_cond":[{
+            "PD_MODE":"R",
+            "PD_VALUE1":"1001||20210901||20211220||||||||",
+            "PD_VALUE2":"||}"
+          }]
+        }
+      });
+
+      List<dynamic> json = jsonDecode(response.body)["dataset"]["ds_master_10Q"];
+      final rcvLists = json.map((rcvJson) => ReceivingList.fromJson(rcvJson)).toList();
+      //print('runtimeType is: ${rcvLists.runtimeType}');
+
+      if (response.statusCode == 200) {
+        return rcvLists;
+      } else {
+        return <ReceivingList>[];
       }
-    });
 
-    if (response.statusCode == 200) {
-      print(response.headers['set-cookie']);
-      print('Status 200');
-    } else {
-      print(response.headers['set-cookie']);
-      isSuccess = 0;
+    } catch (e) {
+      rethrow;
     }
-
-    return isSuccess;
   }
 
   final _baseUrl = 'jsonplaceholder.typicode.com';
@@ -164,7 +175,10 @@ class DataService {
       final uri = Uri.https(_usersBaseUrl, '/users');
       final response = await http.get(uri);
       final json = jsonDecode(response.body) as List;
+      //print('json is: ${json.toString()}');
       final users = json.map((postJson) => User.fromJson(postJson)).toList();
+      //print('users are: ${users.toString()}');
+
       return users;
     } catch (e) {
       throw e;
