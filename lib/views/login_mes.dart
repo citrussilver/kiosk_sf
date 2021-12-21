@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:kiosk_sf/route/route.dart' as route;
 import 'package:flutter/services.dart';
 import 'package:kiosk_sf/bloc/login_bloc.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:kiosk_sf/services/data_service.dart';
 
 
@@ -17,38 +17,38 @@ class LoginMes extends StatefulWidget {
 
 class _LoginMesState extends State<LoginMes> {
 
-  // late LoginBloc _loginBloc;
-  //
-  // @override
-  // void initState() {
-  //   _loginBloc = LoginBloc();
-  //
-  //   if (_loginBloc.settingPref == null) {
-  //     Future<SharedPreferences?> res = _loginBloc.sharedPrefInit();
-  //     res.then((value) {
-  //       _loginBloc.settingPref = value;
-  //       _loginBloc.loadSaveInfo();
-  //       setState(() {});
-  //     });
-  //   }
-  //
-  //   super.initState();
-  //   SystemChrome.setPreferredOrientations(
-  //       [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
-  // }
+  late LoginBloc _loginBloc;
 
-  // List<String> langItems = ['ENG', 'KOR'];
+  @override
+  void initState() {
+    _loginBloc = LoginBloc();
+
+    if (_loginBloc.settingPref == null) {
+      Future<SharedPreferences?> res = _loginBloc.sharedPrefInit();
+      res.then((value) {
+        _loginBloc.settingPref = value;
+        _loginBloc.loadSaveInfo();
+        setState(() {});
+      });
+    }
+
+    super.initState();
+    SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
+  }
+
+  List<String> langItems = ['ENG', 'KOR'];
 
   final _dataService = DataService();
   late int _response;
   final usernameController = TextEditingController();
-  final passController = TextEditingController();
+  final passwordController = TextEditingController();
 
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
     usernameController.dispose();
-    passController.dispose();
+    passwordController.dispose();
     super.dispose();
   }
 
@@ -144,6 +144,7 @@ class _LoginMesState extends State<LoginMes> {
           prefixIcon: Icon(Icons.account_box),
           hintText: 'Username'
       ),
+      //controller: _loginBloc.usrnmCntrl,
       controller: usernameController,
       validator: (value) => null,
     );
@@ -161,7 +162,8 @@ class _LoginMesState extends State<LoginMes> {
         prefixIcon: Icon(Icons.vpn_key),
         hintText: 'Password',
       ),
-      controller: passController,
+      controller: passwordController,
+      //controller: _loginBloc.pwdCntrl,
       validator: (value) => null,
     );
   }
@@ -188,7 +190,7 @@ class _LoginMesState extends State<LoginMes> {
           //     //_loginDialog(_loginBloc.loginMSG);
           //   }
           // });
-          _mesLogin( usernameController.text, passController.text);
+          _mesLogin(usernameController.text, passwordController.text);
         }
     );
   }

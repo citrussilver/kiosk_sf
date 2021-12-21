@@ -15,8 +15,8 @@ class LoginBloc {
 
   Future<int> login() async {
     int isSuccess = 0;
-    //String address = "http://factopia.co.kr/MES/baseinfo/login.do";
-    String address = "http://192.168.1.16:8081/iUp_MES/baseinfo/login.do";
+    //String address = "http://factopia.co.kr/baseinfo/login.do";
+    String address = "http://192.168.0.188:8081/iUp_MES/baseinfo/login.do";
 
     if (usrnmCntrl.text.isEmpty || pwdCntrl.text.isEmpty) {
       loginMSG = "Please enter your username and password.";
@@ -33,8 +33,19 @@ class LoginBloc {
       }
     });
 
+    //SharedPreferences sharedPref = await SharedPreferences.getInstance();
+
+
     if (res.statusCode == 200) {
       Map<String, dynamic> reqInfo = jsonDecode(res.body);
+
+      // SharedPreferences sharedPrefJSession = await SharedPreferences.getInstance();
+      // await sharedPrefJSession.setString("login_info", reqInfo['dataset']["ds_loginInfo"].toString());
+      // print('sharedPrefJSession: ${sharedPrefJSession.getString("login_info")}');
+
+      // SharedPreferences sharedPrefJSession = await SharedPreferences.getInstance();
+      // await sharedPrefJSession.setString("login_session", res.headers['set-cookie'].toString());
+      // print('sharedPrefJSession: ${sharedPrefJSession.getString("login_session")}');
 
       if (reqInfo["code"] < 0) {
         loginMSG = reqInfo["code"] == -1
@@ -44,7 +55,7 @@ class LoginBloc {
       }
 
       List<dynamic> loginfo = reqInfo["dataset"]["ds_loginInfo"];
-      print(loginfo);
+      //print(loginfo);
       if (loginfo.length == 0 ||
           loginfo.isEmpty ||
           loginfo[0]["LOGINYN"] == "N") {
@@ -71,7 +82,7 @@ class LoginBloc {
   Future<int> logout() async {
     int isSuccess = 0;
     //String address = "http://factopia.co.kr/MES/baseinfo/logout.do";
-    String address = "http://192.168.1.16:8081/iUp_MES/baseinfo/logout.do";
+    String address = "http://192.168.0.188:8082/iUp_MES/baseinfo/logout.do";
 
     MESServerConnection mesConn = MESServerConnection();
     try {
