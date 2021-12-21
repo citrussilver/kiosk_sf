@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:kiosk_sf/cubits/users_cubit.dart';
 import 'package:kiosk_sf/route/route.dart' as route;
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kiosk_sf/services/data_service.dart';
-
-import 'package:kiosk_sf/class/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:kiosk_sf/cubits/users_cubit.dart';
+import 'package:kiosk_sf/models/user.dart';
+
+
+import 'package:kiosk_sf/models/receiving_list.dart';
+import 'package:kiosk_sf/cubits/rcvwork_8011P_cubit.dart';
 
 class EightyTenIdea extends StatefulWidget {
 
@@ -668,12 +673,12 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
     );
   }
 
-  Widget _jsonPlaceholderTest(users) {
+  Widget _jsonPlaceholderTest(receivingList) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Receiving List [${users.length}]',
+          'Receiving List [${receivingList.length}]',
           style: const TextStyle(
             fontSize: 22.0,
             color: Colors.white,
@@ -682,22 +687,22 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
         const SizedBox(
             height: 10.0
         ),
-        _listViewContent(users)
+        _listViewContent(receivingList)
       ],
     );
   }
 
-  Widget _listViewContent(users) {
+  Widget _listViewContent(receivingList) {
     return SizedBox(
       height: 500.0,
       child: ListView.builder(
-        itemCount: users.length,
+        itemCount: receivingList.length,
         //shrinkWrap: true,
         itemBuilder: (context, index) {
           return Card(
               child: ListTile(
-                title: Text(users[index].username),
-                subtitle: Text(users[index].website),
+                title: Text('No: ${receivingList[index].rcv_no} Date: ${receivingList[index].rcv_dt}'),
+                subtitle: Text('Item Count: ${receivingList[index].item_cnt}, Customer: ${receivingList[index].cust_nm}'),
                 trailing: Icon(Icons.more_vert),
               )
           );
@@ -736,8 +741,8 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
                 onPressed:() => Navigator.pop(context, false),
               )
           ),
-          body: BlocProvider<UserCubit>(
-            create: (context) => UserCubit()..getUsers(),
+          body: BlocProvider<Rcvwork8011PCubit>(
+            create: (context) => Rcvwork8011PCubit()..getReceivingLists(),
             child: SafeArea(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(20.0),
@@ -757,9 +762,10 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
                             color: const Color(0xFF303f9f),
                               child: Padding(
                                 padding: const EdgeInsets.all(20.0),
-                                child: BlocBuilder<UserCubit, List<User>>(
-                                    builder: (context, users) {
-                                      if (users.isEmpty) {
+                                child: BlocBuilder<Rcvwork8011PCubit, List<ReceivingList>>(
+                                    builder: (context, receivingList) {
+                                      //print(rcvWork8011P);
+                                      if (receivingList.isEmpty) {
                                         return Center(
                                           child: Column(
                                             mainAxisAlignment: MainAxisAlignment.center,
@@ -778,7 +784,7 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
                                           ),
                                         );
                                       }
-                                      return _jsonPlaceholderTest(users);
+                                      return _jsonPlaceholderTest(receivingList);
                                     }
                                 ),
                               )

@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kiosk_sf/services/data_service.dart';
-import 'package:kiosk_sf/class/post.dart';
+import 'package:kiosk_sf/models/post.dart';
 
 class PostsCubit extends Cubit<List<Post>> {
   final _dataService = DataService();
