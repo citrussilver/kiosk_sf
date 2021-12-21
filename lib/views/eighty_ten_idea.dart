@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:kiosk_sf/cubits/users_cubit.dart';
 import 'package:kiosk_sf/route/route.dart' as route;
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kiosk_sf/cubits/posts_cubit.dart';
-import 'package:kiosk_sf/class/post.dart';
+import 'package:kiosk_sf/services/data_service.dart';
 
 import 'package:kiosk_sf/class/user.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class EightyTenIdea extends StatefulWidget {
 
@@ -19,6 +19,7 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
 
   final startDateController = TextEditingController();
   final endDateController = TextEditingController();
+  final rcvNoSearchBoxController = TextEditingController();
 
   String accountName = 'jpim';
   String accountEmail = 'jpim@test.com';
@@ -33,10 +34,11 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
     // Clean up the controller when the widget is removed
     startDateController.dispose();
     endDateController.dispose();
+    rcvNoSearchBoxController.dispose();
     super.dispose();
   }
 
-  void toggleSearchForm() {
+  void toggleRcvListTable() {
     setState(() {
       _isSearchFormVisible = !_isSearchFormVisible;
     });
@@ -466,6 +468,7 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
       ),
     ];
   }
+
   // Sample Hard-coded DataTable
   DataTable _createRcvListDataTable() {
     return DataTable(
@@ -518,82 +521,46 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
     );
   }
 
-  Widget eightyTenMainContent() {
-    return SafeArea(
-      child: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(32),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: 600.0,
-                child: Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget> [
-                        const Expanded(
-                          child: TextField(
-                            style: TextStyle(
-                              fontSize: 20.0,
-                            ),
-                            decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                                prefixIcon: Icon(Icons.search),
-                                hintText: 'Search Receiving No.'
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 15.0,
-                        ),
-                        // Search Button
-                        SizedBox(
-                          height: 50, //height of button
-                          child: ElevatedButton(
-                            onPressed: toggleSearchForm,
-                            child: const Text(
-                              'Search',
-                              style: TextStyle(
-                                fontSize: 22.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+  Widget _searchRcvNoCard() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget> [
+            Expanded(
+              child: TextFormField(
+                style: const TextStyle(
+                  fontSize: 20.0,
+                ),
+                decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.search),
+                    hintText: 'Search Receiving No.'
+                ),
+                controller: rcvNoSearchBoxController,
+              ),
+            ),
+            const SizedBox(
+              width: 15.0,
+            ),
+            // Search Button
+            SizedBox(
+              height: 50, //height of button
+              child: ElevatedButton(
+                onPressed: () {
+                  _tryCallProc();
+                },
+                child: const Text(
+                  'Search',
+                  style: TextStyle(
+                    fontSize: 22.0,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 30.0,
-              ),
-              _rcvListCard(),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _listViewContent(users) {
-    return Center(
-      child: SizedBox(
-        width: 300.0,
-        child: ListView.builder(
-          itemCount: users.length,
-          itemBuilder: (context, index) {
-            return Card(
-                child: ListTile(
-                  title: Text(users[index].username),
-                  subtitle: Text(users[index].website),
-                  trailing: Icon(Icons.more_vert),
-                )
-            );
-          },
+            ),
+          ],
         ),
       ),
     );
@@ -665,19 +632,19 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
         ),
       ],
       rows:
-          //users[index].username
-        users.map(
-          ((element) => DataRow(
-            cells: <DataCell>[
-              DataCell(Text(element["id"])),
-              DataCell(Text(element["name"])),
-              DataCell(Text(element["username"])),
-              DataCell(Text(element["email"])),
-              DataCell(Text(element["phone"])),
-              DataCell(Text(element["website"])),
-            ],
-          )),
-        ).toList(),
+      //users[index].username
+      users.map(
+        ((element) => DataRow(
+          cells: <DataCell>[
+            DataCell(Text(element["id"])),
+            DataCell(Text(element["name"])),
+            DataCell(Text(element["username"])),
+            DataCell(Text(element["email"])),
+            DataCell(Text(element["phone"])),
+            DataCell(Text(element["website"])),
+          ],
+        )),
+      ).toList(),
       dividerThickness: 5,
       dataRowHeight: 80,
       showBottomBorder: true,
@@ -701,6 +668,59 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
     );
   }
 
+  Widget _jsonPlaceholderTest(users) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Receiving List [${users.length}]',
+          style: const TextStyle(
+            fontSize: 22.0,
+            color: Colors.white,
+          ),
+        ),
+        const SizedBox(
+            height: 10.0
+        ),
+        _listViewContent(users)
+      ],
+    );
+  }
+
+  Widget _listViewContent(users) {
+    return SizedBox(
+      height: 500.0,
+      child: ListView.builder(
+        itemCount: users.length,
+        //shrinkWrap: true,
+        itemBuilder: (context, index) {
+          return Card(
+              child: ListTile(
+                title: Text(users[index].username),
+                subtitle: Text(users[index].website),
+                trailing: Icon(Icons.more_vert),
+              )
+          );
+        },
+      ),
+    );
+  }
+
+
+
+  final _dataService = DataService();
+
+  void _tryCallProc() async {
+    SharedPreferences jsessionId = await SharedPreferences.getInstance();
+    String? extractJsessionId = jsessionId.getString('jsessionid');
+    final response = await _dataService.tryCallProc(extractJsessionId);
+    if (response == 1) {
+      print('response is 1');
+    } else {
+      print('response is NOT 1');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -711,30 +731,63 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
             // the App.build method, and use it to set our appbar title.
               automaticallyImplyLeading: true,
               title: const Text('8010 - Receipt Inspection Registration'),
+              //title: const Text('jsonplaceholder API Retrieve (R) test'),
               leading: IconButton(icon: const Icon(Icons.arrow_back),
                 onPressed:() => Navigator.pop(context, false),
               )
           ),
           body: BlocProvider<UserCubit>(
             create: (context) => UserCubit()..getUsers(),
-            child: BlocBuilder<UserCubit, List<User>>(
-                builder: (context, users) {
-                  if (users.isEmpty) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          CircularProgressIndicator(),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          Text('Retrieving data...')
-                        ],
+            child: SafeArea(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(20.0),
+                child: Center(
+                  child: Column(
+                    children: [
+                      SizedBox(
+                          width: 450.0,
+                          child: _searchRcvNoCard()
                       ),
-                    );
-                  }
-                  return _listViewContent(users);
-                }
+                      const SizedBox(
+                        height: 10.0,
+                      ),
+                      SizedBox(
+                          width: 450.0,
+                          child: Card(
+                            color: const Color(0xFF303f9f),
+                              child: Padding(
+                                padding: const EdgeInsets.all(20.0),
+                                child: BlocBuilder<UserCubit, List<User>>(
+                                    builder: (context, users) {
+                                      if (users.isEmpty) {
+                                        return Center(
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: const [
+                                              CircularProgressIndicator(),
+                                              SizedBox(
+                                                height: 10.0,
+                                              ),
+                                              Text('Retrieving data...',
+                                                style: TextStyle(
+                                                  fontSize: 22.0,
+                                                  color: Colors.white,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        );
+                                      }
+                                      return _jsonPlaceholderTest(users);
+                                    }
+                                ),
+                              )
+                          )
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ),
         ),

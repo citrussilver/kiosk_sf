@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'route/route.dart' as route;
 
-// void main() {
-//   runApp(const MaterialApp(
-//     title: 'Kiosk SmartFactory',
-//     home: MyApp(),
-//   ));
-// }
+void main() {
+  runApp(MyApp());
+}
 
-void main() => runApp(MyApp());
+//void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
 

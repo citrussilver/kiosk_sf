@@ -7,6 +7,7 @@ import 'package:kiosk_sf/class/receiving_list.dart';
 import 'package:kiosk_sf/class/post.dart';
 
 import 'package:kiosk_sf/class/user.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DataService {
   // Future<String> makeApiRequest() async {
@@ -34,6 +35,13 @@ class DataService {
     if (response.statusCode == 200) {
       Map<String, dynamic> reqInfo = jsonDecode(response.body);
 
+      String rawJsessionId = response.headers['set-cookie'].toString();
+      String extractJsessionId = rawJsessionId.substring(11,43);
+      SharedPreferences jsessionId = await SharedPreferences.getInstance();
+      await jsessionId.setString('jsessionid', extractJsessionId );
+
+      //print('from res headers: ${rawJsessionId}\nsharedpref: ${jsessionId.getString('jsessionid')}');
+
       if (reqInfo["code"] < 0) {
         loginMSG = reqInfo["code"] == -1
             ? "Account is currently used."
@@ -42,6 +50,9 @@ class DataService {
       }
 
       List<dynamic> loginfo = reqInfo["dataset"]["ds_loginInfo"];
+
+      print('ctkey is: ${loginfo[0]['CTKEY']}');
+
       if (loginfo.isEmpty ||
           loginfo.isEmpty ||
           loginfo[0]["LOGINYN"] == "N") {
@@ -56,10 +67,65 @@ class DataService {
         loginfo[0]["PASSWORD"] = pass;
 
         dataset["ds_loginInfo"] = loginfo;
+
         GmsUser userinfo = GmsUser(dataset);
         userinfo.checkDataSets();
         isSuccess = 1;
       }
+    }
+
+    return isSuccess;
+  }
+
+  Future<int> tryCallProc(jsessionid) async {
+    int isSuccess = 0;
+
+    MESServerConnection mesConn = MESServerConnection();
+    String address = "http://192.168.0.188:8081/iUp_MES/rcvwork8011PManagement/getRcvwork8011P_10Q;jsessionid=${jsessionid}";
+    final response = await mesConn.connectAPI(HttpMethod.POST, address, {
+      "paramMap":{},
+      "dataSetMap":{
+        "ds_cond":[{
+            "PD_MODE":"R",
+            "PD_VALUE1":"1001||20210901||20211220||||||||",
+            "PD_VALUE2":"||}"
+          }]
+      }
+    });
+
+    if (response.statusCode == 200) {
+      print(response.headers['set-cookie']);
+      print('Status 200');
+    } else {
+      print(response.headers['set-cookie']);
+      isSuccess = 0;
+    }
+
+    return isSuccess;
+  }
+
+  Future<int> getRcvWork8011P() async {
+    int isSuccess = 0;
+
+    MESServerConnection mesConn = MESServerConnection();
+    String address = "http://192.168.0.188:8081/iUp_MES/rcvwork8011PManagement/getRcvwork8011P_10Q;jsessionid=${jsessionid}";
+    final response = await mesConn.connectAPI(HttpMethod.POST, address, {
+      "paramMap":{},
+      "dataSetMap":{
+        "ds_cond":[{
+          "PD_MODE":"R",
+          "PD_VALUE1":"1001||20210901||20211220||||||||",
+          "PD_VALUE2":"||}"
+        }]
+      }
+    });
+
+    if (response.statusCode == 200) {
+      print(response.headers['set-cookie']);
+      print('Status 200');
+    } else {
+      print(response.headers['set-cookie']);
+      isSuccess = 0;
     }
 
     return isSuccess;
