@@ -71,7 +71,7 @@ class LoginBloc {
 
         dataset["ds_loginInfo"] = loginfo;
         GmsUser userinfo = GmsUser(dataset);
-        userinfo.checkDataSets();
+        //serinfo.checkDataSets();
         isSuccess = 1;
       }
     }
