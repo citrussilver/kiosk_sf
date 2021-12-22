@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 import 'package:kiosk_sf/services/mes_server_connection.dart';
 import 'package:kiosk_sf/models/gms_user.dart';
@@ -35,11 +36,12 @@ class DataService {
 
     if (response.statusCode == 200) {
       Map<String, dynamic> reqInfo = jsonDecode(response.body);
+      print('response.body is: ${jsonDecode(response.body)["dataset"]["ds_loginInfo"]}');
 
       String rawJsessionId = response.headers['set-cookie'].toString();
       String extractJsessionId = rawJsessionId.substring(11,43);
-      SharedPreferences jsessionId = await SharedPreferences.getInstance();
-      await jsessionId.setString('jsessionid', extractJsessionId );
+      SharedPreferences loginInfoSession = await SharedPreferences.getInstance();
+      await loginInfoSession.setString('jsessionid', extractJsessionId );
 
       //print('from res headers: ${rawJsessionId}\nsharedpref: ${jsessionId.getString('jsessionid')}');
 
@@ -52,7 +54,9 @@ class DataService {
 
       List<dynamic> loginfo = reqInfo["dataset"]["ds_loginInfo"];
 
-      print('ctkey is: ${loginfo[0]['CTKEY']}');
+
+      await loginInfoSession.setString('ctkey', loginfo[0]['CTKEY'] );
+      print('ctkey is: ${loginInfoSession.getString('ctkey')}');
 
       if (loginfo.isEmpty ||
           loginfo.isEmpty ||
@@ -70,7 +74,7 @@ class DataService {
         dataset["ds_loginInfo"] = loginfo;
 
         GmsUser userinfo = GmsUser(dataset);
-        userinfo.checkDataSets();
+        //userinfo.checkDataSets();
         isSuccess = 1;
       }
     }
@@ -111,8 +115,9 @@ class DataService {
       // final rcvLists = json.map((postJson) => ReceivingList.fromJson(postJson)).toList();
       // return rcvLists;
 
-      SharedPreferences jsessionId = await SharedPreferences.getInstance();
-      String? extractJsessionId = jsessionId.getString('jsessionid');
+      SharedPreferences loginInfoSession = await SharedPreferences.getInstance();
+      String? extractJsessionId = loginInfoSession.getString('jsessionid');
+      String? ctkey = loginInfoSession.getString('ctkey');
 
       MESServerConnection mesConn = MESServerConnection();
       String address = "http://192.168.0.188:8081/iUp_MES/rcvwork8011PManagement/getRcvwork8011P_10Q;jsessionid=${extractJsessionId}";
@@ -121,13 +126,14 @@ class DataService {
         "dataSetMap":{
           "ds_cond":[{
             "PD_MODE":"R",
-            "PD_VALUE1":"1001||20210901||20211220||||||||",
+            "PD_VALUE1":"$ctkey||20210901||20211220||||||||",
             "PD_VALUE2":"||}"
           }]
         }
       });
 
       List<dynamic> json = jsonDecode(response.body)["dataset"]["ds_master_10Q"];
+      //print('json is: $json');
       final rcvLists = json.map((rcvJson) => ReceivingList.fromJson(rcvJson)).toList();
       //print('runtimeType is: ${rcvLists.runtimeType}');
 

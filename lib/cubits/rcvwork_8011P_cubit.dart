@@ -8,4 +8,5 @@ class Rcvwork8011PCubit extends Cubit<List<ReceivingList>> {
   Rcvwork8011PCubit() : super([]);
 
   void getReceivingLists() async => emit(await _dataService.getRcvWork8011P());
+
 }

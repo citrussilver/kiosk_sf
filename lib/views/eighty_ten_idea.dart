@@ -5,9 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:kiosk_sf/cubits/users_cubit.dart';
-import 'package:kiosk_sf/models/user.dart';
-
 
 import 'package:kiosk_sf/models/receiving_list.dart';
 import 'package:kiosk_sf/cubits/rcvwork_8011P_cubit.dart';
@@ -103,6 +100,15 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
       ),
       const DataColumn(
         label: Text(
+          'Queue',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 15.0,
+          ),
+        ),
+      ),
+      const DataColumn(
+        label: Text(
           'Receiving No.',
           style: TextStyle(
             fontWeight: FontWeight.bold,
@@ -130,7 +136,16 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
       ),
       const DataColumn(
         label: Text(
-          'Account',
+          'Account Name',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 15.0,
+          ),
+        ),
+      ),
+      const DataColumn(
+        label: Text(
+          'Receiving Type',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 15.0,
@@ -149,337 +164,44 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
     ];
   }
 
-  List<DataRow> _createRows() {
-    return [
-      DataRow(
-          selected: 1 == selectedIndex,
-          onSelectChanged: (val) {
-            handleSelectedIndex(1);
-          },
-          cells: [
-            DataCell(
-              Text('1',
-                style: TextStyle(
-                  fontSize: 15.0,
-                ),
-              ),
-            ),
-            DataCell(
-              Text('2021-10-11',
-                style: TextStyle(
-                  fontSize: 15.0,
-                ),
-              ),
-            ),
-            DataCell(
-              Text('1001A20211011001',
-                style: TextStyle(
-                  fontSize: 15.0,
-                ),
-              ),
-            ),
-            DataCell(
-              Text('Receiving Registration',
-                style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 15,
-                    color: Colors.white,
-                    background: Paint()
-                      ..strokeWidth = 20.0
-                      ..color = const Color(0xFFf19f00)
-                      ..style = PaintingStyle.stroke
-                      ..strokeJoin = StrokeJoin.round
-                ),
-              ),
-            ),
-            DataCell(
-              Text('72330',
-                style: TextStyle(
-                  fontSize: 15.0,
-                ),
-              ),
-            ),
-            DataCell(
-              Text('Albedo’s Alchemy',
-                style: TextStyle(
-                  fontSize: 15.0,
-                ),
-              ),
-            ),
-            DataCell(
-              Text('3',
-                style: TextStyle(
-                  fontSize: 15.0,
-                ),
-              ),
-            ),
-          ]
-      ),
-      DataRow(
-          selected: 2 == selectedIndex,
-          onSelectChanged: (val) {
-            handleSelectedIndex(2);
-          },
-          cells: [
-            DataCell(
-              Text('2',
-                style: TextStyle(
-                  fontSize: 15.0,
-                ),
-              ),
-            ),
-            DataCell(
-              Text('2021-09-09',
-                style: TextStyle(
-                  fontSize: 15.0,
-                ),
-              ),
-            ),
-            DataCell(
-              Text('1001A20210909001',
-                style: TextStyle(
-                  fontSize: 15.0,
-                ),
-              ),
-            ),
-            DataCell(
-              Text('Receiving Registration',
-                style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 15,
-                    color: Colors.white,
-                    background: Paint()
-                      ..strokeWidth = 20.0
-                      ..color = const Color(0xFFf19f00)
-                      ..style = PaintingStyle.stroke
-                      ..strokeJoin = StrokeJoin.round
-                ),
-              ),
-            ),
-            DataCell(
-              Text('74740',
-                style: TextStyle(
-                  fontSize: 15.0,
-                ),
-              ),
-            ),
-            DataCell(
-              Text('Xiangling',
-                style: TextStyle(
-                  fontSize: 15.0,
-                ),
-              ),
-            ),
-            DataCell(
-              Text('2',
-                style: TextStyle(
-                  fontSize: 15.0,
-                ),
-              ),
-            ),
-          ]
-      ),
-      DataRow(
-          selected: 3 == selectedIndex,
-          onSelectChanged: (val) {
-            handleSelectedIndex(3);
-          },
-          cells: [
-            DataCell(
-              Text('3',
-                style: TextStyle(
-                  fontSize: 15.0,
-                ),
-              ),
-            ),
-            DataCell(
-              Text('2021-09-09',
-                style: TextStyle(
-                  fontSize: 15.0,
-                ),
-              ),
-            ),
-            DataCell(
-              Text('1001A20210909002',
-                style: TextStyle(
-                  fontSize: 15.0,
-                ),
-              ),
-            ),
-            DataCell(
-              Text('Receiving Registration',
-                style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 15,
-                    color: Colors.white,
-                    background: Paint()
-                      ..strokeWidth = 20.0
-                      ..color = const Color(0xFFf19f00)
-                      ..style = PaintingStyle.stroke
-                      ..strokeJoin = StrokeJoin.round
-                ),
-              ),
-            ),
-            DataCell(
-              Text('76040',
-                style: TextStyle(
-                  fontSize: 15.0,
-                ),
-              ),
-            ),
-            DataCell(
-              Text('Amber',
-                style: TextStyle(
-                  fontSize: 15.0,
-                ),
-              ),
-            ),
-            DataCell(
-              Text('2',
-                style: TextStyle(
-                  fontSize: 15.0,
-                ),
-              ),
-            ),
-          ]
-      ),
-      DataRow(
-          selected: 4 == selectedIndex,
-          onSelectChanged: (val) {
-            handleSelectedIndex(4);
-          },
-          cells: [
-            DataCell(
-              Text('4',
-                style: TextStyle(
-                  fontSize: 15.0,
-                ),
-              ),
-            ),
-            DataCell(
-              Text('2021-09-09',
-                style: TextStyle(
-                  fontSize: 15.0,
-                ),
-              ),
-            ),
-            DataCell(
-              Text('1001A20210909002',
-                style: TextStyle(
-                  fontSize: 15.0,
-                ),
-              ),
-            ),
-            DataCell(
-              Text('Receiving Registration',
-                style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 15,
-                    color: Colors.white,
-                    background: Paint()
-                      ..strokeWidth = 20.0
-                      ..color = const Color(0xFFf19f00)
-                      ..style = PaintingStyle.stroke
-                      ..strokeJoin = StrokeJoin.round
-                ),
-              ),
-            ),
-            DataCell(
-              Text('77790',
-                style: TextStyle(
-                  fontSize: 15.0,
-                ),
-              ),
-            ),
-            DataCell(
-              Text('Ganyu',
-                style: TextStyle(
-                  fontSize: 15.0,
-                ),
-              ),
-            ),
-            DataCell(
-              Text('2',
-                style: TextStyle(
-                  fontSize: 15.0,
-                ),
-              ),
-            ),
-          ]
-      ),
-      DataRow(
-          selected: 5 == selectedIndex,
-          onSelectChanged: (val) {
-            handleSelectedIndex(5);
-          },
-          cells: [
-            DataCell(
-              Text('5',
-                style: TextStyle(
-                  fontSize: 15.0,
-                ),
-              ),
-            ),
-            DataCell(
-              Text('2021-09-09',
-                style: TextStyle(
-                  fontSize: 15.0,
-                ),
-              ),
-            ),
-            DataCell(
-              Text('1001A20210909003',
-                style: TextStyle(
-                  fontSize: 15.0,
-                ),
-              ),
-            ),
-            DataCell(
-              Text('Inspection Completed',
-                style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 15,
-                    color: Colors.white,
-                    background: Paint()
-                      ..strokeWidth = 20.0
-                      ..color = Colors.green
-                      ..style = PaintingStyle.stroke
-                      ..strokeJoin = StrokeJoin.round
-                ),
-              ),
-            ),
-            DataCell(
-              Text('77794',
-                style: TextStyle(
-                  fontSize: 15.0,
-                ),
-              ),
-            ),
-            DataCell(
-              Text('Yunjin',
-                style: TextStyle(
-                  fontSize: 15.0,
-                ),
-              ),
-            ),
-            DataCell(
-              Text('2',
-                style: TextStyle(
-                  fontSize: 15.0,
-                ),
-              ),
-            ),
-          ]
-      ),
-    ];
+  List<DataRow> _rowsFromApi(receivingList) {
+    //need to map to dynamically parse with .map<DataRow>
+    final sampleData = receivingList.map((h) => {
+      "rcv_dt": h.rcv_dt,
+      "rcv_seq": h.rcv_seq,
+      "rcv_no": h.rcv_no,
+      "rcv_status_nm": h.rcv_status_nm,
+      "cust_cd": h.cust_cd,
+      "cust_cd": h.cust_cd,
+      "cust_nm": h.cust_nm,
+      "item_cnt": h.item_cnt,
+      "rcv_type_nm": h.rcv_type_nm,
+      "remark": h.remark,
+    }).toList();
+
+    //print(sampleData.runtimeType);
+
+    return sampleData.map<DataRow>((e) => DataRow(cells: [
+            DataCell(Text(e['rcv_seq'].toString())),
+            DataCell(Text(e['rcv_dt'])),
+            DataCell(Text(e['rcv_seq'].toString())),
+            DataCell(Text(e['rcv_no'])),
+            DataCell(Text(e['rcv_status_nm'])),
+            DataCell(Text(e['cust_cd'])),
+            DataCell(Text(e['cust_nm'])),
+            DataCell(Text(e['rcv_type_nm'])),
+            DataCell(Text(e['item_cnt'].toString())),
+          ],
+        ),
+      ).toList();
   }
 
-  // Sample Hard-coded DataTable
-  DataTable _createRcvListDataTable() {
+
+  DataTable _createRcvListDataTable(receivingList) {
     return DataTable(
       showCheckboxColumn: false,
       columns: _createColumns(),
-      rows: _createRows(),
+      rows: _rowsFromApi(receivingList),
       dividerThickness: 5,
       dataRowHeight: 80,
       showBottomBorder: true,
@@ -498,7 +220,7 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
           color: const Color(0xFF3F51B5),
           width: 3,
         ),
-        borderRadius: BorderRadius.all(const Radius.circular(10)),
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
       ),
     );
   }
@@ -519,7 +241,7 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
             const SizedBox(
                 height: 10.0
             ),
-            _createRcvListDataTable(),
+
           ],
         ),
       ),
@@ -571,108 +293,6 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
     );
   }
 
-  Widget _dataTableContent(users) {
-    final List<Map<String, String>> listOfColumns = [
-      {"Name": "AAAAAA", "Number": "1", "State": "Yes"},
-      {"Name": "BBBBBB", "Number": "2", "State": "no"},
-      {"Name": "CCCCCC", "Number": "3", "State": "Yes"}
-    ];
-
-    return DataTable(
-      showCheckboxColumn: false,
-      columns: [
-        DataColumn(
-          label: Text(
-            'ID',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 15.0,
-            ),
-          ),
-        ),
-        DataColumn(
-          label: Text(
-            'Name',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 15.0,
-            ),
-          ),
-        ),
-        DataColumn(
-          label: Text(
-            'Username',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 15.0,
-            ),
-          ),
-        ),
-        DataColumn(
-          label: Text(
-            'Email',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 15.0,
-            ),
-          ),
-        ),
-        DataColumn(
-          label: Text(
-            'Phone',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 15.0,
-            ),
-          ),
-        ),
-        DataColumn(
-          label: Text(
-            'Website',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 15.0,
-            ),
-          ),
-        ),
-      ],
-      rows:
-      //users[index].username
-      users.map(
-        ((element) => DataRow(
-          cells: <DataCell>[
-            DataCell(Text(element["id"])),
-            DataCell(Text(element["name"])),
-            DataCell(Text(element["username"])),
-            DataCell(Text(element["email"])),
-            DataCell(Text(element["phone"])),
-            DataCell(Text(element["website"])),
-          ],
-        )),
-      ).toList(),
-      dividerThickness: 5,
-      dataRowHeight: 80,
-      showBottomBorder: true,
-      headingTextStyle: const TextStyle(
-          fontWeight: FontWeight.bold,
-          color: Colors.white
-      ),
-      headingRowColor: MaterialStateProperty.resolveWith(
-              (states) => const Color(0xFF3F51B5)
-      ),
-      dataRowColor: MaterialStateColor.resolveWith(
-              (states) => const Color(0xFFC5CAE9)
-      ),
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: const Color(0xFF3F51B5),
-          width: 3,
-        ),
-        borderRadius: BorderRadius.all(const Radius.circular(10)),
-      ),
-    );
-  }
-
   Widget _jsonPlaceholderTest(receivingList) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -702,7 +322,7 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
           return Card(
               child: ListTile(
                 title: Text('No: ${receivingList[index].rcv_no} Date: ${receivingList[index].rcv_dt}'),
-                subtitle: Text('Item Count: ${receivingList[index].item_cnt}, Customer: ${receivingList[index].cust_nm}'),
+                subtitle: Text('Account: ${receivingList[index].cust_nm}, Item Count: ${receivingList[index].item_cnt}'),
                 trailing: Icon(Icons.more_vert),
               )
           );
@@ -710,8 +330,6 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
       ),
     );
   }
-
-
 
   final _dataService = DataService();
 
@@ -732,11 +350,8 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
     return MaterialApp(
         home: Scaffold(
           appBar: AppBar(
-            // Here we take the value from the MyHomePage object that was created by
-            // the App.build method, and use it to set our appbar title.
               automaticallyImplyLeading: true,
               title: const Text('8010 - Receipt Inspection Registration'),
-              //title: const Text('jsonplaceholder API Retrieve (R) test'),
               leading: IconButton(icon: const Icon(Icons.arrow_back),
                 onPressed:() => Navigator.pop(context, false),
               )
@@ -757,16 +372,18 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
                         height: 10.0,
                       ),
                       SizedBox(
-                          width: 450.0,
-                          child: Card(
-                            color: const Color(0xFF303f9f),
-                              child: Padding(
-                                padding: const EdgeInsets.all(20.0),
-                                child: BlocBuilder<Rcvwork8011PCubit, List<ReceivingList>>(
-                                    builder: (context, receivingList) {
-                                      //print(rcvWork8011P);
-                                      if (receivingList.isEmpty) {
-                                        return Center(
+                          width: 1200.0,
+                          child: Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: BlocBuilder<Rcvwork8011PCubit, List<ReceivingList>>(
+                                builder: (context, receivingList) {
+                                  //print(rcvWork8011P);
+                                  if (receivingList.isEmpty) {
+                                    return Center(
+                                      child: Card(
+                                        color: const Color(0xFF303f9f),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(20.0),
                                           child: Column(
                                             mainAxisAlignment: MainAxisAlignment.center,
                                             children: const [
@@ -782,12 +399,30 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
                                               )
                                             ],
                                           ),
-                                        );
-                                      }
-                                      return _jsonPlaceholderTest(receivingList);
-                                    }
-                                ),
-                              )
+                                        ),
+                                      ),
+                                    );
+                                  }
+
+                                  return Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Receiving List [${receivingList.length}]',
+                                        style: const TextStyle(
+                                          fontSize: 22.0,
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                          height: 10.0
+                                      ),
+                                      SingleChildScrollView(
+                                          scrollDirection: Axis.horizontal,
+                                          child: _createRcvListDataTable(receivingList)),
+                                    ],
+                                  );
+                                }
+                            ),
                           )
                       ),
                     ],

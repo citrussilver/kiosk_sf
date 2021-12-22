@@ -27,11 +27,11 @@ class GmsUser {
   get dsLabel => _dsLabel;
   get sysGb => _gdsSysGb;
 
-  void checkDataSets() {
-    print(_dsLoginInfo);
-    print(_gdsMessage);
-    print(_gdsGlobalSetting);
-    print(_dsLabel);
-    print(_gdsSysGb);
-  }
+  // void checkDataSets() {
+  //   print(_dsLoginInfo);
+  //   print(_gdsMessage);
+  //   print(_gdsGlobalSetting);
+  //   print(_dsLabel);
+  //   print(_gdsSysGb);
+  // }
 }

@@ -17,27 +17,27 @@ class LoginMes extends StatefulWidget {
 
 class _LoginMesState extends State<LoginMes> {
 
-  late LoginBloc _loginBloc;
-
-  @override
-  void initState() {
-    _loginBloc = LoginBloc();
-
-    if (_loginBloc.settingPref == null) {
-      Future<SharedPreferences?> res = _loginBloc.sharedPrefInit();
-      res.then((value) {
-        _loginBloc.settingPref = value;
-        _loginBloc.loadSaveInfo();
-        setState(() {});
-      });
-    }
-
-    super.initState();
-    SystemChrome.setPreferredOrientations(
-        [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
-  }
-
-  List<String> langItems = ['ENG', 'KOR'];
+  // late LoginBloc _loginBloc;
+  //
+  // @override
+  // void initState() {
+  //   _loginBloc = LoginBloc();
+  //
+  //   if (_loginBloc.settingPref == null) {
+  //     Future<SharedPreferences?> res = _loginBloc.sharedPrefInit();
+  //     res.then((value) {
+  //       _loginBloc.settingPref = value;
+  //       _loginBloc.loadSaveInfo();
+  //       setState(() {});
+  //     });
+  //   }
+  //
+  //   super.initState();
+  //   SystemChrome.setPreferredOrientations(
+  //       [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
+  // }
+  //
+  // List<String> langItems = ['ENG', 'KOR'];
 
   final _dataService = DataService();
   late int _response;
