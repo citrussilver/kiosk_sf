@@ -380,24 +380,30 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
                                   //print(rcvWork8011P);
                                   if (receivingList.isEmpty) {
                                     return Center(
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: const [
-                                          CircularProgressIndicator(),
-                                          SizedBox(
-                                            height: 10.0,
+                                      child: Card(
+                                        color: const Color(0xFF303f9f),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(20.0),
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: const [
+                                              CircularProgressIndicator(),
+                                              SizedBox(
+                                                height: 10.0,
+                                              ),
+                                              Text('Retrieving data...',
+                                                style: TextStyle(
+                                                  fontSize: 22.0,
+                                                  color: Colors.white,
+                                                ),
+                                              )
+                                            ],
                                           ),
-                                          Text('Retrieving data...',
-                                            style: TextStyle(
-                                              fontSize: 22.0,
-                                              color: Colors.white,
-                                            ),
-                                          )
-                                        ],
+                                        ),
                                       ),
                                     );
                                   }
-                                  
+
                                   return Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
