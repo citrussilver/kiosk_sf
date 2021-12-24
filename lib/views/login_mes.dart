@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-
 import 'package:kiosk_sf/route/route.dart' as route;
-import 'package:flutter/services.dart';
-import 'package:kiosk_sf/bloc/login_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:kiosk_sf/services/data_service.dart';
 
+import 'package:kiosk_sf/services/data_service.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kiosk_sf/cubits/login_cubit.dart';
 
 class LoginMes extends StatefulWidget {
   const LoginMes({Key? key}) : super(key: key);
@@ -58,7 +56,10 @@ class _LoginMesState extends State<LoginMes> {
       backgroundColor: const Color(0xFF303f9f),
       body: SafeArea(
         child: Center(
-          child: _loginForm(),
+          child: BlocProvider<LoginCubit>(
+              create: (context) => LoginCubit(),
+              child: _loginForm()
+          ),
         ),
       ),
     );

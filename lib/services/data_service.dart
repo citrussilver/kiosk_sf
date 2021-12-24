@@ -34,16 +34,18 @@ class DataService {
       }
     });
 
+    print('response statusCode is : ${response.statusCode}');
+
     if (response.statusCode == 200) {
       Map<String, dynamic> reqInfo = jsonDecode(response.body);
-      print('response.body is: ${jsonDecode(response.body)["dataset"]["ds_loginInfo"]}');
+      //print('response.body is: ${jsonDecode(response.body)["dataset"]["ds_loginInfo"]}');
 
       String rawJsessionId = response.headers['set-cookie'].toString();
       String extractJsessionId = rawJsessionId.substring(11,43);
       SharedPreferences loginInfoSession = await SharedPreferences.getInstance();
       await loginInfoSession.setString('jsessionid', extractJsessionId );
 
-      //print('from res headers: ${rawJsessionId}\nsharedpref: ${jsessionId.getString('jsessionid')}');
+      //print('from res headers: ${rawJsessionId}\nsharedpref: ${loginInfoSession.getString('jsessionid')}');
 
       if (reqInfo["code"] < 0) {
         loginMSG = reqInfo["code"] == -1
@@ -58,6 +60,7 @@ class DataService {
       await loginInfoSession.setString('ctkey', loginfo[0]['CTKEY'] );
       print('ctkey is: ${loginInfoSession.getString('ctkey')}');
 
+      print(loginfo[0]["LOGINYN"].toString());
       if (loginfo.isEmpty ||
           loginfo.isEmpty ||
           loginfo[0]["LOGINYN"] == "N") {
@@ -78,33 +81,53 @@ class DataService {
         isSuccess = 1;
       }
     }
+    else {
+      print('status code is: ${response.statusCode}');
+    }
 
     return isSuccess;
   }
 
-  Future<int> tryCallProc(jsessionid) async {
-    int isSuccess = 0;
+  Future<List<ReceivingList>> tryCallProc(jsessionid, String fromDate, String toDate ) async {
+    try {
+      // final uri = Uri.https( _baseUrl, '/posts');
+      // final response = await http.get(uri);
+      // final json = jsonDecode(response.body) as List;
+      // final rcvLists = json.map((postJson) => ReceivingList.fromJson(postJson)).toList();
+      // return rcvLists;
 
-    MESServerConnection mesConn = MESServerConnection();
-    String address = "http://192.168.0.188:8081/iUp_MES/rcvwork8011PManagement/getRcvwork8011P_10Q;jsessionid=${jsessionid}";
-    final response = await mesConn.connectAPI(HttpMethod.POST, address, {
-      "paramMap":{},
-      "dataSetMap":{
-        "ds_cond":[{
+      SharedPreferences loginInfoSession = await SharedPreferences.getInstance();
+      String? extractJsessionId = loginInfoSession.getString('jsessionid');
+      String? ctkey = loginInfoSession.getString('ctkey');
+
+      MESServerConnection mesConn = MESServerConnection();
+      String address = "http://192.168.0.188:8081/iUp_MES/rcvwork8011PManagement/getRcvwork8011P_10Q;jsessionid=${extractJsessionId}";
+      final response = await mesConn.connectAPI(HttpMethod.POST, address, {
+        "paramMap":{},
+        "dataSetMap":{
+          "ds_cond":[{
             "PD_MODE":"R",
-            "PD_VALUE1":"1001||20210901||20211220||||||||",
+            "PD_VALUE1":"$ctkey||$fromDate||$toDate||||||||",
             "PD_VALUE2":"||}"
           }]
+        }
+      });
+
+      List<dynamic> json = jsonDecode(response.body)["dataset"]["ds_master_10Q"];
+
+      //print('json is: $json');
+      final rcvLists = json.map((rcvJson) => ReceivingList.fromJson(rcvJson)).toList();
+      //print('runtimeType is: ${rcvLists.runtimeType}');
+
+      if (response.statusCode == 200) {
+        return rcvLists;
+      } else {
+        return <ReceivingList>[];
       }
-    });
 
-    if (response.statusCode == 200) {
-      print('Status 200');
-    } else {
-      isSuccess = 0;
+    } catch (e) {
+      rethrow;
     }
-
-    return isSuccess;
   }
 
   Future<List<ReceivingList>> getRcvWork8011P() async {
@@ -133,7 +156,8 @@ class DataService {
       });
 
       List<dynamic> json = jsonDecode(response.body)["dataset"]["ds_master_10Q"];
-      //print('json is: $json');
+
+      print('json is: $json');
       final rcvLists = json.map((rcvJson) => ReceivingList.fromJson(rcvJson)).toList();
       //print('runtimeType is: ${rcvLists.runtimeType}');
 

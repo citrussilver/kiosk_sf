@@ -47,6 +47,8 @@ enum ButtonType { normal, delete, someOtherType, someOtherOtherType }
 class EightyTenTabletPg2 extends StatefulWidget {
   const EightyTenTabletPg2({Key? key}) : super(key: key);
 
+  Object? get arguments => null;
+
   @override
   _EightyTenTabletPg2State createState() => _EightyTenTabletPg2State();
 }
@@ -68,6 +70,8 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
   }
 
   int selectedIndex = -1;
+
+
 
   void handleSelectedIndex(int val) {
     setState(() {
@@ -822,9 +826,11 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
     switch (index) {
       case 4:
         print('Index is: $index');
-        showModalBottomSheet(
-          context: context,
-          builder: (context) => BottomSheetWidget()
+        showModalBottomSheet<dynamic>(
+            // useRootNavigator: true,
+            isScrollControlled: true,
+            context: context,
+            builder: (context) => CustomBottomSheetWidget(hintText: 'hello')
         );
         break;
       default:
@@ -957,11 +963,6 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
                               color: 'red',
                               onTap: () => selectedItem(context, 6)
                           ),
-                          // Button(
-                          //   title: 'Press this button',
-                          //   buttonType: ButtonType.normal,
-                          //   onPressed: () => {},
-                          // )
                         ],
                       ),
                     ),
