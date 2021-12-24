@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'route/route.dart' as route;
-import 'package:kiosk_sf/cubits/app_cubits.dart';
+import 'package:kiosk_sf/cubits/login_cubit.dart';
 
 void main() {
   runApp(MyApp());
@@ -16,10 +16,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Kiosk Smartfactory',
-      //debugShowCheckedModeBanner: false,
-      // home: BlocProvider<AppCubits>(
-      //   create: (context) => AppCubits(),
-      //   child: ,
+      debugShowCheckedModeBanner: false,
+      // home: BlocProvider<LoginCubit>(
+      //   create: (context) => LoginCubit(),
       // ),
       onGenerateRoute: route.controller,
       initialRoute: route.loginMes,
