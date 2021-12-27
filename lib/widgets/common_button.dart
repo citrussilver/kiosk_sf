@@ -1,35 +1,49 @@
 import 'package:flutter/material.dart';
 
-// class CommonButton extends StatelessWidget {
-//   const CommonButton({Key? key}) : super(key: key);
-//
-//   @override
-//   Widget build(BuildContext context)({
-//     required String text,
-//     required String color,
-//   }) {
-//
-//     MaterialColor appliedColor = Colors.blue;
-//
-//     if(color == 'red') {
-//       appliedColor = Colors.red;
-//     }
-//
-//     return SizedBox(
-//       height: 50,
-//       child: ElevatedButton(
-//         child: Text(
-//           text,
-//           style: const TextStyle(
-//             fontSize: 22.0,
-//             fontWeight: FontWeight.bold,
-//           ),
-//         ),
-//         style: ElevatedButton.styleFrom(
-//           primary: appliedColor,
-//         ),
-//         onPressed: onTap,
-//       ),
-//     );
-//   }
-// }
+enum ButtonType { normal, delete, someOtherType, someOtherOtherType }
+
+class CommonButton extends StatefulWidget {
+  final String title;
+  final ButtonType buttonType;
+  final void Function()? onPressed;
+
+  const CommonButton({
+    Key? key,
+    required this.title,
+    required this.buttonType,
+    required this.onPressed,
+  }) : super(key: key);
+
+  static Color buttonColor(ButtonType type) {
+    switch (type) {
+      case ButtonType.normal:
+        return Colors.blue;
+
+      case ButtonType.delete:
+        return Colors.red;
+
+      case ButtonType.someOtherType:
+        return Colors.yellow;
+
+      case ButtonType.someOtherOtherType:
+        return Colors.green;
+    }
+  }
+
+  @override
+  State<CommonButton> createState() => _CommonButtonState();
+}
+
+class _CommonButtonState extends State<CommonButton> {
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      child: Text(widget.title),
+      style: Theme.of(context).elevatedButtonTheme.style!.copyWith(
+        backgroundColor: MaterialStateProperty.all(CommonButton.buttonColor(widget.buttonType)),
+      ),
+      onPressed: widget.onPressed,
+    );
+  }
+}
