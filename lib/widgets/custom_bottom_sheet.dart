@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kiosk_sf/services/data_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:kiosk_sf/widgets/decorated_textfield.dart';
+import 'package:kiosk_sf/widgets/custom_textfield.dart';
 
 class CustomBottomSheetWidget extends StatefulWidget {
   final String hintText;
@@ -15,8 +15,18 @@ class CustomBottomSheetWidget extends StatefulWidget {
 class _CustomBottomSheetWidgetState extends State<CustomBottomSheetWidget> {
 
   String dateNowString = DateTime.now().toString();
+  final dateController = TextEditingController();
   final mngDateController = TextEditingController();
   final expiryDateController = TextEditingController();
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is removed
+    dateController.dispose();
+    mngDateController.dispose();
+    expiryDateController.dispose();
+    super.dispose();
+  }
 
   final _dataService = DataService();
 
@@ -25,17 +35,20 @@ class _CustomBottomSheetWidgetState extends State<CustomBottomSheetWidget> {
     DateTime currentDate = new DateTime(now.year, now.month, now.day);
     String currentDateStr = currentDate.toString();
     currentDateStr = currentDateStr.substring(0,10);
-    currentDateStr = currentDateStr.replaceAll('-', '');
+    //currentDateStr = currentDateStr.replaceAll('-', '');
     return currentDateStr;
   }
 
-  void _tryCallProc() async {
+
+
+  void _eightyTen_40W() async {
     SharedPreferences jsessionId = await SharedPreferences.getInstance();
     String? extractJsessionId = jsessionId.getString('jsessionid');
-    String mngDateStr = mngDateController.text;
+
     String currentDateStr = _getCurrentDate();
 
-    if(mngDateStr != '') {
+    String mngDateStr = mngDateController.text;
+    if(mngDateStr.isNotEmpty) {
       mngDateStr = mngDateStr.replaceAll('-', '');
     } else {
       mngDateStr = currentDateStr;
@@ -43,14 +56,14 @@ class _CustomBottomSheetWidgetState extends State<CustomBottomSheetWidget> {
     }
 
     String expiryDateStr = expiryDateController.text;
-    if(expiryDateStr != '') {
+    if(expiryDateStr.isNotEmpty) {
       expiryDateStr = expiryDateStr.replaceAll('-', '');
     } else {
       expiryDateStr = currentDateStr;
       print(expiryDateStr);
     }
 
-    final response = await _dataService.tryCallProc(extractJsessionId, mngDateStr, expiryDateStr );
+    final response = await _dataService.eighty10_40W(extractJsessionId, mngDateStr, expiryDateStr );
     if (response != null) {
       print('response is not null');
       print(response.toString());
@@ -60,120 +73,122 @@ class _CustomBottomSheetWidgetState extends State<CustomBottomSheetWidget> {
   }
 
   Widget _createLabelInput(String labelText){
-
-    if(labelText.contains('Date')){
-      return Column(
-        children: [
-          Text(
-            labelText,
-          ),
-          const SizedBox(
-            height: 2.0,
-          ),
-          DecoratedTextField(paramHintText: labelText),
-        ],
+    if(labelText.contains('Date')) {
+      dateController.text = _getCurrentDate();
+      return Container(
+          height: 50,
+          alignment: Alignment.center,
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          // decoration: BoxDecoration(
+          //     color: Colors.grey[300], borderRadius: BorderRadius.circular(10)),
+          child: TextFormField(
+              decoration: InputDecoration(
+                hintText: labelText,
+                prefixIcon: Icon(Icons.today),
+              ),
+              showCursor: true,
+              readOnly: true,
+              controller: dateController,
+              onTap: () async {
+                var selectedDate =  await showDatePicker(
+                    context: context,
+                    initialDate:DateTime.now(),
+                    firstDate:DateTime(1900),
+                    lastDate: DateTime(2100));
+                dateController.text = selectedDate.toString().substring(0,10);
+              }
+          )
       );
     } else {
       return Column(
-          children: [
-          Text(
-          labelText,
-        ),
-          const SizedBox(
-          height: 2.0,
-        ),
-          DecoratedTextField(paramHintText: labelText),
-          //CustomTextField(paramHintText: labelText),
+        children: [
+          CustomTextField(paramHintText: labelText),
         ],
       );
     }
-
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      // margin: EdgeInsets.only(top: 5, left: 15, right: 15, bottom: 8),
-      height: MediaQuery.of(context).size.height * 0.65,
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: 300,
-                child: Container(
-                  decoration: const BoxDecoration(
-                    color: Color(0xFF3F51B5),
-                    borderRadius: BorderRadius.all(Radius.circular(5)),
-                  ),
-                  child: const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Center(
-                      child: Text("Add Lot",
-                        style: TextStyle(
-                          fontSize: 22.0,
-                          color: Colors.white,
-                        ),
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(5),
+      child: Column(
+          // mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: 300,
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: Color(0xFF3F51B5),
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                ),
+                child: const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Center(
+                    child: Text("Add Lot",
+                      style: TextStyle(
+                        fontSize: 22.0,
+                        color: Colors.white,
                       ),
                     ),
                   ),
                 ),
               ),
-              SizedBox(
-                height: 20.0,
-              ),
-              Container(
-                width: 300,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.all(Radius.circular(15)),
-                    boxShadow: [
-                      BoxShadow(
-                          blurRadius: 10, color: Colors.grey.shade300, spreadRadius: 5)
-                    ]),
-                child: Column(
-                    children: [
-                      const SizedBox(
-                        height: 2.0,
-                      ),
-                      _createLabelInput('Managed Date'),
-                      const SizedBox(
-                        height: 2.0,
-                      ),
-                      _createLabelInput('Expiration Date'),
-                      const SizedBox(
-                        height: 2.0,
-                      ),
-                      _createLabelInput('LOT'),
-                      const SizedBox(
-                        height: 2.0,
-                      ),
-                      _createLabelInput('Inspected Qty.'),
-                      SizedBox(
-                        height: 50,
-                        child: ElevatedButton(
-                          child: const Text(
-                            'Submit',
-                            style: TextStyle(
-                              fontSize: 22.0,
-                              fontWeight: FontWeight.bold,
-                            ),
+            ),
+            SizedBox(
+              height: 20.0,
+            ),
+            Container(
+              width: 300,
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(Radius.circular(15)),
+                  boxShadow: [
+                    BoxShadow(
+                        blurRadius: 10, color: Colors.grey.shade300, spreadRadius: 5)
+                  ]),
+              child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 2.0,
+                    ),
+                    _createLabelInput('Managed Date'),
+                    const SizedBox(
+                      height: 2.0,
+                    ),
+                    _createLabelInput('Expiration Date'),
+                    const SizedBox(
+                      height: 2.0,
+                    ),
+                    _createLabelInput('LOT'),
+                    const SizedBox(
+                      height: 2.0,
+                    ),
+                    _createLabelInput('Inspected Qty.'),
+                    SizedBox(
+                      height: 50,
+                      child: ElevatedButton(
+                        child: const Text(
+                          'Submit',
+                          style: TextStyle(
+                            fontSize: 22.0,
+                            fontWeight: FontWeight.bold,
                           ),
-                          onPressed: () {
-                            _tryCallProc();
-                          },
                         ),
+                        onPressed: () {
+                          _eightyTen_40W();
+                        },
                       ),
-                      const SizedBox(
-                        height: 10.0,
-                      )
-                    ]
-                ),
+                    ),
+                    const SizedBox(
+                      height: 10.0,
+                    )
+                  ]
               ),
-            ]
-        ),
+            ),
+          ]
       ),
     );
   }

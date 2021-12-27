@@ -130,6 +130,62 @@ class DataService {
     }
   }
 
+  Future<String> eighty10_40W(jsessionid, String mngDateStr, String vldDateStr ) async {
+    try {
+      // final uri = Uri.https( _baseUrl, '/posts');
+      // final response = await http.get(uri);
+      // final json = jsonDecode(response.body) as List;
+      // final rcvLists = json.map((postJson) => ReceivingList.fromJson(postJson)).toList();
+      // return rcvLists;
+
+      SharedPreferences loginInfoSession = await SharedPreferences.getInstance();
+      String? extractJsessionId = loginInfoSession.getString('jsessionid');
+      String? ctkey = loginInfoSession.getString('ctkey');
+
+      //print('jsessionid: $jsessionid\nmngDateStr: $mngDateStr\nexpiryDateStr: $expiryDateStr');
+
+      MESServerConnection mesConn = MESServerConnection();
+      String address = "http://192.168.0.188:8081/iUp_MES/rcvwork8010FManagement/saveRcvwork8010F_40W;jsessionid=${extractJsessionId}";
+      final response = await mesConn.connectAPI(HttpMethod.POST, address, {
+        "paramMap":{},
+        "dataSetMap":{
+          "ds_master_40W":[{
+            "MNG_DT": mngDateStr,
+            "VLD_DT": vldDateStr,
+            "LOT_NO":"zx300",
+            "RCV_QTY":"1",
+            "COMP_CD":"1001",
+            "RCV_DT":"20210908",
+            "RCV_SEQ":1,
+            "DTL_SEQ":1,
+            "LOT_SEQ":"",
+            "ITEM_CD":"11000002",
+            "PD_MODE":"C",
+            "ROWTYPE":1
+          }]
+        }
+      });
+
+      List<dynamic> json = jsonDecode(response.body)["dataset"]["ds_master_40W"];
+
+      print('json is: $json');
+      final rcvLists = json.map((rcvJson) => ReceivingList.fromJson(rcvJson)).toList();
+      //print('runtimeType is: ${rcvLists.runtimeType}');
+
+
+      // if (response.statusCode == 200) {
+      //   return rcvLists;
+      // } else {
+      //   return <ReceivingList>[];
+      // }
+
+      return 'test';
+
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<List<ReceivingList>> getRcvWork8011P() async {
     try {
       // final uri = Uri.https( _baseUrl, '/posts');

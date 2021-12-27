@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:kiosk_sf/cubits/receiving_lists_cubit.dart';
 import 'package:kiosk_sf/route/route.dart' as route;
 import 'package:kiosk_sf/services/data_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-
 import 'package:kiosk_sf/models/receiving_list.dart';
 import 'package:kiosk_sf/cubits/rcvwork_8011P_cubit.dart';
 import 'package:kiosk_sf/cubits/receiving_lists_cubit.dart';
 import 'package:kiosk_sf/cubits/receiving_lists_states.dart';
+import 'package:kiosk_sf/widgets/custom_date_picker.dart';
 
 class EightyTenIdea extends StatefulWidget {
 
@@ -442,52 +441,12 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
             const SizedBox(
               width: 15.0,
             ),
-            SizedBox(
-              width: 145,
-              child: TextField(
-                controller: startDateController,
-                style: const TextStyle(
-                  fontSize: 20.0,
-                ),
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: dateNowString,
-                ),
-                onTap: () async {
-                  var startDate =  await showDatePicker(
-                      context: context,
-                      initialDate:DateTime.now(),
-                      firstDate:DateTime(1900),
-                      lastDate: DateTime(2100));
-                  startDateController.text = startDate.toString().substring(0,10);
-                },
-              ),
-            ),
+            CustomDatePicker(),
             const SizedBox(
               width: 15.0,
             ),
             // Date picker End date
-            SizedBox(
-              width: 145,
-              child: TextField(
-                controller: endDateController,
-                style: const TextStyle(
-                  fontSize: 20.0,
-                ),
-                decoration: InputDecoration(
-                  border: const OutlineInputBorder(),
-                  hintText: dateNowString,
-                ),
-                onTap: () async {
-                  var endDate =  await showDatePicker(
-                      context: context,
-                      initialDate:DateTime.now(),
-                      firstDate: DateTime(1900),
-                      lastDate: DateTime(2100));
-                  endDateController.text = endDate.toString().substring(0,10);
-                },
-              ),
-            ),
+            CustomDatePicker(),
             const SizedBox(
               width: 15.0,
             ),

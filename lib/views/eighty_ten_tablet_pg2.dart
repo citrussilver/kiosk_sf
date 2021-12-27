@@ -1,48 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:kiosk_sf/route/route.dart' as route;
+import 'package:kiosk_sf/widgets/custom_dialog.dart';
 import 'package:kiosk_sf/widgets/custom_bottom_sheet.dart';
+import 'package:kiosk_sf/widgets/common_button.dart';
 
-enum ButtonType { normal, delete, someOtherType, someOtherOtherType }
-
-// class Button extends StatelessWidget {
-//   final String title;
-//   final ButtonType buttonType;
-//   final void Function()? onPressed;
-//
-//   const Button({
-//     Key? key,
-//     required this.title,
-//     required this.buttonType,
-//     required this.onPressed,
-//   }) : super(key: key);
-//
-//   static Color buttonColor(ButtonType type) {
-//     switch (type) {
-//       case ButtonType.normal:
-//         return Colors.blue;
-//
-//       case ButtonType.delete:
-//         return Colors.red;
-//
-//       case ButtonType.someOtherType:
-//         return Colors.yellow;
-//
-//       case ButtonType.someOtherOtherType:
-//         return Colors.green;
-//     }
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return ElevatedButton(
-//       child: Text(title),
-//       style: Theme.of(context).elevatedButtonTheme.style!.copyWith(
-//         backgroundColor: MaterialStateProperty.all(buttonColor),
-//       ),
-//       onPressed: onPressed,
-//     );
-//   }
-// }
 
 class EightyTenTabletPg2 extends StatefulWidget {
   const EightyTenTabletPg2({Key? key}) : super(key: key);
@@ -826,12 +787,19 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
     switch (index) {
       case 4:
         print('Index is: $index');
-        showModalBottomSheet<dynamic>(
-            // useRootNavigator: true,
-            isScrollControlled: true,
-            context: context,
-            builder: (context) => CustomBottomSheetWidget(hintText: 'hello')
-        );
+        Navigator.pushNamed(context, route.eightyTenAddLot);
+        // showModalBottomSheet<dynamic>(
+        //     context: context,
+        //     useRootNavigator: true,
+        //     isScrollControlled: true,
+        //     builder: (context) => CustomBottomSheetWidget(hintText: 'hello')
+        // );
+        // showDialog(
+        //   context: context,
+        //   builder: (BuildContext context) {
+        //     return CustomDialog();
+        //   }
+        // );
         break;
       default:
         throw('The route does not exist yet.');
@@ -963,6 +931,7 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
                               color: 'red',
                               onTap: () => selectedItem(context, 6)
                           ),
+                          //CommonButton(title: 'Delete LOT', buttonType: ButtonType.normal, onPressed: () => {} )
                         ],
                       ),
                     ),
