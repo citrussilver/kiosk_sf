@@ -17,6 +17,8 @@ class _EightyTenAddLotState extends State<EightyTenAddLot> {
   final dateController = TextEditingController();
   final mngDateController = TextEditingController();
   final expiryDateController = TextEditingController();
+  final lotController = TextEditingController();
+  final inspectedQtyController = TextEditingController();
 
   @override
   void dispose() {
@@ -24,6 +26,8 @@ class _EightyTenAddLotState extends State<EightyTenAddLot> {
     dateController.dispose();
     mngDateController.dispose();
     expiryDateController.dispose();
+    lotController.dispose();
+    inspectedQtyController.dispose();
     super.dispose();
   }
 
@@ -38,35 +42,41 @@ class _EightyTenAddLotState extends State<EightyTenAddLot> {
     return currentDateStr;
   }
 
-  void _eightyTen_40W() async {
+  void _eightyTen_40W(mngDate, expiryDate, lot, inspectedQty) async {
     SharedPreferences jsessionId = await SharedPreferences.getInstance();
     String? extractJsessionId = jsessionId.getString('jsessionid');
 
     String currentDateStr = _getCurrentDate();
+    String mngDateStr = mngDate;
 
-    String mngDateStr = mngDateController.text;
-    if(mngDateStr.isNotEmpty) {
+    if(mngDateStr != '') {
       mngDateStr = mngDateStr.replaceAll('-', '');
     } else {
       mngDateStr = currentDateStr;
       print(mngDateStr);
     }
 
-    String expiryDateStr = expiryDateController.text;
-    if(expiryDateStr.isNotEmpty) {
+    String expiryDateStr = expiryDate;
+    print('assignment:  $expiryDateStr');
+    if(expiryDateStr != '') {
       expiryDateStr = expiryDateStr.replaceAll('-', '');
     } else {
       expiryDateStr = currentDateStr;
       print(expiryDateStr);
     }
 
-    final response = await _dataService.eighty10_40W(extractJsessionId, mngDateStr, expiryDateStr );
+    final response = await _dataService.eighty10_40W(extractJsessionId, mngDateStr, expiryDateStr, lot, inspectedQty );
     if (response != null) {
       print('response is not null');
       print(response.toString());
     } else {
       print('response is NOT 1');
     }
+  }
+
+  void initializeDates() {
+    mngDateController.text = _getCurrentDate();
+    expiryDateController.text = _getCurrentDate();
   }
 
   Widget _createLabelInput(String labelText){
@@ -90,6 +100,7 @@ class _EightyTenAddLotState extends State<EightyTenAddLot> {
               showCursor: true,
               readOnly: true,
               controller: dateController,
+              validator: (val) => val!.isEmpty ? 'Date is required' : null,
               onTap: () async {
                 var selectedDate =  await showDatePicker(
                     context: context,
@@ -165,19 +176,106 @@ class _EightyTenAddLotState extends State<EightyTenAddLot> {
                           const SizedBox(
                             height: 2.0,
                           ),
-                          _createLabelInput('Managed Date'),
+                          //_createLabelInput('Managed Date'),
+                          Container(
+                              height: 80,
+                              alignment: Alignment.center,
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                              margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                              // decoration: BoxDecoration(
+                              //     color: Colors.grey[300], borderRadius: BorderRadius.circular(10)),
+                              child: TextFormField(
+                                  style: const TextStyle(
+                                    fontSize: 20.0,
+                                  ),
+                                  decoration: const InputDecoration(
+                                    prefixIcon: Icon(Icons.today),
+                                  ),
+                                  showCursor: true,
+                                  readOnly: true,
+                                  controller: mngDateController,
+                                  validator: (val) => val!.isEmpty ? 'Managed Date is required' : null,
+                                  onTap: () async {
+                                    var selectedDate =  await showDatePicker(
+                                        context: context,
+                                        initialDate:DateTime.now(),
+                                        firstDate:DateTime(1900),
+                                        lastDate: DateTime(2100));
+                                    mngDateController.text = selectedDate.toString().substring(0,10);
+                                  }
+                              )
+                          ),
                           const SizedBox(
                             height: 2.0,
                           ),
-                          _createLabelInput('Expiration Date'),
+                          //_createLabelInput('Expiration Date'),
+                          Container(
+                              height: 80,
+                              alignment: Alignment.center,
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                              margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                              // decoration: BoxDecoration(
+                              //     color: Colors.grey[300], borderRadius: BorderRadius.circular(10)),
+                              child: TextFormField(
+                                  style: const TextStyle(
+                                    fontSize: 20.0,
+                                  ),
+                                  decoration: const InputDecoration(
+                                    prefixIcon: Icon(Icons.today),
+                                  ),
+                                  showCursor: true,
+                                  readOnly: true,
+                                  controller: expiryDateController,
+                                  validator: (val) => val!.isEmpty ? 'Expiry Date is required' : null,
+                                  onTap: () async {
+                                    var selectedDate =  await showDatePicker(
+                                        context: context,
+                                        initialDate:DateTime.now(),
+                                        firstDate:DateTime(1900),
+                                        lastDate: DateTime(2100));
+                                    expiryDateController.text = selectedDate.toString().substring(0,10);
+                                  }
+                              )
+                          ),
                           const SizedBox(
                             height: 2.0,
                           ),
-                          _createLabelInput('LOT'),
+                          // _createLabelInput('LOT'),
+                          Container(
+                              height: 50,
+                              alignment: Alignment.center,
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                              margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                              child: TextField(
+                                style: const TextStyle(
+                                  fontSize: 22.0,
+                                ),
+                                decoration: const InputDecoration(
+                                  hintText: 'Input LOT',
+                                ),
+                                controller: lotController,
+                              )
+                          ),
                           const SizedBox(
                             height: 2.0,
                           ),
-                          _createLabelInput('Inspected Qty.'),
+                          // _createLabelInput('Inspected Qty.'),
+                          Container(
+                              height: 50,
+                              alignment: Alignment.center,
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                              margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                              child: TextFormField(
+                                keyboardType: TextInputType.number,
+                                style: const TextStyle(
+                                  fontSize: 22.0,
+                                ),
+                                decoration: const InputDecoration(
+                                  hintText: 'Input Inspected Qty.',
+                                ),
+                                controller: inspectedQtyController
+                              )
+                          ),
                           SizedBox(
                             height: 50,
                             child: ElevatedButton(
@@ -189,7 +287,7 @@ class _EightyTenAddLotState extends State<EightyTenAddLot> {
                                 ),
                               ),
                               onPressed: () {
-                                _eightyTen_40W();
+                                _eightyTen_40W(mngDateController.text, expiryDateController.text, lotController.text, inspectedQtyController.text);
                               },
                             ),
                           ),
@@ -207,3 +305,4 @@ class _EightyTenAddLotState extends State<EightyTenAddLot> {
     );
   }
 }
+

@@ -184,7 +184,7 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
   }
 
   List<DataRow> _rowsFromApi(receivingList) {
-
+    print(receivingList);
     List<DataRow> rcvRows = [];
 
     for(int x=0; x < receivingList.length; x++ ) {
@@ -242,152 +242,124 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
   }
 
   //kilo loco method
-  DataTable _createRcvListDataTable(receivingList) {
-    return DataTable(
-      showCheckboxColumn: false,
-      columns: _createColumns(),
-      rows: _rowsFromApi(receivingList),
-      dividerThickness: 5,
-      dataRowHeight: 80,
-      showBottomBorder: true,
-      headingTextStyle: const TextStyle(
-          fontWeight: FontWeight.bold,
-          color: Colors.white
-      ),
-      headingRowColor: MaterialStateProperty.resolveWith(
-              (states) => const Color(0xFF3F51B5)
-      ),
-      dataRowColor: MaterialStateColor.resolveWith(
-              (states) => const Color(0xFFC5CAE9)
-      ),
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: const Color(0xFF3F51B5),
-          width: 3,
-        ),
-        borderRadius: const BorderRadius.all(Radius.circular(10)),
-      ),
-    );
-  }
-
-  // DataTable _createRcvListDataTable(state) {
-  //   if(state == 'ReadyState') {
-  //     return DataTable(
-  //       showCheckboxColumn: false,
-  //       columns: _createColumns(),
-  //       rows: _rowsFromApi(state),
-  //       dividerThickness: 5,
-  //       dataRowHeight: 80,
-  //       showBottomBorder: true,
-  //       headingTextStyle: const TextStyle(
-  //           fontWeight: FontWeight.bold,
-  //           color: Colors.white
+  // DataTable _createRcvListDataTable(receivingList) {
+  //   return DataTable(
+  //     showCheckboxColumn: false,
+  //     columns: _createColumns(),
+  //     rows: _rowsFromApi(receivingList),
+  //     dividerThickness: 5,
+  //     dataRowHeight: 80,
+  //     showBottomBorder: true,
+  //     headingTextStyle: const TextStyle(
+  //         fontWeight: FontWeight.bold,
+  //         color: Colors.white
+  //     ),
+  //     headingRowColor: MaterialStateProperty.resolveWith(
+  //             (states) => const Color(0xFF3F51B5)
+  //     ),
+  //     dataRowColor: MaterialStateColor.resolveWith(
+  //             (states) => const Color(0xFFC5CAE9)
+  //     ),
+  //     decoration: BoxDecoration(
+  //       border: Border.all(
+  //         color: const Color(0xFF3F51B5),
+  //         width: 3,
   //       ),
-  //       headingRowColor: MaterialStateProperty.resolveWith(
-  //               (states) => const Color(0xFF3F51B5)
-  //       ),
-  //       dataRowColor: MaterialStateColor.resolveWith(
-  //               (states) => const Color(0xFFC5CAE9)
-  //       ),
-  //       decoration: BoxDecoration(
-  //         border: Border.all(
-  //           color: const Color(0xFF3F51B5),
-  //           width: 3,
-  //         ),
-  //         borderRadius: const BorderRadius.all(Radius.circular(10)),
-  //       ),
-  //     );
-  //   } else {
-  //     return DataTable(
-  //       showCheckboxColumn: false,
-  //       columns: _createColumns(),
-  //       rows: <DataRow>[
-  //         DataRow(
-  //           cells: <DataCell>[
-  //             DataCell(
-  //                 Text('')
-  //             ),
-  //             DataCell(
-  //                 Text('')
-  //             ),
-  //             DataCell(
-  //                 Text('')
-  //             ),
-  //             DataCell(
-  //                 Text('')
-  //             ),
-  //             DataCell(
-  //                 Text('')
-  //             ),
-  //             DataCell(
-  //                 Text('')
-  //             ),
-  //             DataCell(
-  //                 Text('')
-  //             ),
-  //             DataCell(
-  //                 Text('')
-  //             ),
-  //             DataCell(
-  //                 Text('')
-  //             ),
-  //           ]
-  //         ),
-  //         DataRow(
-  //             cells: <DataCell>[
-  //               DataCell(
-  //                   Text('')
-  //               ),
-  //               DataCell(
-  //                   Text('')
-  //               ),
-  //               DataCell(
-  //                   Text('')
-  //               ),
-  //               DataCell(
-  //                   Text('')
-  //               ),
-  //               DataCell(
-  //                   Text('')
-  //               ),
-  //               DataCell(
-  //                   Text('')
-  //               ),
-  //               DataCell(
-  //                   Text('')
-  //               ),
-  //               DataCell(
-  //                   Text('')
-  //               ),
-  //               DataCell(
-  //                   Text('')
-  //               ),
-  //             ]
-  //         ),
-  //       ],
-  //       dividerThickness: 5,
-  //       dataRowHeight: 80,
-  //       showBottomBorder: true,
-  //       headingTextStyle: const TextStyle(
-  //           fontWeight: FontWeight.bold,
-  //           color: Colors.white
-  //       ),
-  //       headingRowColor: MaterialStateProperty.resolveWith(
-  //               (states) => const Color(0xFF3F51B5)
-  //       ),
-  //       dataRowColor: MaterialStateColor.resolveWith(
-  //               (states) => const Color(0xFFC5CAE9)
-  //       ),
-  //       decoration: BoxDecoration(
-  //         border: Border.all(
-  //           color: const Color(0xFF3F51B5),
-  //           width: 3,
-  //         ),
-  //         borderRadius: const BorderRadius.all(Radius.circular(10)),
-  //       ),
-  //     );
-  //   }
+  //       borderRadius: const BorderRadius.all(Radius.circular(10)),
+  //     ),
+  //   );
   // }
+
+  DataTable _createRcvListDataTable(state) {
+    print('state.runtimeType: ${state.runtimeType}');
+    if(state.runtimeType.toString() == 'ReadyState') {
+      print('if branch');
+      return DataTable(
+        showCheckboxColumn: false,
+        columns: _createColumns(),
+        rows: <DataRow>[
+          DataRow(
+              cells: <DataCell>[
+                DataCell(
+                    Text('')
+                ),
+                DataCell(
+                    Text('')
+                ),
+                DataCell(
+                    Text('')
+                ),
+                DataCell(
+                    Text('')
+                ),
+                DataCell(
+                    Text('')
+                ),
+                DataCell(
+                    Text('')
+                ),
+                DataCell(
+                    Text('')
+                ),
+                DataCell(
+                    Text('')
+                ),
+                DataCell(
+                    Text('')
+                ),
+              ]
+          ),
+        ],
+        dividerThickness: 5,
+        dataRowHeight: 80,
+        showBottomBorder: true,
+        headingTextStyle: const TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.white
+        ),
+        headingRowColor: MaterialStateProperty.resolveWith(
+                (states) => const Color(0xFF3F51B5)
+        ),
+        dataRowColor: MaterialStateColor.resolveWith(
+                (states) => const Color(0xFFC5CAE9)
+        ),
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: const Color(0xFF3F51B5),
+            width: 3,
+          ),
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
+        ),
+      );
+    } else {
+      print('else branch');
+      return DataTable(
+        showCheckboxColumn: false,
+        columns: _createColumns(),
+        rows: _rowsFromApi(state.rcvLists),
+        dividerThickness: 5,
+        dataRowHeight: 80,
+        showBottomBorder: true,
+        headingTextStyle: const TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.white
+        ),
+        headingRowColor: MaterialStateProperty.resolveWith(
+                (states) => const Color(0xFF3F51B5)
+        ),
+        dataRowColor: MaterialStateColor.resolveWith(
+                (states) => const Color(0xFFC5CAE9)
+        ),
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: const Color(0xFF3F51B5),
+            width: 3,
+          ),
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
+        ),
+      );
+    }
+  }
 
   // PaginatedDataTable _createRcvListPDataTable (receivingList) {
   //
@@ -441,12 +413,60 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
             const SizedBox(
               width: 15.0,
             ),
-            CustomDatePicker(),
+            //CustomDatePicker(),
+            SizedBox(
+              width: 200,
+              child: TextFormField(
+                controller: startDateController,
+                showCursor: true,
+                readOnly: true,
+                style: const TextStyle(
+                  fontSize: 20.0,
+                ),
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.today),
+                  border: OutlineInputBorder(),
+                  hintText: dateNowString,
+                ),
+                onTap: () async {
+                  var startDate =  await showDatePicker(
+                      context: context,
+                      initialDate:DateTime.now(),
+                      firstDate:DateTime(1900),
+                      lastDate: DateTime(2100));
+                  startDateController.text = startDate.toString().substring(0,10);
+                },
+              ),
+            ),
             const SizedBox(
               width: 15.0,
             ),
             // Date picker End date
-            CustomDatePicker(),
+            // CustomDatePicker(),
+            SizedBox(
+              width: 200,
+              child: TextFormField(
+                controller: endDateController,
+                showCursor: true,
+                readOnly: true,
+                style: const TextStyle(
+                  fontSize: 20.0,
+                ),
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.today),
+                  border: OutlineInputBorder(),
+                  hintText: dateNowString,
+                ),
+                onTap: () async {
+                  var startDate =  await showDatePicker(
+                      context: context,
+                      initialDate:DateTime.now(),
+                      firstDate:DateTime(1900),
+                      lastDate: DateTime(2100));
+                  endDateController.text = startDate.toString().substring(0,10);
+                },
+              ),
+            ),
             const SizedBox(
               width: 15.0,
             ),
@@ -470,18 +490,45 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
             // Search Button
             SizedBox(
               height: 50, //height of button
-              child: ElevatedButton(
-                onPressed: () {
-                //_tryCallProc();
-                //BlocProvider.of<ReceivingListsCubit>(context).getData();
-              },
-                child: const Text(
-                  'Search',
-                  style: TextStyle(
-                    fontSize: 22.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+              child: Builder(
+                builder: (context) {
+                  return ElevatedButton(
+                    onPressed: () {
+                    //_tryCallProc();
+                    //BlocProvider.of<ReceivingListsCubit>(context).getData();
+                      String currentDateStr = _getCurrentDate();
+                      String startDateStr;
+                      startDateStr = startDateController.text;
+                      if(startDateStr.isNotEmpty) {
+                        startDateStr = startDateStr.replaceAll('-', '');
+                      } else {
+                        startDateStr = currentDateStr;
+                        print(startDateStr);
+                      }
+
+                      String endDateStr;
+                      endDateStr = endDateController.text;
+                      if(endDateStr.isNotEmpty) {
+                        endDateStr = endDateStr.replaceAll('-', '');
+                      } else {
+                        endDateStr = currentDateStr;
+                        print(startDateStr);
+                      }
+
+                      print('startDateStr: $startDateStr');
+                      print('endDateController: $endDateStr');
+
+                      BlocProvider.of<ReceivingListsCubit>(context).getData(startDateStr, endDateStr);
+                  },
+                    child: const Text(
+                      'Search',
+                      style: TextStyle(
+                        fontSize: 22.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  );
+                }
               ),
             ),
           ],
@@ -582,8 +629,8 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
                 onPressed:() => Navigator.pop(context, false),
               )
           ),
-          body: BlocProvider<Rcvwork8011PCubit>(
-            create: (context) => Rcvwork8011PCubit()..getReceivingLists(),
+          body: BlocProvider<ReceivingListsCubit>(
+            create: (context) => ReceivingListsCubit(),
             child: SafeArea(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(20.0),
@@ -597,45 +644,15 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
                       const SizedBox(
                         height: 10.0,
                       ),
-                      SizedBox(
-                          width: 1200.0,
-                          child: Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: BlocBuilder<Rcvwork8011PCubit, List<ReceivingList>>(
-                                builder: (context, receivingList) {
-                                  // if(state is ReadyState) {
-                                  //   return _createRcvListDataTable(state);
-                                  // } else if(state is LoadingState) {
-                                  //   return Card(
-                                  //     color: const Color(0xFF303f9f),
-                                  //     child: Padding(
-                                  //       padding: const EdgeInsets.all(20.0),
-                                  //       child: Column(
-                                  //         mainAxisAlignment: MainAxisAlignment.center,
-                                  //         children: const [
-                                  //           CircularProgressIndicator(),
-                                  //           SizedBox(
-                                  //             height: 10.0,
-                                  //           ),
-                                  //           Text('Retrieving data...',
-                                  //             style: TextStyle(
-                                  //               fontSize: 22.0,
-                                  //               color: Colors.white,
-                                  //             ),
-                                  //           )
-                                  //         ],
-                                  //       ),
-                                  //     ),
-                                  //   );
-                                  // } else if(state is LoadedState) {
-                                  //   return _createRcvListDataTable(state);
-                                  // } else {
-                                  //   return Text('No State');
-                                  // }
-                                  //kilo loco method
-                                  if (receivingList.isEmpty) {
-                                    return Center(
-                                      child: Card(
+                      SingleChildScrollView(
+                        child: SizedBox(
+                            width: MediaQuery.of(context).size.width * 2,
+                            child: Padding(
+                              padding: const EdgeInsets.all(20.0),
+                              child: BlocBuilder<ReceivingListsCubit, ReceivingListsStates>(
+                                  builder: (context, state) {
+                                    if(state is LoadingState) {
+                                      return Card(
                                         color: const Color(0xFF303f9f),
                                         child: Padding(
                                           padding: const EdgeInsets.all(20.0),
@@ -655,30 +672,16 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
                                             ],
                                           ),
                                         ),
-                                      ),
-                                    );
+                                      );
+                                    } else if(state is LoadedState) {
+                                      return _createRcvListDataTable(state);
+                                    } else {
+                                      return Text('No State');
+                                    }
                                   }
-
-                                  return Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Receiving List [${receivingList.length}]',
-                                        style: const TextStyle(
-                                          fontSize: 22.0,
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                          height: 10.0
-                                      ),
-                                      SingleChildScrollView(
-                                          scrollDirection: Axis.horizontal,
-                                          child: _createRcvListDataTable(receivingList)),
-                                    ],
-                                  );
-                                }
-                            ),
-                          )
+                              ),
+                            )
+                        ),
                       ),
                     ],
                   ),
