@@ -34,7 +34,7 @@ class DataService {
       }
     });
 
-    print('response statusCode is : ${response.statusCode}');
+    //print('response statusCode is : ${response.statusCode}');
 
     if (response.statusCode == 200) {
       Map<String, dynamic> reqInfo = jsonDecode(response.body);
@@ -58,9 +58,9 @@ class DataService {
 
 
       await loginInfoSession.setString('ctkey', loginfo[0]['CTKEY'] );
-      print('ctkey is: ${loginInfoSession.getString('ctkey')}');
+      //print('ctkey is: ${loginInfoSession.getString('ctkey')}');
 
-      print(loginfo[0]["LOGINYN"].toString());
+      //print(loginfo[0]["LOGINYN"].toString());
       if (loginfo.isEmpty ||
           loginfo.isEmpty ||
           loginfo[0]["LOGINYN"] == "N") {
@@ -130,7 +130,7 @@ class DataService {
     }
   }
 
-  Future<String> eighty10_40W(jsessionid, String mngDateStr, String vldDateStr ) async {
+  Future<List<ReceivingList>> eighty10_40W(jsessionid, String mngDateStr, String vldDateStr, String lot, String inspectedQty) async {
     try {
       // final uri = Uri.https( _baseUrl, '/posts');
       // final response = await http.get(uri);
@@ -142,7 +142,7 @@ class DataService {
       String? extractJsessionId = loginInfoSession.getString('jsessionid');
       String? ctkey = loginInfoSession.getString('ctkey');
 
-      //print('jsessionid: $jsessionid\nmngDateStr: $mngDateStr\nexpiryDateStr: $expiryDateStr');
+      print('jsessionid: $jsessionid\nmngDateStr: $mngDateStr\nexpiryDateStr: $vldDateStr\nLot: $lot\ninspected qty: $inspectedQty');
 
       MESServerConnection mesConn = MESServerConnection();
       String address = "http://192.168.0.188:8081/iUp_MES/rcvwork8010FManagement/saveRcvwork8010F_40W;jsessionid=${extractJsessionId}";
@@ -152,9 +152,9 @@ class DataService {
           "ds_master_40W":[{
             "MNG_DT": mngDateStr,
             "VLD_DT": vldDateStr,
-            "LOT_NO":"zx300",
-            "RCV_QTY":"1",
-            "COMP_CD":"1001",
+            "LOT_NO": lot,
+            "RCV_QTY": inspectedQty,
+            "COMP_CD": ctkey,
             "RCV_DT":"20210908",
             "RCV_SEQ":1,
             "DTL_SEQ":1,
@@ -173,20 +173,20 @@ class DataService {
       //print('runtimeType is: ${rcvLists.runtimeType}');
 
 
-      // if (response.statusCode == 200) {
-      //   return rcvLists;
-      // } else {
-      //   return <ReceivingList>[];
-      // }
+      if (response.statusCode == 200) {
+        return rcvLists;
+      } else {
+        return <ReceivingList>[];
+      }
 
-      return 'test';
+      //return 'test';
 
     } catch (e) {
       rethrow;
     }
   }
 
-  Future<List<ReceivingList>> getRcvWork8011P() async {
+  Future<List<ReceivingList>> getRcvWork8011P(startDate, endDate) async {
     try {
       // final uri = Uri.https( _baseUrl, '/posts');
       // final response = await http.get(uri);
@@ -198,6 +198,8 @@ class DataService {
       String? extractJsessionId = loginInfoSession.getString('jsessionid');
       String? ctkey = loginInfoSession.getString('ctkey');
 
+      print('ctkey: $ctkey\nstartDate: $startDate\nendDate: $endDate');
+
       MESServerConnection mesConn = MESServerConnection();
       String address = "http://192.168.0.188:8081/iUp_MES/rcvwork8011PManagement/getRcvwork8011P_10Q;jsessionid=${extractJsessionId}";
       final response = await mesConn.connectAPI(HttpMethod.POST, address, {
@@ -205,7 +207,7 @@ class DataService {
         "dataSetMap":{
           "ds_cond":[{
             "PD_MODE":"R",
-            "PD_VALUE1":"$ctkey||20210901||20211220||||||||",
+            "PD_VALUE1":"$ctkey||$startDate||$endDate||||||||",
             "PD_VALUE2":"||}"
           }]
         }
