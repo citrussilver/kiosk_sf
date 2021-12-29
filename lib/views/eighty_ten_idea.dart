@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:kiosk_sf/route/route.dart' as route;
 import 'package:kiosk_sf/services/data_service.dart';
+import 'package:kiosk_sf/variables/arguments.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:kiosk_sf/models/receiving_list.dart';
-import 'package:kiosk_sf/cubits/rcvwork_8011P_cubit.dart';
-import 'package:kiosk_sf/cubits/receiving_lists_cubit.dart';
-import 'package:kiosk_sf/cubits/receiving_lists_states.dart';
+import 'package:kiosk_sf/cubits/8010/receiving_lists_cubit.dart';
+import 'package:kiosk_sf/cubits/8010/receiving_lists_states.dart';
 import 'package:kiosk_sf/widgets/custom_date_picker.dart';
 
 class EightyTenIdea extends StatefulWidget {
@@ -61,36 +60,30 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
 
 
     if (val == 1) {
-      Navigator.pushNamed(context, route.eightyTenTabletPg2,
-        arguments: {
-          'no': '1',
-          'rcv_dt': '2021-09-09',
-          'rcv_seq': '1',
-          'recv_no': '1001A20211011001',
-          'recv_status': 'Receiving Registration',
-          'acct_code': '40032',
-          'acct_name': "Albedo's Alchemy",
-          'item_cnt': '1'
-        },);
-    }
+      // final arguments = Arguments(
+      //   no: 1,
+      //   rcv_dt: '2021-09-09',
+      //   rcv_seq: 1,
+      //   recv_no: '1001A20211011001',
+      //   recv_status: 'Receiving Registration',
+      //   acct_code: '40032',
+      //   acct_name: "Albedo's Alchemy",
+      //   item_cnt: 1
+      // );
+      final arguments = {
+        "no": 1,
+        "rcv_dt": '2021-09-09',
+        "rcv_seq": 1,
+        "recv_no": '1001A20211011001',
+        "recv_status": 'Receiving Registration',
+        "acct_code": '40032',
+        "acct_name": "Albedo's Alchemy",
+        "item_cnt": 1
+      };
 
-    // setState(() {
-    //   selectedIndex = val;
-    //   print('selectedIndex is $val');
-    //   if (val == 2) {
-    //     Navigator.pushNamed(context, route.eightyTenTabletPg2,
-    //       arguments: {
-    //         'no': '1',
-    //         'date_recvd': '2021-09-09',
-    //         'recv_no': '1001A20211011001',
-    //         'recv_status': 'Receiving Registration',
-    //         'acct_code': '70030',
-    //         'acct_name': 'Xiangling',
-    //         'item_cnt': '1'
-    //       },);
-    //   }
-    //
-    // });
+      print('arguments is: ${arguments.toString()}');
+      Navigator.pushNamed(context, route.eightyTenTabletPg2, arguments: arguments);
+    }
     // Useful for navigating to different data
     // if(val == 0) {
     //   Navigator.pushNamed(context, route.eightyTenTabletPg2)
@@ -99,7 +92,7 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
 
   List<DataColumn> _createColumns() {
     return [
-      const DataColumn(
+      DataColumn(
         label: Text(
           'No',
           style: TextStyle(
@@ -113,7 +106,7 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
           'Date Received',
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 15.0,
+            fontSize: 10.0,
           ),
         ),
       ),
@@ -122,7 +115,7 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
           'Queue',
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 15.0,
+            fontSize: 10.0,
           ),
         ),
       ),
@@ -131,7 +124,7 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
           'Receiving No.',
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 15.0,
+            fontSize: 10.0,
           ),
         ),
       ),
@@ -140,16 +133,16 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
           'Receiving Status',
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 15.0,
+            fontSize: 10.0,
           ),
         ),
       ),
       const DataColumn(
         label: Text(
-          'Account Code',
+          'Account',
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 15.0,
+            fontSize: 10.0,
           ),
         ),
       ),
@@ -158,7 +151,7 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
           'Account Name',
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 15.0,
+            fontSize: 10.0,
           ),
         ),
       ),
@@ -167,16 +160,16 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
           'Receiving Type',
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 15.0,
+            fontSize: 10.0,
           ),
         ),
       ),
       const DataColumn(
         label: Text(
-          'Item Count',
+          'Count',
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 15.0,
+            fontSize: 10.0,
           ),
         ),
       ),
@@ -184,23 +177,10 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
   }
 
   List<DataRow> _rowsFromApi(receivingList) {
-    print(receivingList);
+    //print(receivingList);
     List<DataRow> rcvRows = [];
 
     for(int x=0; x < receivingList.length; x++ ) {
-      // var mapObj = {
-      //   "no": (x+1),
-      //   "rcv_dt": receivingList[x].rcv_dt,
-      //   "rcv_seq": receivingList[x].rcv_seq,
-      //   "rcv_no": receivingList[x].rcv_no,
-      //   "rcv_status_nm": receivingList[x].rcv_status_nm,
-      //   "cust_cd": receivingList[x].cust_cd,
-      //   "cust_nm": receivingList[x].cust_nm,
-      //   "rcv_type_nm": receivingList[x].rcv_type_nm,
-      //   "item_cnt": receivingList[x].item_cnt
-      // };
-      // mapObj.f
-      // print(receivingList.fromJson());
       rcvRows.add(
           DataRow(
               onSelectChanged: (val) {
@@ -240,35 +220,6 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
     }
     return rcvRows;
   }
-
-  //kilo loco method
-  // DataTable _createRcvListDataTable(receivingList) {
-  //   return DataTable(
-  //     showCheckboxColumn: false,
-  //     columns: _createColumns(),
-  //     rows: _rowsFromApi(receivingList),
-  //     dividerThickness: 5,
-  //     dataRowHeight: 80,
-  //     showBottomBorder: true,
-  //     headingTextStyle: const TextStyle(
-  //         fontWeight: FontWeight.bold,
-  //         color: Colors.white
-  //     ),
-  //     headingRowColor: MaterialStateProperty.resolveWith(
-  //             (states) => const Color(0xFF3F51B5)
-  //     ),
-  //     dataRowColor: MaterialStateColor.resolveWith(
-  //             (states) => const Color(0xFFC5CAE9)
-  //     ),
-  //     decoration: BoxDecoration(
-  //       border: Border.all(
-  //         color: const Color(0xFF3F51B5),
-  //         width: 3,
-  //       ),
-  //       borderRadius: const BorderRadius.all(Radius.circular(10)),
-  //     ),
-  //   );
-  // }
 
   DataTable _createRcvListDataTable(state) {
     print('state.runtimeType: ${state.runtimeType}');
@@ -310,7 +261,7 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
               ]
           ),
         ],
-        dividerThickness: 5,
+        dividerThickness: 2,
         dataRowHeight: 80,
         showBottomBorder: true,
         headingTextStyle: const TextStyle(
@@ -320,9 +271,9 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
         headingRowColor: MaterialStateProperty.resolveWith(
                 (states) => const Color(0xFF3F51B5)
         ),
-        dataRowColor: MaterialStateColor.resolveWith(
-                (states) => const Color(0xFFC5CAE9)
-        ),
+        // dataRowColor: MaterialStateColor.resolveWith(
+        //         // (states) => const Color(0xFFC5CAE9)
+        // ),
         decoration: BoxDecoration(
           border: Border.all(
             color: const Color(0xFF3F51B5),
@@ -337,8 +288,8 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
         showCheckboxColumn: false,
         columns: _createColumns(),
         rows: _rowsFromApi(state.rcvLists),
-        dividerThickness: 5,
-        dataRowHeight: 80,
+        dividerThickness: 2,
+        dataRowHeight: 50,
         showBottomBorder: true,
         headingTextStyle: const TextStyle(
             fontWeight: FontWeight.bold,
@@ -347,9 +298,9 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
         headingRowColor: MaterialStateProperty.resolveWith(
                 (states) => const Color(0xFF3F51B5)
         ),
-        dataRowColor: MaterialStateColor.resolveWith(
-                (states) => const Color(0xFFC5CAE9)
-        ),
+        // dataRowColor: MaterialStateColor.resolveWith(
+        //         (states) => const Color(0xFFC5CAE9)
+        // ),
         decoration: BoxDecoration(
           border: Border.all(
             color: const Color(0xFF3F51B5),
@@ -390,7 +341,6 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
             const SizedBox(
                 height: 10.0
             ),
-
           ],
         ),
       ),
@@ -494,8 +444,6 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
                 builder: (context) {
                   return ElevatedButton(
                     onPressed: () {
-                    //_tryCallProc();
-                    //BlocProvider.of<ReceivingListsCubit>(context).getData();
                       String currentDateStr = _getCurrentDate();
                       String startDateStr;
                       startDateStr = startDateController.text;
@@ -586,36 +534,6 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
     return currentDateStr;
   }
 
-  void _tryCallProc() async {
-    SharedPreferences jsessionId = await SharedPreferences.getInstance();
-    String? extractJsessionId = jsessionId.getString('jsessionid');
-    String startDateStr = startDateController.text;
-    String currentDateStr = _getCurrentDate();
-
-    if(startDateStr != '') {
-      startDateStr = startDateStr.replaceAll('-', '');
-    } else {
-      startDateStr = currentDateStr;
-      print(startDateStr);
-    }
-
-    String endDateStr = endDateController.text;
-    if(endDateStr != '') {
-      endDateStr = endDateStr.replaceAll('-', '');
-    } else {
-      endDateStr = currentDateStr;
-      print(endDateStr);
-    }
-
-    final response = await _dataService.tryCallProc(extractJsessionId, startDateStr, endDateStr );
-    if (response != null) {
-      print('response is not null');
-      print(response.toString());
-    } else {
-      print('response is NOT 1');
-    }
-  }
-
   // main Widget
   @override
   Widget build(BuildContext context) {
@@ -676,7 +594,7 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
                                     } else if(state is LoadedState) {
                                       return _createRcvListDataTable(state);
                                     } else {
-                                      return Text('No State');
+                                      return Text('No Rows to show');
                                     }
                                   }
                               ),

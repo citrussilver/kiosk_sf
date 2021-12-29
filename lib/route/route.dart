@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kiosk_sf/cubits/login_cubit.dart';
+import 'package:kiosk_sf/cubits/login/login_cubit.dart';
 
 // Define Routes
 import 'package:kiosk_sf/views/dashboard.dart';
@@ -42,11 +42,13 @@ Route<dynamic> controller(RouteSettings settings) {
     case eightyTenTablet:
       return MaterialPageRoute(builder: (context) => EightyTenTablet());
     case eightyTenTabletPg2:
-      return MaterialPageRoute(builder: (context) => EightyTenTabletPg2());
+      return MaterialPageRoute(builder: (context) => EightyTenTabletPg2(
+          arguments: settings.arguments,
+      ));
     case eightyTenTabletPg2Kr:
       return MaterialPageRoute(builder: (context) => EightyTenTabletPg2Kr());
     case eightyTenIdea:
-      return MaterialPageRoute(builder: (context) => EightyTenIdea(arguments: settings.arguments));
+      return MaterialPageRoute(builder: (context) => EightyTenIdea());
     case eightyTenAddLot:
       return MaterialPageRoute(builder: (context) => EightyTenAddLot());
     case eightySeventy:

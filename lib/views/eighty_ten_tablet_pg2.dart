@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:kiosk_sf/route/route.dart' as route;
+
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:kiosk_sf/cubits/8010/lot_warehousing_lists_cubit.dart';
+import 'package:kiosk_sf/cubits/8010/lot_warehousing_lists_states.dart';
+
 import 'package:kiosk_sf/widgets/custom_dialog.dart';
 import 'package:kiosk_sf/widgets/custom_bottom_sheet.dart';
 import 'package:kiosk_sf/widgets/common_button.dart';
 
 
 class EightyTenTabletPg2 extends StatefulWidget {
-  const EightyTenTabletPg2({Key? key}) : super(key: key);
+  final arguments;
 
-  Object? get arguments => null;
+  const EightyTenTabletPg2({Key? key, required this.arguments}) : super(key: key);
+
 
   @override
   _EightyTenTabletPg2State createState() => _EightyTenTabletPg2State();
@@ -120,7 +127,7 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
       const DataRow(
           cells: [
             DataCell(
-              Text('2021-09-09',
+              Text('2021-10-11',
                 style: TextStyle(
                   fontSize: 18.0,
                 ),
@@ -141,14 +148,14 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
               ),
             ),
             DataCell(
-              Text('74740',
+              Text('40032',
                 style: TextStyle(
                   fontSize: 18.0,
                 ),
               ),
             ),
             DataCell(
-              Text('Xiangling',
+              Text("Albedo's Alchemy",
                 style: TextStyle(
                   fontSize: 18.0,
                 ),
@@ -349,7 +356,7 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
               Icon(Icons.check_box_outline_blank),
             ),
             DataCell(
-              Text('1',
+              Text('2',
                 style: TextStyle(
                   fontSize: 22.0,
                 ),
@@ -363,21 +370,21 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
               ),
             ),
             DataCell(
-              Text('21000033',
+              Text('21000003',
                 style: TextStyle(
                   fontSize: 22.0,
                 ),
               ),
             ),
             DataCell(
-              Text('두릅',
+              Text('쇠비름',
                 style: TextStyle(
                   fontSize: 22.0,
                 ),
               ),
             ),
             DataCell(
-              Text('100g x 50ea',
+              Text('5 KG',
                 style: TextStyle(
                   fontSize: 22.0,
                 ),
@@ -427,104 +434,6 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
             ),
             DataCell(
               Text('B-1-03',
-                style: TextStyle(
-                  fontSize: 22.0,
-                ),
-              ),
-            ),
-          ]
-      ),
-      const DataRow(
-          cells: [
-            DataCell(
-              Text('2',
-                style: TextStyle(
-                  fontSize: 22.0,
-                ),
-              ),
-            ),
-            DataCell(
-              Icon(Icons.check_box_outline_blank),
-            ),
-            DataCell(
-              Text('2',
-                style: TextStyle(
-                  fontSize: 22.0,
-                ),
-              ),
-            ),
-            DataCell(
-              Text('입고등록',
-                style: TextStyle(
-                  fontSize: 22.0,
-                ),
-              ),
-            ),
-            DataCell(
-              Text('21000001',
-                style: TextStyle(
-                  fontSize: 22.0,
-                ),
-              ),
-            ),
-            DataCell(
-              Text('질경이',
-                style: TextStyle(
-                  fontSize: 22.0,
-                ),
-              ),
-            ),
-            DataCell(
-              Text('100g x 50ea',
-                style: TextStyle(
-                  fontSize: 22.0,
-                ),
-              ),
-            ),
-            DataCell(
-              Text('kg',
-                style: TextStyle(
-                  fontSize: 22.0,
-                ),
-              ),
-            ),
-            DataCell(
-              Text('유통기한',
-                style: TextStyle(
-                  fontSize: 22.0,
-                ),
-              ),
-            ),
-            DataCell(
-              Text('360',
-                style: TextStyle(
-                  fontSize: 22.0,
-                ),
-              ),
-            ),
-            DataCell(
-              Text('0',
-                style: TextStyle(
-                  fontSize: 22.0,
-                ),
-              ),
-            ),
-            DataCell(
-              Text('11',
-                style: TextStyle(
-                  fontSize: 22.0,
-                ),
-              ),
-            ),
-            DataCell(
-              Text('2',
-                style: TextStyle(
-                  fontSize: 22.0,
-                ),
-              ),
-            ),
-            DataCell(
-              Text('B-1-01',
                 style: TextStyle(
                   fontSize: 22.0,
                 ),
@@ -615,93 +524,128 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
     ];
   }
 
-  List<DataRow> _createLotWarehousingRows() {
-    return [
-      const DataRow(
-          cells: [
-            DataCell(
-              Text('1',
-                style: TextStyle(
-                  fontSize: 22.0,
+  List<DataRow> _createLotWarehousingRows(lotWarehousingLists) {
+
+    List<DataRow> lotWarehousingRows = [];
+
+    for(int x=0; x < lotWarehousingLists.length; x++ ) {
+      lotWarehousingRows.add(
+          DataRow(
+              onSelectChanged: (val) {
+                handleSelectedIndex((x+1));
+              },
+              cells: [
+                DataCell(
+                    Text('${x+1}')
                 ),
-              ),
-            ),
-            DataCell(
-              Text('2',
-                style: TextStyle(
-                  fontSize: 22.0,
+                DataCell(
+                    Text(lotWarehousingLists[x].lot_seq.toString())
                 ),
-              ),
-            ),
-            DataCell(
-              Text('2021-12-31',
-                style: TextStyle(
-                  fontSize: 22.0,
+                DataCell(
+                    Text(lotWarehousingLists[x].vld_dt,
+                      style: const TextStyle(
+                      fontSize: 15.0,
+                    ),)
                 ),
-              ),
-            ),
-            DataCell(
-              Text('tzx2y2',
-                style: TextStyle(
-                  fontSize: 22.0,
+                DataCell(
+                    Text(lotWarehousingLists[x].lot_no)
                 ),
-              ),
-            ),
-            DataCell(
-              Text('3',
-                style: TextStyle(
-                  fontSize: 22.0,
+                DataCell(
+                    Text(lotWarehousingLists[x].rcv_qty.toString())
                 ),
-              ),
-            ),
-          ]
-      ),
-      const DataRow(
-          cells: [
-            DataCell(
-              Text('2',
-                style: TextStyle(
-                  fontSize: 22.0,
-                ),
-              ),
-            ),
-            DataCell(
-              Text('3',
-                style: TextStyle(
-                  fontSize: 22.0,
-                ),
-              ),
-            ),
-            DataCell(
-              Text('2021-12-31',
-                style: TextStyle(
-                  fontSize: 22.0,
-                ),
-              ),
-            ),
-            DataCell(
-              Text('tzx2y3',
-                style: TextStyle(
-                  fontSize: 22.0,
-                ),
-              ),
-            ),
-            DataCell(
-              Text('1',
-                style: TextStyle(
-                  fontSize: 22.0,
-                ),
-              ),
-            ),
-          ]
-      ),
-    ];
+              ]
+          )
+      );
+    }
+    return lotWarehousingRows;
+
+    // return [
+    //   const DataRow(
+    //       cells: [
+    //         DataCell(
+    //           Text('1',
+    //             style: TextStyle(
+    //               fontSize: 22.0,
+    //             ),
+    //           ),
+    //         ),
+    //         DataCell(
+    //           Text('2',
+    //             style: TextStyle(
+    //               fontSize: 22.0,
+    //             ),
+    //           ),
+    //         ),
+    //         DataCell(
+    //           Text('2021-12-31',
+    //             style: TextStyle(
+    //               fontSize: 22.0,
+    //             ),
+    //           ),
+    //         ),
+    //         DataCell(
+    //           Text('tzx2y2',
+    //             style: TextStyle(
+    //               fontSize: 22.0,
+    //             ),
+    //           ),
+    //         ),
+    //         DataCell(
+    //           Text('3',
+    //             style: TextStyle(
+    //               fontSize: 22.0,
+    //             ),
+    //           ),
+    //         ),
+    //       ]
+    //   ),
+    //   const DataRow(
+    //       cells: [
+    //         DataCell(
+    //           Text('2',
+    //             style: TextStyle(
+    //               fontSize: 22.0,
+    //             ),
+    //           ),
+    //         ),
+    //         DataCell(
+    //           Text('3',
+    //             style: TextStyle(
+    //               fontSize: 22.0,
+    //             ),
+    //           ),
+    //         ),
+    //         DataCell(
+    //           Text('2021-12-31',
+    //             style: TextStyle(
+    //               fontSize: 22.0,
+    //             ),
+    //           ),
+    //         ),
+    //         DataCell(
+    //           Text('tzx2y3',
+    //             style: TextStyle(
+    //               fontSize: 22.0,
+    //             ),
+    //           ),
+    //         ),
+    //         DataCell(
+    //           Text('1',
+    //             style: TextStyle(
+    //               fontSize: 22.0,
+    //             ),
+    //           ),
+    //         ),
+    //       ]
+    //   ),
+    // ];
   }
 
-  DataTable _createLotWarehousingDataTable() {
+  DataTable _createLotWarehousingDataTable(state) {
+    
     return DataTable(
       columns: _createLotWarehousingColumns(),
-      rows: _createLotWarehousingRows(),
+      rows: _createLotWarehousingRows(state.lotWarehousingLists),
       dividerThickness: 5,
       dataRowHeight: 80,
       showBottomBorder: true,
@@ -712,9 +656,9 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
       headingRowColor: MaterialStateProperty.resolveWith(
               (states) => const Color(0xFF3F51B5)
       ),
-      dataRowColor: MaterialStateColor.resolveWith(
-              (states) => const Color(0xFFC5CAE9)
-      ),
+      // dataRowColor: MaterialStateColor.resolveWith(
+      //         (states) => const Color(0xFFC5CAE9)
+      // ),
       decoration: BoxDecoration(
         border: Border.all(
           color: const Color(0xFF3F51B5),
@@ -817,86 +761,20 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
               onPressed:() => Navigator.pop(context, false),
             )
         ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _createRcvDataTable(),
-            const SizedBox(
-              height: 20.0,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 20.0),
-              child: Row(
-                children: [
-                  // Star
-                  Expanded(
-                    child: Row(
-                      children: const [
-                        Icon(
-                            Icons.star,
-                            color: Colors.red
-                        ),
-                        Text(
-                          'Items Ordered To Be Received [2]',
-                          style: TextStyle(
-                            fontSize: 22.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        buildCommonBtn(
-                            text: 'Issue LOT Label',
-                            color: '',
-                            onTap: () => selectedItem(context, 1)
-                        ),
-                        const SizedBox(
-                          width: 80.0,
-                        ),
-                        buildCommonBtn(
-                            text: 'Confirmation',
-                            color: '',
-                            onTap: () => selectedItem(context, 1)
-                        ),
-                        const SizedBox(
-                          width: 30.0,
-                        ),
-                        buildCommonBtn(
-                            text: 'Insp Cancel',
-                            color: 'red',
-                            onTap: () => selectedItem(context, 1)
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+        body: BlocProvider(
+          create: (context) => LotWarehousingListsCubit(),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _createRcvDataTable(),
+              const SizedBox(
+                height: 20.0,
               ),
-            ),
-            const SizedBox(
-              height: 10.0,
-            ),
-            Flexible(
-              child: Padding(
+              Padding(
                 padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 20.0),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: _createItemsDetailDataTable(),
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 15.0,
-            ),
-            Column(children: [
-              SizedBox(
-                width: 650,
                 child: Row(
                   children: [
+                    // Star
                     Expanded(
                       child: Row(
                         children: const [
@@ -905,7 +783,7 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
                               color: Colors.red
                           ),
                           Text(
-                            'LOT Warehousing',
+                            'Items Ordered To Be Received [2]',
                             style: TextStyle(
                               fontSize: 22.0,
                               fontWeight: FontWeight.bold,
@@ -919,19 +797,26 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
                           buildCommonBtn(
-                              text: 'Add LOT',
+                              text: 'Issue LOT Label',
                               color: '',
-                              onTap: () => selectedItem(context, 4)
+                              onTap: () => selectedItem(context, 1)
                           ),
                           const SizedBox(
-                              width: 25.0
+                            width: 80.0,
                           ),
                           buildCommonBtn(
-                              text: 'Delete LOT',
-                              color: 'red',
-                              onTap: () => selectedItem(context, 6)
+                              text: 'Confirmation',
+                              color: '',
+                              onTap: () => selectedItem(context, 1)
                           ),
-                          //CommonButton(title: 'Delete LOT', buttonType: ButtonType.normal, onPressed: () => {} )
+                          const SizedBox(
+                            width: 30.0,
+                          ),
+                          buildCommonBtn(
+                              text: 'Insp Cancel',
+                              color: 'red',
+                              onTap: () => selectedItem(context, 1)
+                          ),
                         ],
                       ),
                     ),
@@ -941,13 +826,110 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
               const SizedBox(
                 height: 10.0,
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 20.0),
-                child: _createLotWarehousingDataTable(),
+              Flexible(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 20.0),
+                  child: Builder(
+                    builder: (context) {
+                      BlocProvider.of<LotWarehousingListsCubit>(context).getData('20211011', '1', '2');
+                      return SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: _createItemsDetailDataTable(),
+                      );
+                    }
+                  ),
+                ),
               ),
+              const SizedBox(
+                height: 15.0,
+              ),
+              Column(children: [
+                SizedBox(
+                  width: 650,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Row(
+                          children: const [
+                            Icon(
+                                Icons.star,
+                                color: Colors.red
+                            ),
+                            Text(
+                              'LOT Warehousing',
+                              style: TextStyle(
+                                fontSize: 22.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            buildCommonBtn(
+                                text: 'Add LOT',
+                                color: '',
+                                onTap: () => selectedItem(context, 4)
+                            ),
+                            const SizedBox(
+                                width: 25.0
+                            ),
+                            buildCommonBtn(
+                                text: 'Delete LOT',
+                                color: 'red',
+                                onTap: () => selectedItem(context, 6)
+                            ),
+                            //CommonButton(title: 'Delete LOT', buttonType: ButtonType.normal, onPressed: () => {} )
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 10.0,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20.0),
+                  child: BlocBuilder<LotWarehousingListsCubit, LotWarehousingListsStates>(
+                    builder: (context, state) {
+                      if(state is LoadingState) {
+                        return Card(
+                          color: const Color(0xFF303f9f),
+                          child: Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: const [
+                                CircularProgressIndicator(),
+                                SizedBox(
+                                  height: 10.0,
+                                ),
+                                Text('Retrieving data...',
+                                  style: TextStyle(
+                                    fontSize: 22.0,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        );
+                      } else if(state is LoadedState) {
+                        return _createLotWarehousingDataTable(state);
+                      } else {
+                        return Text('No Rows to show');
+                      }
+                    }
+                  ),
+                ),
+              ],
+              )
             ],
-            )
-          ],
+          ),
         ),
       ),
     );
