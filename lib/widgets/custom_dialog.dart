@@ -27,36 +27,6 @@ class _CustomDialogState extends State<CustomDialog> {
     return currentDateStr;
   }
 
-  void _tryCallProc() async {
-    SharedPreferences jsessionId = await SharedPreferences.getInstance();
-    String? extractJsessionId = jsessionId.getString('jsessionid');
-    String mngDateStr = mngDateController.text;
-    String currentDateStr = _getCurrentDate();
-
-    if(mngDateStr != '') {
-      mngDateStr = mngDateStr.replaceAll('-', '');
-    } else {
-      mngDateStr = currentDateStr;
-      print(mngDateStr);
-    }
-
-    String expiryDateStr = expiryDateController.text;
-    if(expiryDateStr != '') {
-      expiryDateStr = expiryDateStr.replaceAll('-', '');
-    } else {
-      expiryDateStr = currentDateStr;
-      print(expiryDateStr);
-    }
-
-    final response = await _dataService.tryCallProc(extractJsessionId, mngDateStr, expiryDateStr );
-    if (response != null) {
-      print('response is not null');
-      print(response.toString());
-    } else {
-      print('response is NOT 1');
-    }
-  }
-
   Widget _createLabelInput(String labelText){
     return Column(
       children: [
@@ -137,7 +107,7 @@ class _CustomDialogState extends State<CustomDialog> {
                             ),
                           ),
                           onPressed: () {
-                            _tryCallProc();
+
                           },
                         ),
                       ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'route/route.dart' as route;
-import 'package:kiosk_sf/cubits/login_cubit.dart';
+import 'package:kiosk_sf/cubits/login/login_cubit.dart';
 
 void main() {
   runApp(MyApp());

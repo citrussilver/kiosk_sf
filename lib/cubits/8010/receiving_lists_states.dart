@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:kiosk_sf/models/receiving_list.dart';
+import 'package:kiosk_sf/models/8010/receiving_list.dart';
 
 abstract class ReceivingListsStates extends Equatable{}
 

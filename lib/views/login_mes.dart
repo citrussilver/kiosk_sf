@@ -3,7 +3,7 @@ import 'package:kiosk_sf/route/route.dart' as route;
 
 import 'package:kiosk_sf/services/data_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kiosk_sf/cubits/login_cubit.dart';
+import 'package:kiosk_sf/cubits/login/login_cubit.dart';
 
 class LoginMes extends StatefulWidget {
   const LoginMes({Key? key}) : super(key: key);
