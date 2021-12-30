@@ -5,17 +5,17 @@ import 'package:kiosk_sf/services/data_service.dart';
 
 class LotWarehousingListsCubit extends Cubit<LotWarehousingListsStates> {
   LotWarehousingListsCubit() : super(InitialState()){
-    emit(ReadyState());
+    emit(lwlReadyState());
   }
 
   final _dataService = DataService();
-  late final lotWarehousingLists;
 
-  void getData(rcvDt, rcvSeq, dtlSeq) async {
+  void getRcvWork8010F_30Q(rcvDt, rcvSeq, dtlSeq) async {
     try {
-      emit(LoadingState());
-      lotWarehousingLists = await _dataService.getRcvWork8010f30Q(rcvDt, rcvSeq, dtlSeq);
-      emit(LoadedState(lotWarehousingLists));
+      emit(lwlLoadingState());
+      late final lotWarehousingLists;
+      lotWarehousingLists = await _dataService.getRcvWork8010F_30Q(rcvDt, rcvSeq, dtlSeq);
+      emit(lwlLoadedState(lotWarehousingLists));
     } catch(e) {
       rethrow;
     }

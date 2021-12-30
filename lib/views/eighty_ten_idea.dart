@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kiosk_sf/route/route.dart' as route;
 import 'package:kiosk_sf/services/data_service.dart';
-import 'package:kiosk_sf/variables/arguments.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kiosk_sf/cubits/8010/receiving_lists_cubit.dart';
 import 'package:kiosk_sf/cubits/8010/receiving_lists_states.dart';
 import 'package:kiosk_sf/widgets/custom_date_picker.dart';
+import 'package:kiosk_sf/widgets/custom_progress_indicator.dart';
 
 class EightyTenIdea extends StatefulWidget {
 
@@ -21,6 +22,7 @@ class EightyTenIdea extends StatefulWidget {
 class _EightyTenIdeaState extends State<EightyTenIdea> {
 
   String dateNowString = DateTime.now().toString();
+  double commonWidthSize = 15.0;
   final startDateController = TextEditingController();
   final endDateController = TextEditingController();
   final rcvNoSearchBoxController = TextEditingController();
@@ -57,19 +59,8 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
   int selectedIndex = -1;
 
   void handleSelectedIndex(int val) {
-
-
     if (val == 1) {
-      // final arguments = Arguments(
-      //   no: 1,
-      //   rcv_dt: '2021-09-09',
-      //   rcv_seq: 1,
-      //   recv_no: '1001A20211011001',
-      //   recv_status: 'Receiving Registration',
-      //   acct_code: '40032',
-      //   acct_name: "Albedo's Alchemy",
-      //   item_cnt: 1
-      // );
+
       final arguments = {
         "no": 1,
         "rcv_dt": '2021-09-09',
@@ -180,39 +171,76 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
     //print(receivingList);
     List<DataRow> rcvRows = [];
 
-    for(int x=0; x < receivingList.length; x++ ) {
+    if(receivingList.length > 0) {
+      for(int x=0; x < receivingList.length; x++ ) {
+        rcvRows.add(
+            DataRow(
+                onSelectChanged: (val) {
+                  handleSelectedIndex((x+1));
+                },
+                cells: [
+                  DataCell(
+                      Text('${x+1}')
+                  ),
+                  DataCell(
+                      Text(receivingList[x].rcv_dt)
+                  ),
+                  DataCell(
+                      Text(receivingList[x].rcv_seq.toString())
+                  ),
+                  DataCell(
+                      Text(receivingList[x].rcv_no)
+                  ),
+                  DataCell(
+                      Text(receivingList[x].rcv_status_nm)
+                  ),
+                  DataCell(
+                      Text(receivingList[x].cust_cd)
+                  ),
+                  DataCell(
+                      Text(receivingList[x].cust_nm)
+                  ),
+                  DataCell(
+                      Text(receivingList[x].rcv_type_nm)
+                  ),
+                  DataCell(
+                      Text(receivingList[x].item_cnt.toString())
+                  ),
+                ]
+            )
+        );
+      }
+
+    } else {
       rcvRows.add(
-          DataRow(
-              onSelectChanged: (val) {
-                handleSelectedIndex((x+1));
-              },
-              cells: [
+          const DataRow(
+              cells: <DataCell>[
                 DataCell(
-                    Text('${x+1}')
+                    Text('')
                 ),
                 DataCell(
-                    Text(receivingList[x].rcv_dt)
+                    Text('')
                 ),
                 DataCell(
-                    Text(receivingList[x].rcv_seq.toString())
+                    Text('')
                 ),
                 DataCell(
-                    Text(receivingList[x].rcv_no)
+                    Text('')
                 ),
                 DataCell(
-                    Text(receivingList[x].rcv_status_nm)
+                    Text('No rows to show.')
                 ),
                 DataCell(
-                    Text(receivingList[x].cust_cd)
+                    Text('')
                 ),
                 DataCell(
-                    Text(receivingList[x].cust_nm)
+                    Text('')
                 ),
                 DataCell(
-                    Text(receivingList[x].rcv_type_nm)
+                    Text('')
                 ),
                 DataCell(
-                    Text(receivingList[x].item_cnt.toString())
+                    Text('')
                 ),
               ]
           )
@@ -223,11 +251,36 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
 
   DataTable _createRcvListDataTable(state) {
     print('state.runtimeType: ${state.runtimeType}');
-    if(state.runtimeType.toString() == 'ReadyState') {
-      print('if branch');
+    if(state is rlLoadedState) {
       return DataTable(
         showCheckboxColumn: false,
         columns: _createColumns(),
+        rows: _rowsFromApi(state.rcvLists),
+        dividerThickness: 2,
+        dataRowHeight: 50,
+        showBottomBorder: true,
+        headingTextStyle: const TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.white
+        ),
+        headingRowColor: MaterialStateProperty.resolveWith(
+                (states) => const Color(0xFF3F51B5)
+        ),
+        // dataRowColor: MaterialStateColor.resolveWith(
+        //         (states) => const Color(0xFFC5CAE9)
+        // ),
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: const Color(0xFF3F51B5),
+            width: 3,
+          ),
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
+        ),
+      );
+    } else {
+      return DataTable(
+          showCheckboxColumn: false,
+          columns: _createColumns(),
         rows: <DataRow>[
           DataRow(
               cells: <DataCell>[
@@ -244,7 +297,7 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
                     Text('')
                 ),
                 DataCell(
-                    Text('')
+                    Text('No rows to show.')
                 ),
                 DataCell(
                     Text('')
@@ -261,33 +314,6 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
               ]
           ),
         ],
-        dividerThickness: 2,
-        dataRowHeight: 80,
-        showBottomBorder: true,
-        headingTextStyle: const TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Colors.white
-        ),
-        headingRowColor: MaterialStateProperty.resolveWith(
-                (states) => const Color(0xFF3F51B5)
-        ),
-        // dataRowColor: MaterialStateColor.resolveWith(
-        //         // (states) => const Color(0xFFC5CAE9)
-        // ),
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: const Color(0xFF3F51B5),
-            width: 3,
-          ),
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-        ),
-      );
-    } else {
-      print('else branch');
-      return DataTable(
-        showCheckboxColumn: false,
-        columns: _createColumns(),
-        rows: _rowsFromApi(state.rcvLists),
         dividerThickness: 2,
         dataRowHeight: 50,
         showBottomBorder: true,
@@ -325,6 +351,32 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
   //     );
   // }
 
+  Widget _rcvListContent(state) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            const Icon(
+                Icons.star,
+                color: Colors.red
+            ),
+            Text(
+              'Receiving List [ ${state.rcvLists.length} ]',
+              style: const TextStyle(
+                fontSize: 22.0,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(
+            height: 10.0
+        ),
+        _createRcvListDataTable(state),
+      ],
+    );
+  }
+
   Widget _rcvListCard() {
     return Card(
       child: Padding(
@@ -350,7 +402,7 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
   Widget _searchCriteriaCard() {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(15.0),
+        padding: const EdgeInsets.all(8.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget> [
@@ -360,83 +412,36 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
                 fontSize: 22.0,
               ),
             ),
-            const SizedBox(
-              width: 15.0,
-            ),
-            //CustomDatePicker(),
             SizedBox(
-              width: 200,
-              child: TextFormField(
-                controller: startDateController,
-                showCursor: true,
-                readOnly: true,
-                style: const TextStyle(
-                  fontSize: 20.0,
-                ),
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.today),
-                  border: OutlineInputBorder(),
-                  hintText: dateNowString,
-                ),
-                onTap: () async {
-                  var startDate =  await showDatePicker(
-                      context: context,
-                      initialDate:DateTime.now(),
-                      firstDate:DateTime(1900),
-                      lastDate: DateTime(2100));
-                  startDateController.text = startDate.toString().substring(0,10);
-                },
-              ),
+              width: commonWidthSize,
             ),
-            const SizedBox(
-              width: 15.0,
+            // Date picker Start date
+            CustomDatePicker(controller: startDateController),
+            SizedBox(
+              width: commonWidthSize,
             ),
             // Date picker End date
-            // CustomDatePicker(),
+            CustomDatePicker(controller: endDateController),
             SizedBox(
-              width: 200,
+              width: commonWidthSize,
+            ),
+            SizedBox(
+              width: 250.0,
               child: TextFormField(
-                controller: endDateController,
-                showCursor: true,
-                readOnly: true,
                 style: const TextStyle(
                   fontSize: 20.0,
                 ),
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.today),
-                  border: OutlineInputBorder(),
-                  hintText: dateNowString,
+                decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.search),
+                    hintText: 'Search Account'
                 ),
-                onTap: () async {
-                  var startDate =  await showDatePicker(
-                      context: context,
-                      initialDate:DateTime.now(),
-                      firstDate:DateTime(1900),
-                      lastDate: DateTime(2100));
-                  endDateController.text = startDate.toString().substring(0,10);
-                },
+                controller: rcvNoSearchBoxController,
               ),
             ),
-            const SizedBox(
-              width: 15.0,
+            SizedBox(
+              width: commonWidthSize,
             ),
-            // SizedBox(
-            //   width: 250.0,
-            //   child: TextFormField(
-            //     style: const TextStyle(
-            //       fontSize: 20.0,
-            //     ),
-            //     decoration: const InputDecoration(
-            //         border: OutlineInputBorder(),
-            //         prefixIcon: Icon(Icons.search),
-            //         hintText: 'Search Receiving No.'
-            //     ),
-            //     controller: rcvNoSearchBoxController,
-            //   ),
-            // ),
-            // const SizedBox(
-            //   width: 15.0,
-            // ),
             // Search Button
             SizedBox(
               height: 50, //height of button
@@ -447,27 +452,17 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
                       String currentDateStr = _getCurrentDate();
                       String startDateStr;
                       startDateStr = startDateController.text;
-                      if(startDateStr.isNotEmpty) {
-                        startDateStr = startDateStr.replaceAll('-', '');
-                      } else {
-                        startDateStr = currentDateStr;
-                        print(startDateStr);
-                      }
+                      startDateStr = _dateNoHypen(startDateStr);
 
                       String endDateStr;
                       endDateStr = endDateController.text;
-                      if(endDateStr.isNotEmpty) {
-                        endDateStr = endDateStr.replaceAll('-', '');
-                      } else {
-                        endDateStr = currentDateStr;
-                        print(startDateStr);
-                      }
+                      endDateStr = _dateNoHypen(endDateStr);
 
                       print('startDateStr: $startDateStr');
                       print('endDateController: $endDateStr');
 
-                      BlocProvider.of<ReceivingListsCubit>(context).getData(startDateStr, endDateStr);
-                  },
+                      BlocProvider.of<ReceivingListsCubit>(context).getRcvWork8011P_10Q(startDateStr, endDateStr);
+                    },
                     child: const Text(
                       'Search',
                       style: TextStyle(
@@ -485,44 +480,6 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
     );
   }
 
-  Widget _jsonPlaceholderTest(receivingList) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Receiving List [${receivingList.length}]',
-          style: const TextStyle(
-            fontSize: 22.0,
-            color: Colors.white,
-          ),
-        ),
-        const SizedBox(
-            height: 10.0
-        ),
-        _listViewContent(receivingList)
-      ],
-    );
-  }
-
-  Widget _listViewContent(receivingList) {
-    return SizedBox(
-      height: 500.0,
-      child: ListView.builder(
-        itemCount: receivingList.length,
-        //shrinkWrap: true,
-        itemBuilder: (context, index) {
-          return Card(
-              child: ListTile(
-                title: Text('No: ${receivingList[index].rcv_no} Date: ${receivingList[index].rcv_dt}'),
-                subtitle: Text('Account: ${receivingList[index].cust_nm}, Item Count: ${receivingList[index].item_cnt}'),
-                trailing: Icon(Icons.more_vert),
-              )
-          );
-        },
-      ),
-    );
-  }
-
   final _dataService = DataService();
 
   String _getCurrentDate() {
@@ -532,6 +489,16 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
     currentDateStr = currentDateStr.substring(0,10);
     currentDateStr = currentDateStr.replaceAll('-', '');
     return currentDateStr;
+  }
+
+  String _dateNoHypen(dateParam) {
+    if(dateParam.isNotEmpty) {
+      dateParam = dateParam.replaceAll('-', '');
+    } else {
+      dateParam = _getCurrentDate();
+      print(dateParam);
+    }
+    return dateParam;
   }
 
   // main Widget
@@ -556,7 +523,7 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
                   child: Column(
                     children: [
                       SizedBox(
-                        width: 900.0,
+                        width: MediaQuery.of(context).size.width * 0.9,
                         child: _searchCriteriaCard(),
                       ),
                       const SizedBox(
@@ -569,30 +536,10 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
                               padding: const EdgeInsets.all(20.0),
                               child: BlocBuilder<ReceivingListsCubit, ReceivingListsStates>(
                                   builder: (context, state) {
-                                    if(state is LoadingState) {
-                                      return Card(
-                                        color: const Color(0xFF303f9f),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(20.0),
-                                          child: Column(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: const [
-                                              CircularProgressIndicator(),
-                                              SizedBox(
-                                                height: 10.0,
-                                              ),
-                                              Text('Retrieving data...',
-                                                style: TextStyle(
-                                                  fontSize: 22.0,
-                                                  color: Colors.white,
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      );
-                                    } else if(state is LoadedState) {
-                                      return _createRcvListDataTable(state);
+                                    if(state is rlLoadingState) {
+                                      return const CustomProgressIndicator();
+                                    } else if(state is rlLoadedState) {
+                                      return _rcvListContent(state);
                                     } else {
                                       return Text('No Rows to show');
                                     }

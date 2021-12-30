@@ -29,7 +29,7 @@ class ReceivingList {
       cust_cd: json['CUST_CD'],
       cust_nm: json['CUST_NM'],
       rcv_type_nm: json['RCV_TYPE_NM'],
-      item_cnt: json['ITEM_CNT'],
+      item_cnt: json['ITEM_CNT'] == null ? 1 : 1,
       remark: json['REMARK']
   );
 }

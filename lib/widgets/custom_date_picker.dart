@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class CustomDatePicker extends StatefulWidget {
-
-  const CustomDatePicker({Key? key}) : super(key: key);
+  final TextEditingController controller;
+  const CustomDatePicker({Key? key, required this.controller}) : super(key: key);
 
   @override
   _CustomDatePickerState createState() => _CustomDatePickerState();
@@ -11,21 +11,13 @@ class CustomDatePicker extends StatefulWidget {
 class _CustomDatePickerState extends State<CustomDatePicker> {
 
   String dateNowString = DateTime.now().toString();
-  final dateController = TextEditingController();
-
-  @override
-  void dispose() {
-    // Clean up the controller when the widget is removed
-    dateController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: 200,
       child: TextFormField(
-        controller: dateController,
+        controller: widget.controller,
         showCursor: true,
         readOnly: true,
         style: const TextStyle(
@@ -42,7 +34,7 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
               initialDate:DateTime.now(),
               firstDate:DateTime(1900),
               lastDate: DateTime(2100));
-          dateController.text = startDate.toString().substring(0,10);
+          widget.controller.text = startDate.toString().substring(0,10);
         },
       ),
     );

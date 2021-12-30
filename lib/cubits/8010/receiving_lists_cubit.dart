@@ -1,21 +1,32 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kiosk_sf/cubits/8010/receiving_lists_states.dart';
+import 'package:kiosk_sf/models/8010/receiving_list.dart';
 import 'package:kiosk_sf/services/data_service.dart';
-//import 'package:kiosk_sf/variables/globals.dart';
 
 class ReceivingListsCubit extends Cubit<ReceivingListsStates> {
   ReceivingListsCubit() : super(InitialState()){
-    emit(ReadyState());
+    emit(rlReadyState());
   }
 
   final _dataService = DataService();
-  late final rcvLists;
 
-  void getData(startDate, endDate) async {
+  void getRcvWork8011P_10Q(startDate, endDate) async {
     try {
-      emit(LoadingState());
-      rcvLists = await _dataService.getRcvWork8011P(startDate, endDate);
-      emit(LoadedState(rcvLists));
+      emit(rlLoadingState());
+      late final List<ReceivingList> rcvLists;
+      rcvLists = await _dataService.getRcvWork8011P_10Q(startDate, endDate);
+      emit(rlLoadedState(rcvLists));
+    } catch(e) {
+      rethrow;
+    }
+  }
+
+  void getRcvwork8010F_10Q(rcvNo) async {
+    try {
+      emit(rlLoadingState());
+      late final List<ReceivingList> rcvLists;
+      rcvLists = await _dataService.getRcvwork8010F_10Q(rcvNo);
+      emit(rlLoadedState(rcvLists));
     } catch(e) {
       rethrow;
     }

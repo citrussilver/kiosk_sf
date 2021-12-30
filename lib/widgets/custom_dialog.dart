@@ -30,7 +30,7 @@ class _CustomDialogState extends State<CustomDialog> {
   Widget _createLabelInput(String labelText){
     return Column(
       children: [
-        CustomTextField(paramHintText: labelText),
+        CustomTextField(hintText: labelText),
       ],
     );
   }
