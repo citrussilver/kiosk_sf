@@ -526,13 +526,19 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
 
   List<DataRow> _createLotWarehousingRows(lotWarehousingLists) {
 
+    int selectedIndex = -1;
+
     List<DataRow> lotWarehousingRows = [];
 
     for(int x=0; x < lotWarehousingLists.length; x++ ) {
       lotWarehousingRows.add(
           DataRow(
+              selected: x == selectedIndex,
               onSelectChanged: (val) {
-                handleSelectedIndex((x+1));
+                // handleSelectedIndex((x+1));
+                setState(() {
+                  selectedIndex = x;
+                });
               },
               cells: [
                 DataCell(

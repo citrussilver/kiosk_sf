@@ -9,11 +9,11 @@ class LotWarehousingListsCubit extends Cubit<LotWarehousingListsStates> {
   }
 
   final _dataService = DataService();
-  late final lotWarehousingLists;
 
   void getData(rcvDt, rcvSeq, dtlSeq) async {
     try {
       emit(LoadingState());
+      late final lotWarehousingLists;
       lotWarehousingLists = await _dataService.getRcvWork8010f30Q(rcvDt, rcvSeq, dtlSeq);
       emit(LoadedState(lotWarehousingLists));
     } catch(e) {

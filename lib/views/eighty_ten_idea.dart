@@ -21,6 +21,7 @@ class EightyTenIdea extends StatefulWidget {
 class _EightyTenIdeaState extends State<EightyTenIdea> {
 
   String dateNowString = DateTime.now().toString();
+  double commonWidthSize = 15.0;
   final startDateController = TextEditingController();
   final endDateController = TextEditingController();
   final rcvNoSearchBoxController = TextEditingController();
@@ -180,39 +181,76 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
     //print(receivingList);
     List<DataRow> rcvRows = [];
 
-    for(int x=0; x < receivingList.length; x++ ) {
+    if(receivingList.length > 0) {
+      for(int x=0; x < receivingList.length; x++ ) {
+        rcvRows.add(
+            DataRow(
+                onSelectChanged: (val) {
+                  handleSelectedIndex((x+1));
+                },
+                cells: [
+                  DataCell(
+                      Text('${x+1}')
+                  ),
+                  DataCell(
+                      Text(receivingList[x].rcv_dt)
+                  ),
+                  DataCell(
+                      Text(receivingList[x].rcv_seq.toString())
+                  ),
+                  DataCell(
+                      Text(receivingList[x].rcv_no)
+                  ),
+                  DataCell(
+                      Text(receivingList[x].rcv_status_nm)
+                  ),
+                  DataCell(
+                      Text(receivingList[x].cust_cd)
+                  ),
+                  DataCell(
+                      Text(receivingList[x].cust_nm)
+                  ),
+                  DataCell(
+                      Text(receivingList[x].rcv_type_nm)
+                  ),
+                  DataCell(
+                      Text(receivingList[x].item_cnt.toString())
+                  ),
+                ]
+            )
+        );
+      }
+
+    } else {
       rcvRows.add(
-          DataRow(
-              onSelectChanged: (val) {
-                handleSelectedIndex((x+1));
-              },
-              cells: [
+          const DataRow(
+              cells: <DataCell>[
                 DataCell(
-                    Text('${x+1}')
+                    Text('')
                 ),
                 DataCell(
-                    Text(receivingList[x].rcv_dt)
+                    Text('')
                 ),
                 DataCell(
-                    Text(receivingList[x].rcv_seq.toString())
+                    Text('')
                 ),
                 DataCell(
-                    Text(receivingList[x].rcv_no)
+                    Text('')
                 ),
                 DataCell(
-                    Text(receivingList[x].rcv_status_nm)
+                    Text('')
                 ),
                 DataCell(
-                    Text(receivingList[x].cust_cd)
+                    Text('')
                 ),
                 DataCell(
-                    Text(receivingList[x].cust_nm)
+                    Text('')
                 ),
                 DataCell(
-                    Text(receivingList[x].rcv_type_nm)
+                    Text('')
                 ),
                 DataCell(
-                    Text(receivingList[x].item_cnt.toString())
+                    Text('')
                 ),
               ]
           )
@@ -325,6 +363,32 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
   //     );
   // }
 
+  Widget _rcvListContent(state) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            const Icon(
+                Icons.star,
+                color: Colors.red
+            ),
+            Text(
+              'Receiving List [${state.rcvLists.length}]',
+              style: const TextStyle(
+                fontSize: 22.0,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(
+            height: 10.0
+        ),
+        _createRcvListDataTable(state),
+      ],
+    );
+  }
+
   Widget _rcvListCard() {
     return Card(
       child: Padding(
@@ -360,83 +424,36 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
                 fontSize: 22.0,
               ),
             ),
-            const SizedBox(
-              width: 15.0,
-            ),
-            //CustomDatePicker(),
             SizedBox(
-              width: 200,
-              child: TextFormField(
-                controller: startDateController,
-                showCursor: true,
-                readOnly: true,
-                style: const TextStyle(
-                  fontSize: 20.0,
-                ),
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.today),
-                  border: OutlineInputBorder(),
-                  hintText: dateNowString,
-                ),
-                onTap: () async {
-                  var startDate =  await showDatePicker(
-                      context: context,
-                      initialDate:DateTime.now(),
-                      firstDate:DateTime(1900),
-                      lastDate: DateTime(2100));
-                  startDateController.text = startDate.toString().substring(0,10);
-                },
-              ),
+              width: commonWidthSize,
             ),
-            const SizedBox(
-              width: 15.0,
+            // Date picker Start date
+            CustomDatePicker(controller: startDateController),
+            SizedBox(
+              width: commonWidthSize,
             ),
             // Date picker End date
-            // CustomDatePicker(),
+            CustomDatePicker(controller: endDateController),
             SizedBox(
-              width: 200,
+              width: commonWidthSize,
+            ),
+            SizedBox(
+              width: 250.0,
               child: TextFormField(
-                controller: endDateController,
-                showCursor: true,
-                readOnly: true,
                 style: const TextStyle(
                   fontSize: 20.0,
                 ),
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.today),
-                  border: OutlineInputBorder(),
-                  hintText: dateNowString,
+                decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.search),
+                    hintText: 'Search Account'
                 ),
-                onTap: () async {
-                  var startDate =  await showDatePicker(
-                      context: context,
-                      initialDate:DateTime.now(),
-                      firstDate:DateTime(1900),
-                      lastDate: DateTime(2100));
-                  endDateController.text = startDate.toString().substring(0,10);
-                },
+                controller: rcvNoSearchBoxController,
               ),
             ),
-            const SizedBox(
-              width: 15.0,
+            SizedBox(
+              width: commonWidthSize,
             ),
-            // SizedBox(
-            //   width: 250.0,
-            //   child: TextFormField(
-            //     style: const TextStyle(
-            //       fontSize: 20.0,
-            //     ),
-            //     decoration: const InputDecoration(
-            //         border: OutlineInputBorder(),
-            //         prefixIcon: Icon(Icons.search),
-            //         hintText: 'Search Receiving No.'
-            //     ),
-            //     controller: rcvNoSearchBoxController,
-            //   ),
-            // ),
-            // const SizedBox(
-            //   width: 15.0,
-            // ),
             // Search Button
             SizedBox(
               height: 50, //height of button
@@ -481,44 +498,6 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _jsonPlaceholderTest(receivingList) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Receiving List [${receivingList.length}]',
-          style: const TextStyle(
-            fontSize: 22.0,
-            color: Colors.white,
-          ),
-        ),
-        const SizedBox(
-            height: 10.0
-        ),
-        _listViewContent(receivingList)
-      ],
-    );
-  }
-
-  Widget _listViewContent(receivingList) {
-    return SizedBox(
-      height: 500.0,
-      child: ListView.builder(
-        itemCount: receivingList.length,
-        //shrinkWrap: true,
-        itemBuilder: (context, index) {
-          return Card(
-              child: ListTile(
-                title: Text('No: ${receivingList[index].rcv_no} Date: ${receivingList[index].rcv_dt}'),
-                subtitle: Text('Account: ${receivingList[index].cust_nm}, Item Count: ${receivingList[index].item_cnt}'),
-                trailing: Icon(Icons.more_vert),
-              )
-          );
-        },
       ),
     );
   }
@@ -592,7 +571,7 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
                                         ),
                                       );
                                     } else if(state is LoadedState) {
-                                      return _createRcvListDataTable(state);
+                                      return _rcvListContent(state);
                                     } else {
                                       return Text('No Rows to show');
                                     }
