@@ -33,7 +33,7 @@ class ReceivingListDetail {
     rcv_status_nm: json['RCV_STATUS_NM'],
     item_cd: json['ITEM_CD'],
     item_nm: json['ITEM_NM'],
-    item_unit: json['ITEM_UNIT'] ==null ? '' : json['ITEM_UNIT'],
+    item_unit: json['ITEM_UNIT'] == null ? '' : json['ITEM_UNIT'],
     item_mng_unit_nm: json['ITEM_MNG_UNIT_NM'],
     vld_mng_type_nm: json['VLD_MNG_TYPE_NM'],
     vld_day: json['VLD_DAY'],

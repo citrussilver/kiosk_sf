@@ -197,6 +197,44 @@ class DataService {
     }
   }
 
+  Future<List<ReceivingList>> getRcvwork8010F_10Q(rcvNo) async {
+
+    try {
+      SharedPreferences loginInfoSession = await SharedPreferences.getInstance();
+      String? extractJsessionId = loginInfoSession.getString('jsessionid');
+      String? ctkey = loginInfoSession.getString('ctkey');
+
+      print('8010F_10Q\nctkey: $ctkey\nRCV_NO: $rcvNo');
+
+      MESServerConnection mesConn = MESServerConnection();
+      String address = _baseUrl+"/rcvwork8010FManagement/getRcvwork8010F_10Q;jsessionid=${extractJsessionId}";
+      final response = await mesConn.connectAPI(HttpMethod.POST, address, {
+        "paramMap":{},
+        "dataSetMap":{
+          "ds_cond":[{
+            "PD_MODE":"R",
+            "PD_VALUE1":"$ctkey||$rcvNo||","PD_VALUE2":"||}"
+          }]
+        }
+      });
+
+      List<dynamic> json = jsonDecode(response.body)["dataset"]["ds_master_fields_10Q"];
+
+      print('getRcvwork8010F_10Q json response: $json');
+      final receivingList = json.map((receivingListJson) => ReceivingList.fromJson(receivingListJson)).toList();
+      //print('runtimeType is: ${rcvLists.runtimeType}');
+
+      if (response.statusCode == 200) {
+        return receivingList;
+      } else {
+        return <ReceivingList>[];
+      }
+
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<List<ReceivingListDetail>> getRcvwork8010F_20Q(rcvDt, rcvSeq) async {
 
     try {

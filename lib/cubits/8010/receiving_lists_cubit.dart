@@ -21,4 +21,15 @@ class ReceivingListsCubit extends Cubit<ReceivingListsStates> {
     }
   }
 
+  void getRcvwork8010F_10Q(rcvNo) async {
+    try {
+      emit(rlLoadingState());
+      late final List<ReceivingList> rcvLists;
+      rcvLists = await _dataService.getRcvwork8010F_10Q(rcvNo);
+      emit(rlLoadedState(rcvLists));
+    } catch(e) {
+      rethrow;
+    }
+  }
+
 }

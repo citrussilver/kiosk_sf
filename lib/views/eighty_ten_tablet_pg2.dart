@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+
 import 'package:kiosk_sf/route/route.dart' as route;
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:kiosk_sf/cubits/8010/receiving_lists_cubit.dart';
+import 'package:kiosk_sf/cubits/8010/receiving_lists_states.dart';
 import 'package:kiosk_sf/cubits/8010/receiving_list_detail_cubit.dart';
 import 'package:kiosk_sf/cubits/8010/receiving_list_detail_states.dart';
 import 'package:kiosk_sf/cubits/8010/lot_warehousing_lists_cubit.dart';
@@ -12,7 +15,6 @@ import 'package:kiosk_sf/widgets/custom_progress_indicator.dart';
 
 class EightyTenTabletPg2 extends StatefulWidget {
   late final arguments;
-  Map<String, dynamic> myData = new Map();
 
   EightyTenTabletPg2({Key? key, required this.arguments}) : super(key: key);
 
@@ -122,71 +124,145 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
     ];
   }
   // Receiving List
-  List<DataRow> _createRows() {
-    //print(arguments);
-    return [
-      const DataRow(
-          cells: [
-            DataCell(
-              Text('2021-10-11',
-                style: TextStyle(
-                  fontSize: 18.0,
+  List<DataRow> _createRows(receivingList) {
+
+    List<DataRow> rcvRows = [];
+
+    if(receivingList.length > 0) {
+      for(int x=0; x < receivingList.length; x++ ) {
+        rcvRows.add(
+            DataRow(
+                onSelectChanged: (val) {
+                  handleSelectedIndex((x+1));
+                },
+                cells: [
+                  DataCell(
+                      Text(receivingList[x].rcv_dt)
+                  ),
+                  DataCell(
+                      Text(receivingList[x].rcv_seq.toString())
+                  ),
+                  DataCell(
+                      Text(receivingList[x].rcv_status_nm)
+                  ),
+                  DataCell(
+                      Text(receivingList[x].cust_cd)
+                  ),
+                  DataCell(
+                      Text(receivingList[x].cust_nm)
+                  ),
+                  DataCell(
+                      Text(receivingList[x].rcv_type_nm)
+                  ),
+                  DataCell(
+                      Text(receivingList[x].item_cnt.toString())
+                  ),
+                ]
+            )
+        );
+      }
+
+    } else {
+      rcvRows.add(
+          const DataRow(
+              cells: <DataCell>[
+                DataCell(
+                    Text('')
                 ),
-              ),
-            ),
-            DataCell(
-              Text('2',
-                style: TextStyle(
-                  fontSize: 18.0,
+                DataCell(
+                    Text('')
                 ),
-              ),
-            ),
-            DataCell(
-              Text('입고등록',
-                style: TextStyle(
-                  fontSize: 18.0,
+                DataCell(
+                    Text('')
                 ),
-              ),
-            ),
-            DataCell(
-              Text('40032',
-                style: TextStyle(
-                  fontSize: 18.0,
+                DataCell(
+                    Text('')
                 ),
-              ),
-            ),
-            //"Albedo's Alchemy"
-            DataCell(
-              Text("Albedo's Alchemy",
-                style: TextStyle(
-                  fontSize: 18.0,
+                DataCell(
+                    Text('No rows to show.')
                 ),
-              ),
-            ),
-            DataCell(
-              Text('매입입고',
-                style: TextStyle(
-                  fontSize: 18.0,
+                DataCell(
+                    Text('')
                 ),
-              ),
-            ),
-            DataCell(
-              Text('1',
-                style: TextStyle(
-                  fontSize: 18.0,
+                DataCell(
+                    Text('')
                 ),
-              ),
-            ),
-          ]
-      ),
-    ];
+                DataCell(
+                    Text('')
+                ),
+                DataCell(
+                    Text('')
+                ),
+              ]
+          )
+      );
+    }
+    return rcvRows;
+
+    // return [
+    //   const DataRow(
+    //       cells: [
+    //         DataCell(
+    //           Text('2021-10-11',
+    //             style: TextStyle(
+    //               fontSize: 18.0,
+    //             ),
+    //           ),
+    //         ),
+    //         DataCell(
+    //           Text('2',
+    //             style: TextStyle(
+    //               fontSize: 18.0,
+    //             ),
+    //           ),
+    //         ),
+    //         DataCell(
+    //           Text('입고등록',
+    //             style: TextStyle(
+    //               fontSize: 18.0,
+    //             ),
+    //           ),
+    //         ),
+    //         DataCell(
+    //           Text('40032',
+    //             style: TextStyle(
+    //               fontSize: 18.0,
+    //             ),
+    //           ),
+    //         ),
+    //         //"Albedo's Alchemy"
+    //         DataCell(
+    //           Text("Albedo's Alchemy",
+    //             style: TextStyle(
+    //               fontSize: 18.0,
+    //             ),
+    //           ),
+    //         ),
+    //         DataCell(
+    //           Text('매입입고',
+    //             style: TextStyle(
+    //               fontSize: 18.0,
+    //             ),
+    //           ),
+    //         ),
+    //         DataCell(
+    //           Text('1',
+    //             style: TextStyle(
+    //               fontSize: 18.0,
+    //             ),
+    //           ),
+    //         ),
+    //       ]
+    //   ),
+    // ];
+
   }
 
-  DataTable _createRcvDataTable() {
+  DataTable _createRcvDataTable(state) {
     return DataTable(
       // showCheckboxColumn: false,
       columns: _createColumns(),
-      rows: _createRows(),
+      rows: _createRows(state.rcvLists),
       dividerThickness: 5,
       dataRowHeight: 80,
       showBottomBorder: true,
@@ -197,9 +273,9 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
       headingRowColor: MaterialStateProperty.resolveWith(
               (states) => const Color(0xFF3F51B5)
       ),
-      dataRowColor: MaterialStateColor.resolveWith(
-              (states) => const Color(0xFFC5CAE9)
-      ),
+      // dataRowColor: MaterialStateColor.resolveWith(
+      //         (states) => const Color(0xFFC5CAE9)
+      // ),
       decoration: BoxDecoration(
         border: Border.all(
           color: const Color(0xFF3F51B5),
@@ -793,11 +869,14 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
         ),
         body: MultiBlocProvider(
           providers: [
+            BlocProvider<ReceivingListsCubit>(
+              create: (context) => ReceivingListsCubit()..getRcvwork8010F_10Q('0000A20211230002'),
+            ),
             BlocProvider<ReceivingListDetailCubit>(
-              create: (context) => ReceivingListDetailCubit(),
+              create: (context) => ReceivingListDetailCubit()..getRcvwork8010F_20Q('20211230', '2'),
             ),
             BlocProvider<LotWarehousingListsCubit>(
-              create: (context) => LotWarehousingListsCubit(),
+              create: (context) => LotWarehousingListsCubit()..getRcvWork8010F_30Q('20211230', '2', '1'),
             ),
           ],
           child: Column(
@@ -805,8 +884,20 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
             children: [
               Builder(
                 builder: (context) {
-                  BlocProvider.of<ReceivingListDetailCubit>(context).getRcvwork8010F_20Q('20211230', '2');
-                  return _createRcvDataTable();
+                  //BlocProvider.of<ReceivingListDetailCubit>(context).getRcvwork8010F_20Q('20211230', '2');
+                  return SingleChildScrollView(
+                      child: BlocBuilder<ReceivingListsCubit, ReceivingListsStates>(
+                        builder: (context, state) {
+                          if(state is rlLoadingState) {
+                            return const CustomProgressIndicator();
+                          } else if(state is rlLoadedState) {
+                            return _createRcvDataTable(state);
+                          } else {
+                            return Text('No Rows to show');
+                          }
+                        }
+                      )
+                  );
                 }
               ),
               const SizedBox(
@@ -873,7 +964,7 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
                   padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 20.0),
                   child: Builder(
                     builder: (context) {
-                      BlocProvider.of<LotWarehousingListsCubit>(context).getRcvWork8010F_30Q('20211230', '2', '1');
+                      //BlocProvider.of<LotWarehousingListsCubit>(context).getRcvWork8010F_30Q('20211230', '2', '1');
                       return SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: BlocBuilder<ReceivingListDetailCubit, ReceivingListDetailStates>(
