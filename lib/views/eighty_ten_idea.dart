@@ -414,7 +414,7 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
   Widget _searchCriteriaCard() {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(15.0),
+        padding: const EdgeInsets.all(8.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget> [
@@ -484,7 +484,7 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
                       print('endDateController: $endDateStr');
 
                       BlocProvider.of<ReceivingListsCubit>(context).getData(startDateStr, endDateStr);
-                  },
+                    },
                     child: const Text(
                       'Search',
                       style: TextStyle(
@@ -535,7 +535,7 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
                   child: Column(
                     children: [
                       SizedBox(
-                        width: 900.0,
+                        width: MediaQuery.of(context).size.width * 0.9,
                         child: _searchCriteriaCard(),
                       ),
                       const SizedBox(
