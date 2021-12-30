@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-enum ButtonType { normal, delete, someOtherType, someOtherOtherType }
+import 'package:kiosk_sf/variables/button_type.dart';
 
 class CommonButton extends StatefulWidget {
   final String title;

@@ -10,22 +10,22 @@ class InitialState extends LotWarehousingListsStates {
 
 }
 
-class ReadyState extends LotWarehousingListsStates {
+class lwlReadyState extends LotWarehousingListsStates {
   @override
   // TODO: implement props
   List<Object> get props => [];
 
 }
 
-class LoadingState extends LotWarehousingListsStates {
+class lwlLoadingState extends LotWarehousingListsStates {
   @override
   // TODO: implement props
   List<Object> get props => [];
 
 }
 
-class LoadedState extends LotWarehousingListsStates {
-  LoadedState(this.lotWarehousingLists);
+class lwlLoadedState extends LotWarehousingListsStates {
+  lwlLoadedState(this.lotWarehousingLists);
   final List<LotWarehousingList> lotWarehousingLists;
   @override
   // TODO: implement props

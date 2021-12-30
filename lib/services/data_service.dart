@@ -1,10 +1,13 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+
 import 'package:kiosk_sf/services/mes_server_connection.dart';
 import 'package:kiosk_sf/models/gms_user.dart';
 
+// 8010 models
 import 'package:kiosk_sf/models/8010/receiving_list.dart';
+import 'package:kiosk_sf/models/8010/receiving_list_detail.dart';
 import 'package:kiosk_sf/models/8010/lot_warehousing_list.dart';
 import 'package:kiosk_sf/models/post.dart';
 
@@ -21,8 +24,8 @@ class DataService {
 
   String loginMSG = "";
   String lang = "ENG";
-  String _baseUrl = "http://192.168.0.188:8081/iUp_MES";
-  //String _baseUrl = "http://factopia.co.kr/MESCloud";
+  // String _baseUrl = "http://192.168.0.188:8081/iUp_MES";
+  String _baseUrl = "http://factopia.co.kr/MESCloud";
 
   final _jsonplaceholderUrl = 'jsonplaceholder.typicode.com';
 
@@ -44,7 +47,7 @@ class DataService {
 
     if (response.statusCode == 200) {
       Map<String, dynamic> reqInfo = jsonDecode(response.body);
-      //print('response.body is: ${jsonDecode(response.body)["dataset"]["ds_loginInfo"]}');
+      print('response.body is: ${jsonDecode(response.body)["dataset"]["ds_loginInfo"]}');
 
       String rawJsessionId = response.headers['set-cookie'].toString();
       String extractJsessionId = rawJsessionId.substring(11,43);
@@ -62,7 +65,6 @@ class DataService {
       }
 
       List<dynamic> loginfo = reqInfo["dataset"]["ds_loginInfo"];
-
 
       await loginInfoSession.setString('ctkey', loginfo[0]['CTKEY'] );
       //print('ctkey is: ${loginInfoSession.getString('ctkey')}');
@@ -151,7 +153,7 @@ class DataService {
     }
   }
 
-  Future<List<ReceivingList>> getRcvWork8011P(startDate, endDate) async {
+  Future<List<ReceivingList>> getRcvWork8011P_10Q(startDate, endDate) async {
     try {
       // final uri = Uri.https( _baseUrl, '/posts');
       // final response = await http.get(uri);
@@ -163,7 +165,7 @@ class DataService {
       String? extractJsessionId = loginInfoSession.getString('jsessionid');
       String? ctkey = loginInfoSession.getString('ctkey');
 
-      print('ctkey: $ctkey\nstartDate: $startDate\nendDate: $endDate');
+      //print('ctkey: $ctkey\nstartDate: $startDate\nendDate: $endDate');
 
       MESServerConnection mesConn = MESServerConnection();
       String address = _baseUrl + "/rcvwork8011PManagement/getRcvwork8011P_10Q;jsessionid=${extractJsessionId}";
@@ -180,7 +182,7 @@ class DataService {
 
       List<dynamic> json = jsonDecode(response.body)["dataset"]["ds_master_10Q"];
 
-      print('json is: $json');
+      //print('getRcvWork8011P json response: $json');
       final rcvLists = json.map((rcvJson) => ReceivingList.fromJson(rcvJson)).toList();
       //print('runtimeType is: ${rcvLists.runtimeType}');
 
@@ -195,7 +197,46 @@ class DataService {
     }
   }
 
-  Future<List<LotWarehousingList>> getRcvWork8010f30Q(rcvDt, rcvSeq, dtlSeq) async {
+  Future<List<ReceivingListDetail>> getRcvwork8010F_20Q(rcvDt, rcvSeq) async {
+
+    try {
+      SharedPreferences loginInfoSession = await SharedPreferences.getInstance();
+      String? extractJsessionId = loginInfoSession.getString('jsessionid');
+      String? ctkey = loginInfoSession.getString('ctkey');
+
+      print('_20Q\nctkey: $ctkey\nRCV_DT: $rcvDt\nRCV_SEQ: $rcvSeq');
+
+      MESServerConnection mesConn = MESServerConnection();
+      String address = _baseUrl+"/rcvwork8010FManagement/getRcvwork8010F_20Q;jsessionid=${extractJsessionId}";
+      final response = await mesConn.connectAPI(HttpMethod.POST, address, {
+        "paramMap":{},
+        "dataSetMap":{
+          "ds_cond_20Q":[{
+            "PD_MODE":"R",
+            "PD_VALUE1":"$ctkey||$rcvDt||$rcvSeq||",
+            "PD_VALUE2":"||}"
+          }]
+        }
+      });
+
+      List<dynamic> json = jsonDecode(response.body)["dataset"]["ds_master_20Q"];
+
+      print('getRcvwork8010F_20Q json response: $json');
+      final receivingListDetailLists = json.map((receivingListDetailJson) => ReceivingListDetail.fromJson(receivingListDetailJson)).toList();
+      //print('runtimeType is: ${rcvLists.runtimeType}');
+
+      if (response.statusCode == 200) {
+        return receivingListDetailLists;
+      } else {
+        return <ReceivingListDetail>[];
+      }
+
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<List<LotWarehousingList>> getRcvWork8010F_30Q(rcvDt, rcvSeq, dtlSeq) async {
 
     try {
       SharedPreferences loginInfoSession = await SharedPreferences.getInstance();
@@ -219,7 +260,7 @@ class DataService {
 
       List<dynamic> json = jsonDecode(response.body)["dataset"]["ds_master_30Q"];
 
-      print('json is: $json');
+      print('getRcvWork8010F_30Q json response: $json');
       final lotWarehousingLists = json.map((lotWarehousingJson) => LotWarehousingList.fromJson(lotWarehousingJson)).toList();
       //print('runtimeType is: ${rcvLists.runtimeType}');
 

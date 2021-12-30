@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kiosk_sf/route/route.dart' as route;
 import 'package:kiosk_sf/services/data_service.dart';
-import 'package:kiosk_sf/variables/arguments.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kiosk_sf/cubits/8010/receiving_lists_cubit.dart';
 import 'package:kiosk_sf/cubits/8010/receiving_lists_states.dart';
 import 'package:kiosk_sf/widgets/custom_date_picker.dart';
+import 'package:kiosk_sf/widgets/custom_progress_indicator.dart';
 
 class EightyTenIdea extends StatefulWidget {
 
@@ -58,19 +59,8 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
   int selectedIndex = -1;
 
   void handleSelectedIndex(int val) {
-
-
     if (val == 1) {
-      // final arguments = Arguments(
-      //   no: 1,
-      //   rcv_dt: '2021-09-09',
-      //   rcv_seq: 1,
-      //   recv_no: '1001A20211011001',
-      //   recv_status: 'Receiving Registration',
-      //   acct_code: '40032',
-      //   acct_name: "Albedo's Alchemy",
-      //   item_cnt: 1
-      // );
+
       final arguments = {
         "no": 1,
         "rcv_dt": '2021-09-09',
@@ -238,7 +228,7 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
                     Text('')
                 ),
                 DataCell(
-                    Text('')
+                    Text('No rows to show.')
                 ),
                 DataCell(
                     Text('')
@@ -261,11 +251,36 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
 
   DataTable _createRcvListDataTable(state) {
     print('state.runtimeType: ${state.runtimeType}');
-    if(state.runtimeType.toString() == 'ReadyState') {
-      print('if branch');
+    if(state is rlLoadedState) {
       return DataTable(
         showCheckboxColumn: false,
         columns: _createColumns(),
+        rows: _rowsFromApi(state.rcvLists),
+        dividerThickness: 2,
+        dataRowHeight: 50,
+        showBottomBorder: true,
+        headingTextStyle: const TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.white
+        ),
+        headingRowColor: MaterialStateProperty.resolveWith(
+                (states) => const Color(0xFF3F51B5)
+        ),
+        // dataRowColor: MaterialStateColor.resolveWith(
+        //         (states) => const Color(0xFFC5CAE9)
+        // ),
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: const Color(0xFF3F51B5),
+            width: 3,
+          ),
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
+        ),
+      );
+    } else {
+      return DataTable(
+          showCheckboxColumn: false,
+          columns: _createColumns(),
         rows: <DataRow>[
           DataRow(
               cells: <DataCell>[
@@ -282,7 +297,7 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
                     Text('')
                 ),
                 DataCell(
-                    Text('')
+                    Text('No rows to show.')
                 ),
                 DataCell(
                     Text('')
@@ -299,33 +314,6 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
               ]
           ),
         ],
-        dividerThickness: 2,
-        dataRowHeight: 80,
-        showBottomBorder: true,
-        headingTextStyle: const TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Colors.white
-        ),
-        headingRowColor: MaterialStateProperty.resolveWith(
-                (states) => const Color(0xFF3F51B5)
-        ),
-        // dataRowColor: MaterialStateColor.resolveWith(
-        //         // (states) => const Color(0xFFC5CAE9)
-        // ),
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: const Color(0xFF3F51B5),
-            width: 3,
-          ),
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-        ),
-      );
-    } else {
-      print('else branch');
-      return DataTable(
-        showCheckboxColumn: false,
-        columns: _createColumns(),
-        rows: _rowsFromApi(state.rcvLists),
         dividerThickness: 2,
         dataRowHeight: 50,
         showBottomBorder: true,
@@ -374,7 +362,7 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
                 color: Colors.red
             ),
             Text(
-              'Receiving List [${state.rcvLists.length}]',
+              'Receiving List [ ${state.rcvLists.length} ]',
               style: const TextStyle(
                 fontSize: 22.0,
               ),
@@ -464,26 +452,16 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
                       String currentDateStr = _getCurrentDate();
                       String startDateStr;
                       startDateStr = startDateController.text;
-                      if(startDateStr.isNotEmpty) {
-                        startDateStr = startDateStr.replaceAll('-', '');
-                      } else {
-                        startDateStr = currentDateStr;
-                        print(startDateStr);
-                      }
+                      startDateStr = _dateNoHypen(startDateStr);
 
                       String endDateStr;
                       endDateStr = endDateController.text;
-                      if(endDateStr.isNotEmpty) {
-                        endDateStr = endDateStr.replaceAll('-', '');
-                      } else {
-                        endDateStr = currentDateStr;
-                        print(startDateStr);
-                      }
+                      endDateStr = _dateNoHypen(endDateStr);
 
                       print('startDateStr: $startDateStr');
                       print('endDateController: $endDateStr');
 
-                      BlocProvider.of<ReceivingListsCubit>(context).getData(startDateStr, endDateStr);
+                      BlocProvider.of<ReceivingListsCubit>(context).getRcvWork8011P_10Q(startDateStr, endDateStr);
                     },
                     child: const Text(
                       'Search',
@@ -511,6 +489,16 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
     currentDateStr = currentDateStr.substring(0,10);
     currentDateStr = currentDateStr.replaceAll('-', '');
     return currentDateStr;
+  }
+
+  String _dateNoHypen(dateParam) {
+    if(dateParam.isNotEmpty) {
+      dateParam = dateParam.replaceAll('-', '');
+    } else {
+      dateParam = _getCurrentDate();
+      print(dateParam);
+    }
+    return dateParam;
   }
 
   // main Widget
@@ -548,29 +536,9 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
                               padding: const EdgeInsets.all(20.0),
                               child: BlocBuilder<ReceivingListsCubit, ReceivingListsStates>(
                                   builder: (context, state) {
-                                    if(state is LoadingState) {
-                                      return Card(
-                                        color: const Color(0xFF303f9f),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(20.0),
-                                          child: Column(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: const [
-                                              CircularProgressIndicator(),
-                                              SizedBox(
-                                                height: 10.0,
-                                              ),
-                                              Text('Retrieving data...',
-                                                style: TextStyle(
-                                                  fontSize: 22.0,
-                                                  color: Colors.white,
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      );
-                                    } else if(state is LoadedState) {
+                                    if(state is rlLoadingState) {
+                                      return const CustomProgressIndicator();
+                                    } else if(state is rlLoadedState) {
                                       return _rcvListContent(state);
                                     } else {
                                       return Text('No Rows to show');

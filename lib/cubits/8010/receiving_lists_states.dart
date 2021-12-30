@@ -10,22 +10,22 @@ class InitialState extends ReceivingListsStates {
 
 }
 
-class ReadyState extends ReceivingListsStates {
+class rlReadyState extends ReceivingListsStates {
   @override
   // TODO: implement props
   List<Object> get props => [];
 
 }
 
-class LoadingState extends ReceivingListsStates {
+class rlLoadingState extends ReceivingListsStates {
   @override
   // TODO: implement props
   List<Object> get props => [];
 
 }
 
-class LoadedState extends ReceivingListsStates {
-  LoadedState(this.rcvLists);
+class rlLoadedState extends ReceivingListsStates {
+  rlLoadedState(this.rcvLists);
   final List<ReceivingList> rcvLists;
   @override
   // TODO: implement props

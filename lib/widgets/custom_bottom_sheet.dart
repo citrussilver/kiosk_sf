@@ -103,7 +103,7 @@ class _CustomBottomSheetWidgetState extends State<CustomBottomSheetWidget> {
     } else {
       return Column(
         children: [
-          CustomTextField(paramHintText: labelText),
+          CustomTextField(hintText: labelText),
         ],
       );
     }
