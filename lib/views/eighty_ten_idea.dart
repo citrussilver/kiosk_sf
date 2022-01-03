@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kiosk_sf/route/route.dart' as route;
 import 'package:kiosk_sf/services/data_service.dart';
 
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:kiosk_sf/variables/receiving_no.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -33,6 +33,8 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
   bool _isSearchFormVisible = false;
   bool _isDataTableVisible = false;
 
+
+
   String dropdownValue = 'All';
 
   @override
@@ -58,27 +60,9 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
 
   int selectedIndex = -1;
 
-  void handleSelectedIndex(int val) {
-    if (val == 1) {
-
-      final arguments = {
-        "no": 1,
-        "rcv_dt": '2021-09-09',
-        "rcv_seq": 1,
-        "recv_no": '1001A20211011001',
-        "recv_status": 'Receiving Registration',
-        "acct_code": '40032',
-        "acct_name": "Albedo's Alchemy",
-        "item_cnt": 1
-      };
-
-      print('arguments is: ${arguments.toString()}');
-      Navigator.pushNamed(context, route.eightyTenTabletPg2, arguments: arguments);
-    }
-    // Useful for navigating to different data
-    // if(val == 0) {
-    //   Navigator.pushNamed(context, route.eightyTenTabletPg2)
-    // }
+  void handleSelectedIndex(int val, String recvNo) {
+    print('val: $val\nrecvNo: $recvNo');
+    Navigator.pushNamed(context, route.eightyTenTabletPg2, arguments: recvNo);
   }
 
   List<DataColumn> _createColumns() {
@@ -170,13 +154,17 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
   List<DataRow> _rowsFromApi(receivingList) {
     //print(receivingList);
     List<DataRow> rcvRows = [];
+    int noCounter = 0;
 
     if(receivingList.length > 0) {
       for(int x=0; x < receivingList.length; x++ ) {
+
         rcvRows.add(
             DataRow(
                 onSelectChanged: (val) {
-                  handleSelectedIndex((x+1));
+                  // noCounter = x + 1;
+                  // handleSelectedIndex( noCounter, receivingList[x].rcv_no);
+                  Navigator.pushNamed(context, route.eightyTenTabletPg2, arguments: receivingList[x].rcv_no);
                 },
                 cells: [
                   DataCell(

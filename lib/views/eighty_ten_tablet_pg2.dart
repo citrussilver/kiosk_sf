@@ -14,9 +14,9 @@ import 'package:kiosk_sf/cubits/8010/lot_warehousing_lists_states.dart';
 import 'package:kiosk_sf/widgets/custom_progress_indicator.dart';
 
 class EightyTenTabletPg2 extends StatefulWidget {
-  late final arguments;
+  late String recvNo;
 
-  EightyTenTabletPg2({Key? key, required this.arguments}) : super(key: key);
+  EightyTenTabletPg2({Key? key, required this.recvNo}) : super(key: key);
 
 
   @override
@@ -27,6 +27,12 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
 
   String accountName = 'jpim';
   String accountEmail = 'jpim@test.com';
+
+  var datamap10Q = {};
+  var datamap20Q = {};
+  var combinedMap = {};
+  var dataList = [];
+
 
   final managedDateController = TextEditingController();
   final expiryDateController = TextEditingController();
@@ -41,8 +47,6 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
 
   int selectedIndex = -1;
 
-
-
   void handleSelectedIndex(int val) {
     setState(() {
       selectedIndex = val;
@@ -54,7 +58,7 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
     // }
   }
 
-  List<DataColumn> _createColumns() {
+  List<DataColumn> _createColumns_10Q() {
     return [
       const DataColumn(
         label: Text(
@@ -124,12 +128,17 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
     ];
   }
   // Receiving List
-  List<DataRow> _createRows(receivingList) {
+  List<DataRow> _createRows_10Q(receivingList) {
 
     List<DataRow> rcvRows = [];
 
     if(receivingList.length > 0) {
       for(int x=0; x < receivingList.length; x++ ) {
+
+        datamap10Q['rcv_dt'] = receivingList[x].rcv_dt;
+        datamap10Q['rcv_seq']  = receivingList[x].rcv_seq.toString();
+        print("datamap10Q: ${datamap10Q['rcv_dt']} ${datamap10Q['rcv_seq']}");
+
         rcvRows.add(
             DataRow(
                 onSelectChanged: (val) {
@@ -198,71 +207,13 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
       );
     }
     return rcvRows;
-
-    // return [
-    //   const DataRow(
-    //       cells: [
-    //         DataCell(
-    //           Text('2021-10-11',
-    //             style: TextStyle(
-    //               fontSize: 18.0,
-    //             ),
-    //           ),
-    //         ),
-    //         DataCell(
-    //           Text('2',
-    //             style: TextStyle(
-    //               fontSize: 18.0,
-    //             ),
-    //           ),
-    //         ),
-    //         DataCell(
-    //           Text('입고등록',
-    //             style: TextStyle(
-    //               fontSize: 18.0,
-    //             ),
-    //           ),
-    //         ),
-    //         DataCell(
-    //           Text('40032',
-    //             style: TextStyle(
-    //               fontSize: 18.0,
-    //             ),
-    //           ),
-    //         ),
-    //         //"Albedo's Alchemy"
-    //         DataCell(
-    //           Text("Albedo's Alchemy",
-    //             style: TextStyle(
-    //               fontSize: 18.0,
-    //             ),
-    //           ),
-    //         ),
-    //         DataCell(
-    //           Text('매입입고',
-    //             style: TextStyle(
-    //               fontSize: 18.0,
-    //             ),
-    //           ),
-    //         ),
-    //         DataCell(
-    //           Text('1',
-    //             style: TextStyle(
-    //               fontSize: 18.0,
-    //             ),
-    //           ),
-    //         ),
-    //       ]
-    //   ),
-    // ];
-
   }
 
-  DataTable _createRcvDataTable(state) {
+  DataTable _createDataTable_10Q(state) {
     return DataTable(
       // showCheckboxColumn: false,
-      columns: _createColumns(),
-      rows: _createRows(state.rcvLists),
+      columns: _createColumns_10Q(),
+      rows: _createRows_10Q(state.rcvLists),
       dividerThickness: 5,
       dataRowHeight: 80,
       showBottomBorder: true,
@@ -286,7 +237,7 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
     );
   }
 
-  List<DataColumn> _createItemsDetailColumns() {
+  List<DataColumn> _createColumns_20Q() {
     return [
       const DataColumn(
         numeric: true,
@@ -419,12 +370,21 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
     ];
   }
 
-  List<DataRow> _createItemsDetailRows(rcvListDetail) {
+  List<DataRow> _createRows_20Q(rcvListDetail) {
 
     List<DataRow> rcvDetailRows = [];
 
     if(rcvListDetail.length > 0) {
       for(int x=0; x < rcvListDetail.length; x++ ) {
+
+        datamap20Q['dtlSeq'] = rcvListDetail[x].dtl_seq.toString();
+        combinedMap['rcv_dt'] = datamap10Q['rcv_dt'];
+        combinedMap['rcv_seq'] = datamap10Q['rcv_seq'];
+        combinedMap['dtlSeq'] = datamap20Q['dtlSeq'];
+        dataList.add(combinedMap);
+        print('combinedMap: $combinedMap');
+        print('dataList: $dataList');
+
         rcvDetailRows.add(
             DataRow(
                 onSelectChanged: (val) {
@@ -626,10 +586,10 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
     // ];
   }
 
-  DataTable _createItemsDetailDataTable(state) {
+  DataTable _createDataTable_20Q(state) {
     return DataTable(
-      columns: _createItemsDetailColumns(),
-      rows: _createItemsDetailRows(state.rcvListDetail),
+      columns: _createColumns_20Q(),
+      rows: _createRows_20Q(state.rcvListDetail),
       dividerThickness: 5,
       dataRowHeight: 80,
       showBottomBorder: true,
@@ -870,13 +830,15 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
         body: MultiBlocProvider(
           providers: [
             BlocProvider<ReceivingListsCubit>(
-              create: (context) => ReceivingListsCubit()..getRcvwork8010F_10Q('0000A20211230002'),
+              create: (context) => ReceivingListsCubit()..getRcvwork8010F_10Q(widget.recvNo),
             ),
+            //..getRcvwork8010F_20Q('20211230', '2')
             BlocProvider<ReceivingListDetailCubit>(
-              create: (context) => ReceivingListDetailCubit()..getRcvwork8010F_20Q('20211230', '2'),
+              create: (context) => ReceivingListDetailCubit(),
             ),
+            //..getRcvWork8010F_30Q('20211230', '2', '1')
             BlocProvider<LotWarehousingListsCubit>(
-              create: (context) => LotWarehousingListsCubit()..getRcvWork8010F_30Q('20211230', '2', '1'),
+              create: (context) => LotWarehousingListsCubit(),
             ),
           ],
           child: Column(
@@ -884,18 +846,25 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
             children: [
               Builder(
                 builder: (context) {
-                  //BlocProvider.of<ReceivingListDetailCubit>(context).getRcvwork8010F_20Q('20211230', '2');
                   return SingleChildScrollView(
                       child: BlocBuilder<ReceivingListsCubit, ReceivingListsStates>(
+                        // listener: (context, state) {
+                        //   if (state is rlLoadedState) {
+                        //     context.read<ReceivingListDetailCubit>().getRcvwork8010F_20Q(datamap10Q['rcv_dt'], datamap10Q['rcv_seq']);
+                        //     print("10Q listener\ndatamap10Q['rcv_dt']: ${datamap10Q['rcv_dt']}");
+                        //     //BlocProvider.of<ReceivingListDetailCubit>(context).getRcvwork8010F_20Q(datamap10Q['rcv_dt'], datamap10Q['rcv_seq']);
+                        //   }
+                        // },
                         builder: (context, state) {
+                          //BlocProvider.of<ReceivingListDetailCubit>(context).getRcvwork8010F_20Q(datamap10Q['rcv_dt'], datamap10Q['rcv_seq']);
                           if(state is rlLoadingState) {
                             return const CustomProgressIndicator();
                           } else if(state is rlLoadedState) {
-                            return _createRcvDataTable(state);
+                            return _createDataTable_10Q(state);
                           } else {
                             return Text('No Rows to show');
                           }
-                        }
+                        },
                       )
                   );
                 }
@@ -916,7 +885,7 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
                               color: Colors.red
                           ),
                           Text(
-                            'Items Ordered To Be Received [2]',
+                            'Items Ordered To Be Received',
                             style: TextStyle(
                               fontSize: 22.0,
                               fontWeight: FontWeight.bold,
@@ -962,24 +931,27 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
               Flexible(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 20.0),
-                  child: Builder(
-                    builder: (context) {
-                      //BlocProvider.of<LotWarehousingListsCubit>(context).getRcvWork8010F_30Q('20211230', '2', '1');
-                      return SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: BlocBuilder<ReceivingListDetailCubit, ReceivingListDetailStates>(
-                          builder: (context, state) {
-                            if(state is rldLoadingState) {
-                              return const CustomProgressIndicator();
-                            } else if(state is rldLoadedState) {
-                              return _createItemsDetailDataTable(state);
-                            } else {
-                              return Text('No Rows to show');
-                            }
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: BlocBuilder<ReceivingListDetailCubit, ReceivingListDetailStates>(
+                        // listener: (context, state) {
+                        //   if(state is rldLoadingState) {
+                        //     print('listener 20Q');
+                        //     print("datamap10Q['rcv_dt']: ${datamap10Q['rcv_dt']}");
+                        //     context.read<ReceivingListDetailCubit>().getRcvwork8010F_20Q(datamap10Q['rcv_dt'], datamap10Q['rcv_seq']);
+                        //   }
+                        // },
+                        builder: (context, state) {
+                          context.read<ReceivingListDetailCubit>().getRcvwork8010F_20Q(datamap10Q['rcv_dt'], datamap10Q['rcv_seq']);
+                          if(state is rldLoadingState) {
+                            return const CustomProgressIndicator();
+                          } else if(state is rldLoadedState) {
+                            return _createDataTable_20Q(state);
+                          } else {
+                            return Text('No Rows to show');
                           }
-                        ),
-                      );
-                    }
+                        }
+                    ),
                   ),
                 ),
               ),
