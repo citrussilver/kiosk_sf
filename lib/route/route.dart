@@ -43,7 +43,7 @@ Route<dynamic> controller(RouteSettings settings) {
       return MaterialPageRoute(builder: (context) => EightyTenTablet());
     case eightyTenTabletPg2:
       return MaterialPageRoute(builder: (context) => EightyTenTabletPg2(
-          arguments: settings.arguments,
+          recvNo: settings.arguments.toString()
       ));
     case eightyTenTabletPg2Kr:
       return MaterialPageRoute(builder: (context) => EightyTenTabletPg2Kr());

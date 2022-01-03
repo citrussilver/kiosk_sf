@@ -24,8 +24,8 @@ class DataService {
 
   String loginMSG = "";
   String lang = "ENG";
-  // String _baseUrl = "http://192.168.0.188:8081/iUp_MES";
-  String _baseUrl = "http://factopia.co.kr/MESCloud";
+  String _baseUrl = "http://192.168.0.188:8081/iUp_MES";
+  //String _baseUrl = "http://factopia.co.kr/MESCloud";
 
   final _jsonplaceholderUrl = 'jsonplaceholder.typicode.com';
 
@@ -204,7 +204,7 @@ class DataService {
       String? extractJsessionId = loginInfoSession.getString('jsessionid');
       String? ctkey = loginInfoSession.getString('ctkey');
 
-      print('8010F_10Q\nctkey: $ctkey\nRCV_NO: $rcvNo');
+      //print('8010F_10Q\nctkey: $ctkey\nRCV_NO: $rcvNo');
 
       MESServerConnection mesConn = MESServerConnection();
       String address = _baseUrl+"/rcvwork8010FManagement/getRcvwork8010F_10Q;jsessionid=${extractJsessionId}";
@@ -220,7 +220,7 @@ class DataService {
 
       List<dynamic> json = jsonDecode(response.body)["dataset"]["ds_master_fields_10Q"];
 
-      print('getRcvwork8010F_10Q json response: $json');
+      //print('getRcvwork8010F_10Q json response: $json');
       final receivingList = json.map((receivingListJson) => ReceivingList.fromJson(receivingListJson)).toList();
       //print('runtimeType is: ${rcvLists.runtimeType}');
 
@@ -259,7 +259,7 @@ class DataService {
 
       List<dynamic> json = jsonDecode(response.body)["dataset"]["ds_master_20Q"];
 
-      print('getRcvwork8010F_20Q json response: $json');
+      //print('getRcvwork8010F_20Q json response: $json');
       final receivingListDetailLists = json.map((receivingListDetailJson) => ReceivingListDetail.fromJson(receivingListDetailJson)).toList();
       //print('runtimeType is: ${rcvLists.runtimeType}');
 
@@ -281,7 +281,7 @@ class DataService {
       String? extractJsessionId = loginInfoSession.getString('jsessionid');
       String? ctkey = loginInfoSession.getString('ctkey');
 
-      print('ctkey: $ctkey\nRCV_DT: $rcvDt\nRCV_SEQ: $rcvSeq\nDTL_SEQ: $dtlSeq');
+      //print('ctkey: $ctkey\nRCV_DT: $rcvDt\nRCV_SEQ: $rcvSeq\nDTL_SEQ: $dtlSeq');
 
       MESServerConnection mesConn = MESServerConnection();
       String address = _baseUrl+"/rcvwork8010FManagement/getRcvwork8010F_30Q;jsessionid=${extractJsessionId}";
@@ -298,7 +298,7 @@ class DataService {
 
       List<dynamic> json = jsonDecode(response.body)["dataset"]["ds_master_30Q"];
 
-      print('getRcvWork8010F_30Q json response: $json');
+      //print('getRcvWork8010F_30Q json response: $json');
       final lotWarehousingLists = json.map((lotWarehousingJson) => LotWarehousingList.fromJson(lotWarehousingJson)).toList();
       //print('runtimeType is: ${rcvLists.runtimeType}');
 
