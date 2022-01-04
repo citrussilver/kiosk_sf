@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:kiosk_sf/services/data_service.dart';
+import 'package:kiosk_sf/widgets/common_button.dart';
 import 'package:kiosk_sf/widgets/custom_styled_date_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:kiosk_sf/widgets/custom_textfield.dart';
+import 'package:kiosk_sf/variables/button_type.dart';
 
 class EightyTenAddLot extends StatefulWidget {
 
-  const EightyTenAddLot({Key? key}) : super(key: key);
+  final List<String> addLotData;
+
+  const EightyTenAddLot({Key? key, required this.addLotData}) : super(key: key);
 
   @override
   _EightyTenAddLotState createState() => _EightyTenAddLotState();
@@ -15,11 +19,18 @@ class EightyTenAddLot extends StatefulWidget {
 class _EightyTenAddLotState extends State<EightyTenAddLot> {
 
   String dateNowString = DateTime.now().toString();
+  String selectedDate = '';
+  String alphaNumericText = '';
+
+  var addLotMap = {};
+  var addLotList = [];
+
   final dateController = TextEditingController();
   final mngDateController = TextEditingController();
   final expiryDateController = TextEditingController();
+  final alphaNumericController = TextEditingController();
   final lotController = TextEditingController();
-  final inspectedQtyController = TextEditingController();
+  final inspQtyController = TextEditingController();
 
   @override
   void dispose() {
@@ -27,16 +38,17 @@ class _EightyTenAddLotState extends State<EightyTenAddLot> {
     dateController.dispose();
     mngDateController.dispose();
     expiryDateController.dispose();
+    alphaNumericController.dispose();
     lotController.dispose();
-    inspectedQtyController.dispose();
+    inspQtyController.dispose();
     super.dispose();
   }
 
   final _dataService = DataService();
 
   String _getCurrentDate() {
-    DateTime now = new DateTime.now();
-    DateTime currentDate = new DateTime(now.year, now.month, now.day);
+    DateTime now = DateTime.now();
+    DateTime currentDate = DateTime(now.year, now.month, now.day);
     String currentDateStr = currentDate.toString();
     currentDateStr = currentDateStr.substring(0,10);
     //currentDateStr = currentDateStr.replaceAll('-', '');
@@ -76,20 +88,57 @@ class _EightyTenAddLotState extends State<EightyTenAddLot> {
   }
 
   void initializeDates() {
+    //dateController.text = _getCurrentDate();
     mngDateController.text = _getCurrentDate();
     expiryDateController.text = _getCurrentDate();
+    addLotMap['mng_date'] = _getCurrentDate();
+    addLotMap['expiry_date'] = _getCurrentDate();
   }
 
   Widget _createLabelInput(String labelText){
     if(labelText.contains('Date')) {
-      dateController.text = _getCurrentDate();
-      return CustomStyledDatePicker(labelText: labelText, controller: dateController);
+      initializeDates();
+
+      if(labelText == 'Managed Date'){
+        return CustomStyledDatePicker(labelText: labelText, controller: mngDateController, onDateTimeChanged: (newDateTime) {
+          selectedDate = newDateTime;
+          print('selectedDate: $selectedDate');
+          addLotMap['mng_date'] = selectedDate;
+          mngDateController.text = selectedDate;
+        },);
+      } else {
+        return CustomStyledDatePicker(labelText: labelText, controller: expiryDateController, onDateTimeChanged: (newDateTime) {
+          selectedDate = newDateTime;
+          print('selectedDate: $selectedDate');
+          addLotMap['expiry_date'] = selectedDate;
+          expiryDateController.text = selectedDate;
+        },);
+      }
+
     } else {
-      return Column(
-        children: [
-          CustomTextField(hintText: labelText),
-        ],
-      );
+      if(labelText == 'LOT'){
+        return Column(
+          children: [
+            CustomTextField(hintText: labelText, controller: lotController, onTextChanged: (newAlphaNumericText) {
+              alphaNumericText = newAlphaNumericText;
+              print('alphaNumericText: $alphaNumericText');
+              addLotMap['lot'] = alphaNumericText;
+              lotController.text = alphaNumericText;
+            },),
+          ],
+        );
+      } else {
+        return Column(
+          children: [
+            CustomTextField(hintText: labelText, controller: inspQtyController, onTextChanged: (newAlphaNumericText) {
+              alphaNumericText = newAlphaNumericText;
+              addLotMap['insp_qty'] = alphaNumericText;
+              print('alphaNumericText: $alphaNumericText');
+            },),
+          ],
+        );
+      }
+
     }
   }
 
@@ -149,132 +198,21 @@ class _EightyTenAddLotState extends State<EightyTenAddLot> {
                           const SizedBox(
                             height: 2.0,
                           ),
-                          //_createLabelInput('Managed Date'),
-                          Container(
-                              height: 100,
-                              alignment: Alignment.center,
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                              margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                              // decoration: BoxDecoration(
-                              //     color: Colors.grey[300], borderRadius: BorderRadius.circular(10)),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text('Managed Date:',
-                                    style: const TextStyle(
-                                      fontSize: 18.0,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 5.0,
-                                  ),
-                                  TextFormField(
-                                      style: const TextStyle(
-                                        fontSize: 20.0,
-                                      ),
-                                      decoration: InputDecoration(
-                                        prefixIcon: Icon(Icons.today),
-                                      ),
-                                      showCursor: true,
-                                      readOnly: true,
-                                      controller: mngDateController,
-                                      validator: (val) => val!.isEmpty ? 'Date is required' : null,
-                                      onTap: () async {
-                                        var selectedDate =  await showDatePicker(
-                                            context: context,
-                                            initialDate:DateTime.now(),
-                                            firstDate:DateTime(1900),
-                                            lastDate: DateTime(2100));
-                                        mngDateController.text = selectedDate.toString().substring(0,10);
-                                      }
-                                  ),
-                                ],
-                              )
-                          ),
+                          _createLabelInput('Managed Date'),
                           const SizedBox(
                             height: 2.0,
                           ),
-                          //_createLabelInput('Expiration Date'),
-                          Container(
-                              height: 100,
-                              alignment: Alignment.center,
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                              margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                              // decoration: BoxDecoration(
-                              //     color: Colors.grey[300], borderRadius: BorderRadius.circular(10)),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text('Expiry Date:',
-                                    style: const TextStyle(
-                                      fontSize: 18.0,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 5.0,
-                                  ),
-                                  TextFormField(
-                                      style: const TextStyle(
-                                        fontSize: 20.0,
-                                      ),
-                                      decoration: InputDecoration(
-                                        prefixIcon: Icon(Icons.today),
-                                      ),
-                                      showCursor: true,
-                                      readOnly: true,
-                                      controller: expiryDateController,
-                                      validator: (val) => val!.isEmpty ? 'Date is required' : null,
-                                      onTap: () async {
-                                        var selectedDate =  await showDatePicker(
-                                            context: context,
-                                            initialDate:DateTime.now(),
-                                            firstDate:DateTime(1900),
-                                            lastDate: DateTime(2100));
-                                        expiryDateController.text = selectedDate.toString().substring(0,10);
-                                      }
-                                  ),
-                                ],
-                              )
-                          ),
+                          _createLabelInput('Expiration Date'),
                           const SizedBox(
                             height: 2.0,
                           ),
-                          //_createLabelInput('LOT'),
-                          Container(
-                              height: 50,
-                              alignment: Alignment.center,
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                              margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                              child: TextField(
-                                style: const TextStyle(
-                                  fontSize: 22.0,
-                                ),
-                                decoration: const InputDecoration(
-                                  hintText: 'Input LOT',
-                                ),
-                                controller: lotController,
-                              )
-                          ),
+                          _createLabelInput('LOT'),
                           const SizedBox(
                             height: 2.0,
                           ),
-                          // _createLabelInput('Inspected Qty.'),
-                          Container(
-                              height: 50,
-                              alignment: Alignment.center,
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                              margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                              child: TextFormField(
-                                keyboardType: TextInputType.number,
-                                style: const TextStyle(
-                                  fontSize: 22.0,
-                                ),
-                                decoration: const InputDecoration(
-                                  hintText: 'Input Inspected Qty.',
-                                ),
-                                controller: inspectedQtyController
-                              )
-                          ),
+                          _createLabelInput('Inspected Qty.'),
+                          //CommonButton(title: 'Submit', buttonType: buttonType, onPressed: (){}),
+                          // Submit button
                           SizedBox(
                             height: 50,
                             child: ElevatedButton(
@@ -286,7 +224,8 @@ class _EightyTenAddLotState extends State<EightyTenAddLot> {
                                 ),
                               ),
                               onPressed: () {
-                                _eightyTen_40W(mngDateController.text, expiryDateController.text, lotController.text, inspectedQtyController.text);
+                                print('addLotMap: $addLotMap');
+                                //_eightyTen_40W(mngDateController.text, expiryDateController.text, lotController.text, inspectedQtyController.text);
                               },
                             ),
                           ),

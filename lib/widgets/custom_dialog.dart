@@ -15,6 +15,7 @@ class _CustomDialogState extends State<CustomDialog> {
   String dateNowString = DateTime.now().toString();
   final mngDateController = TextEditingController();
   final expiryDateController = TextEditingController();
+  final lotController = TextEditingController();
 
   final _dataService = DataService();
 
@@ -30,7 +31,7 @@ class _CustomDialogState extends State<CustomDialog> {
   Widget _createLabelInput(String labelText){
     return Column(
       children: [
-        CustomTextField(hintText: labelText),
+        CustomTextField(hintText: labelText, onTextChanged: (String value) {  }, controller: lotController,),
       ],
     );
   }

@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 
 class CustomTextField extends StatefulWidget {
+  final TextEditingController controller;
   final String hintText;
-  const CustomTextField({Key? key, required this.hintText}) : super(key: key);
+
+  final ValueChanged<String> onTextChanged;
+
+  const CustomTextField({Key? key, required this.hintText, required this.controller, required this.onTextChanged}) : super(key: key);
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
@@ -20,6 +24,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           child: TextFormField(
             keyboardType: TextInputType.number,
+            controller: widget.controller,
             style: const TextStyle(
               fontSize: 22.0,
             ),
@@ -34,7 +39,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
           alignment: Alignment.center,
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child: TextField(
+          child: TextFormField(
+            controller: widget.controller,
             style: const TextStyle(
               fontSize: 22.0,
             ),

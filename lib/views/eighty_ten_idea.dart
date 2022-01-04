@@ -25,7 +25,7 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
   double commonWidthSize = 15.0;
   final startDateController = TextEditingController();
   final endDateController = TextEditingController();
-  final rcvNoSearchBoxController = TextEditingController();
+  final acctNoController = TextEditingController();
 
   String accountName = 'jpim';
   String accountEmail = 'jpim@test.com';
@@ -33,16 +33,16 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
   bool _isSearchFormVisible = false;
   bool _isDataTableVisible = false;
 
-
-
   String dropdownValue = 'All';
+  var rcvTypeKr = ['All','1', '2', '9'];
+  String rcvTypeNm = '';
 
   @override
   void dispose() {
     // Clean up the controller when the widget is removed
     startDateController.dispose();
     endDateController.dispose();
-    rcvNoSearchBoxController.dispose();
+    acctNoController.dispose();
     super.dispose();
   }
 
@@ -413,18 +413,86 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
             SizedBox(
               width: commonWidthSize,
             ),
+            const Text(
+              'Receiving\nType',
+              style: TextStyle(
+                fontSize: 15.0,
+              ),
+            ),
             SizedBox(
-              width: 250.0,
+              width: commonWidthSize,
+            ),
+            DropdownButton<String>(
+              value: dropdownValue,
+              icon: const Icon(Icons.keyboard_arrow_down),
+              iconSize: 24,
+              elevation: 16,
+              style: const TextStyle(
+                color: Colors.indigo,
+                fontSize: 20.0,
+              ),
+              underline: Container(
+                height: 2,
+                color: Colors.indigo,
+              ),
+              onChanged: (String? newValue) {
+                setState(() {
+                  dropdownValue = newValue!;
+                  rcvTypeNm = dropdownValue;
+                  print('dropdownValue: $dropdownValue');
+                });
+              },
+              items:
+              rcvTypeKr.map((String types) {
+                return DropdownMenuItem(
+                  value: types,
+                  child: Text(types),
+                );
+              }).toList(),
+            ),
+            SizedBox(
+              width: commonWidthSize,
+            ),
+            SizedBox(
+              width: 125.0,
               child: TextFormField(
                 style: const TextStyle(
-                  fontSize: 20.0,
+                  fontSize: 15.0,
                 ),
                 decoration: const InputDecoration(
                     border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.search),
-                    hintText: 'Search Account'
+                    // prefixIcon: Icon(Icons.search),
+                    hintText: 'Account code'
                 ),
-                controller: rcvNoSearchBoxController,
+                controller: acctNoController,
+              ),
+            ),
+            SizedBox(
+              width: 0.5,
+            ),
+            // Magnifier button
+            SizedBox(
+              width: 49.0,
+              child: TextButton.icon(
+                icon: Icon(Icons.search),
+                label: Text(''),
+                onPressed: (){},
+              ),
+            ),
+            SizedBox(
+              width: 0.5,
+            ),
+            SizedBox(
+              width: 125.0,
+              child: TextFormField(
+                enabled: false,
+                style: const TextStyle(
+                  fontSize: 15.0,
+                ),
+                decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'Account name'
+                ),
               ),
             ),
             SizedBox(
@@ -435,7 +503,15 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
               height: 50, //height of button
               child: Builder(
                 builder: (context) {
-                  return ElevatedButton(
+                  return ElevatedButton.icon(
+                    label: const Text(
+                      'Search',
+                      style: TextStyle(
+                        fontSize: 22.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    icon: const Icon(Icons.search),
                     onPressed: () {
                       String currentDateStr = _getCurrentDate();
                       String startDateStr;
@@ -449,15 +525,8 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
                       print('startDateStr: $startDateStr');
                       print('endDateController: $endDateStr');
 
-                      BlocProvider.of<ReceivingListsCubit>(context).getRcvWork8011P_10Q(startDateStr, endDateStr);
-                    },
-                    child: const Text(
-                      'Search',
-                      style: TextStyle(
-                        fontSize: 22.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                      BlocProvider.of<ReceivingListsCubit>(context).getRcvWork8011P_10Q(startDateStr, endDateStr, rcvTypeNm, acctNoController.text );
+                    }
                   );
                 }
               ),

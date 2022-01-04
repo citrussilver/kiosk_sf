@@ -5,6 +5,9 @@ import 'package:http/http.dart' as http;
 import 'package:kiosk_sf/services/mes_server_connection.dart';
 import 'package:kiosk_sf/models/gms_user.dart';
 
+// 0120P model
+import 'package:kiosk_sf/models/0120P/acct_info_list.dart';
+
 // 8010 models
 import 'package:kiosk_sf/models/8010/receiving_list.dart';
 import 'package:kiosk_sf/models/8010/receiving_list_detail.dart';
@@ -153,7 +156,43 @@ class DataService {
     }
   }
 
-  Future<List<ReceivingList>> getRcvWork8011P_10Q(startDate, endDate) async {
+  Future<List<AcctInfoList>> getComCust0120_10Q(custNm, custType) async {
+    try {
+      SharedPreferences loginInfoSession = await SharedPreferences.getInstance();
+      String? extractJsessionId = loginInfoSession.getString('jsessionid');
+      String? ctkey = loginInfoSession.getString('ctkey');
+
+      MESServerConnection mesConn = MESServerConnection();
+      String address = _baseUrl + "/commonPopupManagement/getComCust0120_10Q;jsessionid=${extractJsessionId}";
+      final response = await mesConn.connectAPI(HttpMethod.POST, address, {
+        "paramMap":{},
+        "dataSetMap":{
+          "ds_cond_CustPopup":[{
+            "PD_MODE":"R",
+            "PD_VALUE1":"$ctkey||$custNm||$custType||",
+            "PD_VALUE2":"||}"
+          }]
+        }
+      });
+
+      List<dynamic> json = jsonDecode(response.body)["dataset"]["ds_cond_CustPopup"];
+
+      print('getComCust0120_10Q json response: $json');
+      final acctInfoLists = json.map((acctInfoJson) => AcctInfoList.fromJson(acctInfoJson)).toList();
+      print('runtimeType is: ${acctInfoLists.runtimeType}');
+
+      if (response.statusCode == 200) {
+        return acctInfoLists;
+      } else {
+        return <AcctInfoList>[];
+      }
+
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<List<ReceivingList>> getRcvWork8011P_10Q(startDate, endDate, rcvTypeNm, custCd) async {
     try {
       // final uri = Uri.https( _baseUrl, '/posts');
       // final response = await http.get(uri);
@@ -165,7 +204,11 @@ class DataService {
       String? extractJsessionId = loginInfoSession.getString('jsessionid');
       String? ctkey = loginInfoSession.getString('ctkey');
 
-      //print('ctkey: $ctkey\nstartDate: $startDate\nendDate: $endDate');
+      //print('ctkey: $ctkey\nstartDate: $startDate\nendDate: $endDate\nrcvTypeNm: $rcvTypeNm\ncustCd: $custCd');
+      print('rcvTypeNm: $rcvTypeNm\ncustCd: $custCd');
+      if(custCd.isEmpty) {
+        custCd = '';
+      }
 
       MESServerConnection mesConn = MESServerConnection();
       String address = _baseUrl + "/rcvwork8011PManagement/getRcvwork8011P_10Q;jsessionid=${extractJsessionId}";
@@ -174,7 +217,7 @@ class DataService {
         "dataSetMap":{
           "ds_cond":[{
             "PD_MODE":"R",
-            "PD_VALUE1":"$ctkey||$startDate||$endDate||||||||",
+            "PD_VALUE1":"$ctkey||$startDate||$endDate||||$rcvTypeNm||$custCd||",
             "PD_VALUE2":"||}"
           }]
         }
@@ -182,7 +225,7 @@ class DataService {
 
       List<dynamic> json = jsonDecode(response.body)["dataset"]["ds_master_10Q"];
 
-      //print('getRcvWork8011P json response: $json');
+      print('getRcvWork8011P json response: $json');
       final rcvLists = json.map((rcvJson) => ReceivingList.fromJson(rcvJson)).toList();
       //print('runtimeType is: ${rcvLists.runtimeType}');
 
@@ -242,7 +285,7 @@ class DataService {
       String? extractJsessionId = loginInfoSession.getString('jsessionid');
       String? ctkey = loginInfoSession.getString('ctkey');
 
-      print('_20Q\nctkey: $ctkey\nRCV_DT: $rcvDt\nRCV_SEQ: $rcvSeq');
+      //print('_20Q\nctkey: $ctkey\nRCV_DT: $rcvDt\nRCV_SEQ: $rcvSeq');
 
       MESServerConnection mesConn = MESServerConnection();
       String address = _baseUrl+"/rcvwork8010FManagement/getRcvwork8010F_20Q;jsessionid=${extractJsessionId}";

@@ -10,11 +10,11 @@ class ReceivingListsCubit extends Cubit<ReceivingListsStates> {
 
   final _dataService = DataService();
 
-  void getRcvWork8011P_10Q(startDate, endDate) async {
+  void getRcvWork8011P_10Q(startDate, endDate, rcvTypeNm, custCd) async {
     try {
       emit(rlLoadingState());
       late final List<ReceivingList> rcvLists;
-      rcvLists = await _dataService.getRcvWork8011P_10Q(startDate, endDate);
+      rcvLists = await _dataService.getRcvWork8011P_10Q(startDate, endDate, rcvTypeNm, custCd);
       emit(rlLoadedState(rcvLists));
     } catch(e) {
       rethrow;

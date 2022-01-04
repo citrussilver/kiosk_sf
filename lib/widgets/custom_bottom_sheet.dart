@@ -17,6 +17,7 @@ class _CustomBottomSheetWidgetState extends State<CustomBottomSheetWidget> {
   String dateNowString = DateTime.now().toString();
   final dateController = TextEditingController();
   final mngDateController = TextEditingController();
+  final lotController = TextEditingController();
   final expiryDateController = TextEditingController();
 
   @override
@@ -103,7 +104,7 @@ class _CustomBottomSheetWidgetState extends State<CustomBottomSheetWidget> {
     } else {
       return Column(
         children: [
-          CustomTextField(hintText: labelText),
+          CustomTextField(hintText: labelText, onTextChanged: (newTextValue){ }, controller: lotController,),
         ],
       );
     }

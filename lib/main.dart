@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
       // home: BlocProvider<LoginCubit>(
       //   create: (context) => LoginCubit(),
       // ),
-      onGenerateRoute: route.controller,
+      onGenerateRoute: route.generateRoute,
       initialRoute: route.loginMes,
     );
   }
