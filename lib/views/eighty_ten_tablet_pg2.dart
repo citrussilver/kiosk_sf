@@ -31,7 +31,9 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
   var datamap10Q = {};
   var datamap20Q = {};
   var combinedMap = {};
-  var dataList = [];
+  var dataList20Q = [];
+
+  List<String> addLotDataList = [];
 
 
   final managedDateController = TextEditingController();
@@ -90,7 +92,7 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
       ),
       const DataColumn(
         label: Text(
-          'Account',
+          'Supplier code',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 18.0,
@@ -99,7 +101,7 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
       ),
       const DataColumn(
         label: Text(
-          'Account Name',
+          'Supplier Name',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 18.0,
@@ -175,33 +177,15 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
       rcvRows.add(
           const DataRow(
               cells: <DataCell>[
-                DataCell(
-                    Text('')
-                ),
-                DataCell(
-                    Text('')
-                ),
-                DataCell(
-                    Text('')
-                ),
-                DataCell(
-                    Text('')
-                ),
-                DataCell(
-                    Text('No rows to show.')
-                ),
-                DataCell(
-                    Text('')
-                ),
-                DataCell(
-                    Text('')
-                ),
-                DataCell(
-                    Text('')
-                ),
-                DataCell(
-                    Text('')
-                ),
+                DataCell(Text('')),
+                DataCell(Text('')),
+                DataCell(Text('')),
+                DataCell(Text('')),
+                DataCell(Text('No rows to show.')),
+                DataCell(Text('')),
+                DataCell(Text('')),
+                DataCell(Text('')),
+                DataCell(Text('')),
               ]
           )
       );
@@ -381,9 +365,12 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
         combinedMap['rcv_dt'] = datamap10Q['rcv_dt'];
         combinedMap['rcv_seq'] = datamap10Q['rcv_seq'];
         combinedMap['dtlSeq'] = datamap20Q['dtlSeq'];
-        dataList.add(combinedMap);
-        print('combinedMap: $combinedMap');
-        print('dataList: $dataList');
+        combinedMap['lot_seq'] = '';
+        combinedMap['item_cd'] = rcvListDetail[x].item_cd;
+        dataList20Q.add(combinedMap);
+        //print('combinedMap: $combinedMap');
+        //print('dataList20Q: $dataList20Q');
+        //print('dataList20Q[0].item_cd: ${dataList20Q[0]['item_cd']}');
 
         rcvDetailRows.add(
             DataRow(
@@ -439,151 +426,24 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
       rcvDetailRows.add(
           const DataRow(
               cells: <DataCell>[
-                DataCell(
-                    Text('')
-                ),
-                DataCell(
-                    Text('')
-                ),
-                DataCell(
-                    Text('')
-                ),
-                DataCell(
-                    Text('')
-                ),
-                DataCell(
-                    Text('No rows to show.')
-                ),
-                DataCell(
-                    Text('')
-                ),
-                DataCell(
-                    Text('')
-                ),
-                DataCell(
-                    Text('')
-                ),
-                DataCell(
-                    Text('')
-                ),
-                DataCell(
-                    Text('')
-                ),
-                DataCell(
-                    Text('')
-                ),
-                DataCell(
-                    Text('')
-                ),
-                DataCell(
-                    Text('')
-                ),
+                DataCell(Text('')),
+                DataCell(Text('')),
+                DataCell(Text('')),
+                DataCell(Text('')),
+                DataCell(Text('No rows to show.')),
+                DataCell(Text('')),
+                DataCell(Text('')),
+                DataCell(Text('')),
+                DataCell(Text('')),
+                DataCell(Text('')),
+                DataCell(Text('')),
+                DataCell(Text('')),
+                DataCell(Text('')),
               ]
           )
       );
     }
     return rcvDetailRows;
-
-    // return [
-    //   const DataRow(
-    //       cells: [
-    //         DataCell(
-    //           Text('1',
-    //             style: TextStyle(
-    //               fontSize: 22.0,
-    //             ),
-    //           ),
-    //         ),
-    //         DataCell(
-    //           Icon(Icons.check_box_outline_blank),
-    //         ),
-    //         DataCell(
-    //           Text('2',
-    //             style: TextStyle(
-    //               fontSize: 22.0,
-    //             ),
-    //           ),
-    //         ),
-    //         DataCell(
-    //           Text('입고등록',
-    //             style: TextStyle(
-    //               fontSize: 22.0,
-    //             ),
-    //           ),
-    //         ),
-    //         DataCell(
-    //           Text('21000003',
-    //             style: TextStyle(
-    //               fontSize: 22.0,
-    //             ),
-    //           ),
-    //         ),
-    //         DataCell(
-    //           Text('쇠비름',
-    //             style: TextStyle(
-    //               fontSize: 22.0,
-    //             ),
-    //           ),
-    //         ),
-    //         DataCell(
-    //           Text('5 KG',
-    //             style: TextStyle(
-    //               fontSize: 22.0,
-    //             ),
-    //           ),
-    //         ),
-    //         DataCell(
-    //           Text('kg',
-    //             style: TextStyle(
-    //               fontSize: 22.0,
-    //             ),
-    //           ),
-    //         ),
-    //         DataCell(
-    //           Text('유통기한',
-    //             style: TextStyle(
-    //               fontSize: 22.0,
-    //             ),
-    //           ),
-    //         ),
-    //         DataCell(
-    //           Text('365',
-    //             style: TextStyle(
-    //               fontSize: 22.0,
-    //             ),
-    //           ),
-    //         ),
-    //         DataCell(
-    //           Text('0',
-    //             style: TextStyle(
-    //               fontSize: 22.0,
-    //             ),
-    //           ),
-    //         ),
-    //         DataCell(
-    //           Text('19',
-    //             style: TextStyle(
-    //               fontSize: 22.0,
-    //             ),
-    //           ),
-    //         ),
-    //         DataCell(
-    //           Text('4',
-    //             style: TextStyle(
-    //               fontSize: 22.0,
-    //             ),
-    //           ),
-    //         ),
-    //         DataCell(
-    //           Text('B-1-03',
-    //             style: TextStyle(
-    //               fontSize: 22.0,
-    //             ),
-    //           ),
-    //         ),
-    //       ]
-    //   ),
-    // ];
   }
 
   DataTable _createDataTable_20Q(state) {
@@ -797,19 +657,7 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
     switch (index) {
       case 4:
         print('Index is: $index');
-        Navigator.pushNamed(context, route.eightyTenAddLot);
-        // showModalBottomSheet<dynamic>(
-        //     context: context,
-        //     useRootNavigator: true,
-        //     isScrollControlled: true,
-        //     builder: (context) => CustomBottomSheetWidget(hintText: 'hello')
-        // );
-        // showDialog(
-        //   context: context,
-        //   builder: (BuildContext context) {
-        //     return CustomDialog();
-        //   }
-        // );
+        Navigator.pushNamed(context, route.eightyTenAddLot, arguments: dataList20Q[0]);
         break;
       default:
         throw('The route does not exist yet.');
@@ -834,11 +682,11 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
             ),
             //..getRcvwork8010F_20Q('20211230', '2')
             BlocProvider<ReceivingListDetailCubit>(
-              create: (context) => ReceivingListDetailCubit(),
+              create: (context) => ReceivingListDetailCubit()..getRcvwork8010F_20Q('', ''),
             ),
             //..getRcvWork8010F_30Q('20211230', '2', '1')
             BlocProvider<LotWarehousingListsCubit>(
-              create: (context) => LotWarehousingListsCubit(),
+              create: (context) => LotWarehousingListsCubit()..getRcvWork8010F_30Q('', '', ''),
             ),
           ],
           child: Column(
@@ -847,16 +695,16 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
               Builder(
                 builder: (context) {
                   return SingleChildScrollView(
-                      child: BlocBuilder<ReceivingListsCubit, ReceivingListsStates>(
-                        // listener: (context, state) {
-                        //   if (state is rlLoadedState) {
-                        //     context.read<ReceivingListDetailCubit>().getRcvwork8010F_20Q(datamap10Q['rcv_dt'], datamap10Q['rcv_seq']);
-                        //     print("10Q listener\ndatamap10Q['rcv_dt']: ${datamap10Q['rcv_dt']}");
-                        //     //BlocProvider.of<ReceivingListDetailCubit>(context).getRcvwork8010F_20Q(datamap10Q['rcv_dt'], datamap10Q['rcv_seq']);
-                        //   }
-                        // },
+                      child: BlocConsumer<ReceivingListsCubit, ReceivingListsStates>(
+                        listener: (context, state) {
+                          if (state is rlLoadedState) {
+                            context.read<ReceivingListDetailCubit>().getRcvwork8010F_20Q(datamap10Q['rcv_dt'], datamap10Q['rcv_seq']);
+                            print("10Q listener\ndatamap10Q['rcv_dt']: ${datamap10Q['rcv_dt']}");
+                            //context.read<ReceivingListsCubit>().getRcvwork8010F_10Q(widget.recvNo);
+                          }
+                        },
                         builder: (context, state) {
-                          //BlocProvider.of<ReceivingListDetailCubit>(context).getRcvwork8010F_20Q(datamap10Q['rcv_dt'], datamap10Q['rcv_seq']);
+                          context.read<ReceivingListDetailCubit>().getRcvwork8010F_20Q(datamap10Q['rcv_dt'], datamap10Q['rcv_seq']);
                           if(state is rlLoadingState) {
                             return const CustomProgressIndicator();
                           } else if(state is rlLoadedState) {
@@ -935,14 +783,13 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
                     scrollDirection: Axis.horizontal,
                     child: BlocBuilder<ReceivingListDetailCubit, ReceivingListDetailStates>(
                         // listener: (context, state) {
-                        //   if(state is rldLoadingState) {
+                        //   if(state is rldLoadedState) {
                         //     print('listener 20Q');
                         //     print("datamap10Q['rcv_dt']: ${datamap10Q['rcv_dt']}");
-                        //     context.read<ReceivingListDetailCubit>().getRcvwork8010F_20Q(datamap10Q['rcv_dt'], datamap10Q['rcv_seq']);
+                        //
                         //   }
                         // },
                         builder: (context, state) {
-                          context.read<ReceivingListDetailCubit>().getRcvwork8010F_20Q(datamap10Q['rcv_dt'], datamap10Q['rcv_seq']);
                           if(state is rldLoadingState) {
                             return const CustomProgressIndicator();
                           } else if(state is rldLoadedState) {

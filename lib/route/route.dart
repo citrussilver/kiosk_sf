@@ -27,10 +27,11 @@ const String eightyTenAddLot = 'eightyTenAddLot';
 const String eightySeventy = 'eightySeventy';
 
 // Control our page route flow
-Route<dynamic> controller(RouteSettings settings) {
+Route<dynamic> generateRoute(RouteSettings settings) {
 
 
   switch (settings.name) {
+
     case loginPage:
       return MaterialPageRoute(builder: (context) => LoginPage());
     case loginMes:
@@ -50,7 +51,10 @@ Route<dynamic> controller(RouteSettings settings) {
     case eightyTenIdea:
       return MaterialPageRoute(builder: (context) => EightyTenIdea());
     case eightyTenAddLot:
-      return MaterialPageRoute(builder: (context) => EightyTenAddLot());
+      final value = settings.arguments as List<String>;
+      return MaterialPageRoute(builder: (context) => EightyTenAddLot(
+          addLotData: value)
+      );
     case eightySeventy:
       return MaterialPageRoute(builder: (context) => EightySeventy());
     default:
