@@ -32,3 +32,10 @@ class rlLoadedState extends ReceivingListsStates {
   List<Object> get props => [rcvLists];
 
 }
+
+class rlSessionExpired extends ReceivingListsStates {
+  @override
+  // TODO: implement props
+  List<Object> get props => [];
+
+}

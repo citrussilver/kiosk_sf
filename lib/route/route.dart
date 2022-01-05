@@ -51,7 +51,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case eightyTenIdea:
       return MaterialPageRoute(builder: (context) => EightyTenIdea());
     case eightyTenAddLot:
-      final value = settings.arguments as List<String>;
+      final value = settings.arguments as List<dynamic>;
       return MaterialPageRoute(builder: (context) => EightyTenAddLot(
           addLotData: value)
       );

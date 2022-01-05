@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kiosk_sf/route/route.dart' as route;
 import 'package:kiosk_sf/services/data_service.dart';
 
-import 'package:kiosk_sf/variables/receiving_no.dart';
-
-import 'package:flutter_bloc/flutter_bloc.dart';
-
+// cubits
 import 'package:kiosk_sf/cubits/8010/receiving_lists_cubit.dart';
 import 'package:kiosk_sf/cubits/8010/receiving_lists_states.dart';
+
+// widgets
 import 'package:kiosk_sf/widgets/custom_date_picker.dart';
 import 'package:kiosk_sf/widgets/custom_progress_indicator.dart';
+
+//functions
+import 'package:kiosk_sf/functions/get_current_date.dart';
+
+// variables
+import 'package:kiosk_sf/variables/8010/eighty_ten_columns.dart';
 
 class EightyTenIdea extends StatefulWidget {
 
@@ -21,14 +27,17 @@ class EightyTenIdea extends StatefulWidget {
 
 class _EightyTenIdeaState extends State<EightyTenIdea> {
 
+  String accountName = 'jpim';
+  String accountEmail = 'jpim@test.com';
+
   String dateNowString = DateTime.now().toString();
-  double commonWidthSize = 15.0;
+  String selectedDate = '';
+
   final startDateController = TextEditingController();
   final endDateController = TextEditingController();
   final acctNoController = TextEditingController();
 
-  String accountName = 'jpim';
-  String accountEmail = 'jpim@test.com';
+  double commonWidthSize = 15.0;
 
   bool _isSearchFormVisible = false;
   bool _isDataTableVisible = false;
@@ -63,92 +72,6 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
   void handleSelectedIndex(int val, String recvNo) {
     print('val: $val\nrecvNo: $recvNo');
     Navigator.pushNamed(context, route.eightyTenTabletPg2, arguments: recvNo);
-  }
-
-  List<DataColumn> _createColumns() {
-    return [
-      DataColumn(
-        label: Text(
-          'No',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 15.0,
-          ),
-        ),
-      ),
-      const DataColumn(
-        label: Text(
-          'Date Received',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 10.0,
-          ),
-        ),
-      ),
-      const DataColumn(
-        label: Text(
-          'Queue',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 10.0,
-          ),
-        ),
-      ),
-      const DataColumn(
-        label: Text(
-          'Receiving No.',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 10.0,
-          ),
-        ),
-      ),
-      const DataColumn(
-        label: Text(
-          'Receiving Status',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 10.0,
-          ),
-        ),
-      ),
-      const DataColumn(
-        label: Text(
-          'Account',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 10.0,
-          ),
-        ),
-      ),
-      const DataColumn(
-        label: Text(
-          'Account Name',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 10.0,
-          ),
-        ),
-      ),
-      const DataColumn(
-        label: Text(
-          'Receiving Type',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 10.0,
-          ),
-        ),
-      ),
-      const DataColumn(
-        label: Text(
-          'Count',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 10.0,
-          ),
-        ),
-      ),
-    ];
   }
 
   List<DataRow> _rowsFromApi(receivingList) {
@@ -203,33 +126,15 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
       rcvRows.add(
           const DataRow(
               cells: <DataCell>[
-                DataCell(
-                    Text('')
-                ),
-                DataCell(
-                    Text('')
-                ),
-                DataCell(
-                    Text('')
-                ),
-                DataCell(
-                    Text('')
-                ),
-                DataCell(
-                    Text('No rows to show.')
-                ),
-                DataCell(
-                    Text('')
-                ),
-                DataCell(
-                    Text('')
-                ),
-                DataCell(
-                    Text('')
-                ),
-                DataCell(
-                    Text('')
-                ),
+                DataCell(Text('')),
+                DataCell(Text('')),
+                DataCell(Text('')),
+                DataCell(Text('')),
+                DataCell(Text('No rows to show.')),
+                DataCell(Text('')),
+                DataCell(Text('')),
+                DataCell(Text('')),
+                DataCell(Text('')),
               ]
           )
       );
@@ -237,93 +142,41 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
     return rcvRows;
   }
 
+  List<DataColumn> getColumns(List<String> columns) => columns.map((String column) => DataColumn(
+    label: Text(column,
+      style: const TextStyle(
+        fontWeight: FontWeight.bold,
+        fontSize: 10.0,
+      ),
+    ),
+  )).toList();
+
   DataTable _createRcvListDataTable(state) {
-    print('state.runtimeType: ${state.runtimeType}');
-    if(state is rlLoadedState) {
-      return DataTable(
-        showCheckboxColumn: false,
-        columns: _createColumns(),
-        rows: _rowsFromApi(state.rcvLists),
-        dividerThickness: 2,
-        dataRowHeight: 50,
-        showBottomBorder: true,
-        headingTextStyle: const TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Colors.white
+    return DataTable(
+      showCheckboxColumn: false,
+      columns: getColumns(EightyTenColumns().columns_11P_10Q),
+      rows: _rowsFromApi(state.rcvLists),
+      dividerThickness: 2,
+      dataRowHeight: 50,
+      showBottomBorder: true,
+      headingTextStyle: const TextStyle(
+          fontWeight: FontWeight.bold,
+          color: Colors.white
+      ),
+      headingRowColor: MaterialStateProperty.resolveWith(
+              (states) => const Color(0xFF3F51B5)
+      ),
+      // dataRowColor: MaterialStateColor.resolveWith(
+      //         (states) => const Color(0xFFC5CAE9)
+      // ),
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: const Color(0xFF3F51B5),
+          width: 3,
         ),
-        headingRowColor: MaterialStateProperty.resolveWith(
-                (states) => const Color(0xFF3F51B5)
-        ),
-        // dataRowColor: MaterialStateColor.resolveWith(
-        //         (states) => const Color(0xFFC5CAE9)
-        // ),
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: const Color(0xFF3F51B5),
-            width: 3,
-          ),
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-        ),
-      );
-    } else {
-      return DataTable(
-          showCheckboxColumn: false,
-          columns: _createColumns(),
-        rows: <DataRow>[
-          DataRow(
-              cells: <DataCell>[
-                DataCell(
-                    Text('')
-                ),
-                DataCell(
-                    Text('')
-                ),
-                DataCell(
-                    Text('')
-                ),
-                DataCell(
-                    Text('')
-                ),
-                DataCell(
-                    Text('No rows to show.')
-                ),
-                DataCell(
-                    Text('')
-                ),
-                DataCell(
-                    Text('')
-                ),
-                DataCell(
-                    Text('')
-                ),
-                DataCell(
-                    Text('')
-                ),
-              ]
-          ),
-        ],
-        dividerThickness: 2,
-        dataRowHeight: 50,
-        showBottomBorder: true,
-        headingTextStyle: const TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Colors.white
-        ),
-        headingRowColor: MaterialStateProperty.resolveWith(
-                (states) => const Color(0xFF3F51B5)
-        ),
-        // dataRowColor: MaterialStateColor.resolveWith(
-        //         (states) => const Color(0xFFC5CAE9)
-        // ),
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: const Color(0xFF3F51B5),
-            width: 3,
-          ),
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-        ),
-      );
-    }
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
+      ),
+    );
   }
 
   // PaginatedDataTable _createRcvListPDataTable (receivingList) {
@@ -387,6 +240,29 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
     );
   }
 
+  void initializeDates() {
+    startDateController.text = GetCurrentDate.wHypen();
+    endDateController.text = GetCurrentDate.wHypen();
+  }
+
+  Widget _initCreateDatePicker(String kind) {
+    if(kind == 'start') {
+      initializeDates();
+      return CustomDatePicker(controller: startDateController, onDateTimeChanged: (newDate) {
+        selectedDate = newDate;
+        print('selectedDate: $selectedDate');
+        startDateController.text = selectedDate;
+      });
+    } else {
+      initializeDates();
+      return CustomDatePicker(controller: endDateController, onDateTimeChanged: (newDate) {
+        selectedDate = newDate;
+        print('selectedDate: $selectedDate');
+        endDateController.text = selectedDate;
+      });
+    }
+  }
+
   Widget _searchCriteriaCard() {
     return Card(
       child: Padding(
@@ -404,12 +280,12 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
               width: commonWidthSize,
             ),
             // Date picker Start date
-            CustomDatePicker(controller: startDateController),
+            _initCreateDatePicker('start'),
             SizedBox(
               width: commonWidthSize,
             ),
             // Date picker End date
-            CustomDatePicker(controller: endDateController),
+            _initCreateDatePicker('end'),
             SizedBox(
               width: commonWidthSize,
             ),
@@ -513,17 +389,21 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
                     ),
                     icon: const Icon(Icons.search),
                     onPressed: () {
-                      String currentDateStr = _getCurrentDate();
+                      String currentDateStr = GetCurrentDate.noHypen();
                       String startDateStr;
                       startDateStr = startDateController.text;
                       startDateStr = _dateNoHypen(startDateStr);
+
+                      if(endDateController.text.isEmpty) {
+
+                      }
 
                       String endDateStr;
                       endDateStr = endDateController.text;
                       endDateStr = _dateNoHypen(endDateStr);
 
-                      print('startDateStr: $startDateStr');
-                      print('endDateController: $endDateStr');
+                      //print('startDateStr: $startDateStr');
+                      //print('endDateController: $endDateStr');
 
                       BlocProvider.of<ReceivingListsCubit>(context).getRcvWork8011P_10Q(startDateStr, endDateStr, rcvTypeNm, acctNoController.text );
                     }
@@ -539,20 +419,11 @@ class _EightyTenIdeaState extends State<EightyTenIdea> {
 
   final _dataService = DataService();
 
-  String _getCurrentDate() {
-    DateTime now = new DateTime.now();
-    DateTime currentDate = new DateTime(now.year, now.month, now.day);
-    String currentDateStr = currentDate.toString();
-    currentDateStr = currentDateStr.substring(0,10);
-    currentDateStr = currentDateStr.replaceAll('-', '');
-    return currentDateStr;
-  }
-
   String _dateNoHypen(dateParam) {
     if(dateParam.isNotEmpty) {
       dateParam = dateParam.replaceAll('-', '');
     } else {
-      dateParam = _getCurrentDate();
+      dateParam = GetCurrentDate.noHypen();
       print(dateParam);
     }
     return dateParam;

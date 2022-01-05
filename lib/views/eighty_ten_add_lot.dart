@@ -8,7 +8,7 @@ import 'package:kiosk_sf/variables/button_type.dart';
 
 class EightyTenAddLot extends StatefulWidget {
 
-  final List<String> addLotData;
+  final List<dynamic> addLotData;
 
   const EightyTenAddLot({Key? key, required this.addLotData}) : super(key: key);
 
@@ -100,15 +100,15 @@ class _EightyTenAddLotState extends State<EightyTenAddLot> {
       initializeDates();
 
       if(labelText == 'Managed Date'){
-        return CustomStyledDatePicker(labelText: labelText, controller: mngDateController, onDateTimeChanged: (newDateTime) {
-          selectedDate = newDateTime;
+        return CustomStyledDatePicker(labelText: labelText, controller: mngDateController, onDateTimeChanged: (newDate) {
+          selectedDate = newDate;
           print('selectedDate: $selectedDate');
           addLotMap['mng_date'] = selectedDate;
           mngDateController.text = selectedDate;
         },);
       } else {
-        return CustomStyledDatePicker(labelText: labelText, controller: expiryDateController, onDateTimeChanged: (newDateTime) {
-          selectedDate = newDateTime;
+        return CustomStyledDatePicker(labelText: labelText, controller: expiryDateController, onDateTimeChanged: (newDate) {
+          selectedDate = newDate;
           print('selectedDate: $selectedDate');
           addLotMap['expiry_date'] = selectedDate;
           expiryDateController.text = selectedDate;
@@ -224,8 +224,8 @@ class _EightyTenAddLotState extends State<EightyTenAddLot> {
                                 ),
                               ),
                               onPressed: () {
-                                print('addLotMap: $addLotMap');
-                                //_eightyTen_40W(mngDateController.text, expiryDateController.text, lotController.text, inspectedQtyController.text);
+                                print('addLotData[0]: ${widget.addLotData[0]}');
+                                //_eightyTen_40W(mngDateController.text, expiryDateController.text, lotController.text, inspQtyController.text);
                               },
                             ),
                           ),
