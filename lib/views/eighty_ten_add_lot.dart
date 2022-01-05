@@ -225,7 +225,7 @@ class _EightyTenAddLotState extends State<EightyTenAddLot> {
                               ),
                               onPressed: () {
                                 print('addLotData[0]: ${widget.addLotData[0]}');
-                                _eightyTen_40W(mngDateController.text, expiryDateController.text, lotController.text, inspQtyController.text);
+                                //_eightyTen_40W(mngDateController.text, expiryDateController.text, lotController.text, inspQtyController.text);
                               },
                             ),
                           ),

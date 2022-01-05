@@ -57,10 +57,10 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
 
   void handleSelectedIndex(int val, String origin) {
     print('val: $val\norigin: $origin');
-    // setState(() {
-    //   selectedIndex = val;
-    //   print('selectedIndex is $val');
-    // });
+    setState(() {
+      selectedIndex = val;
+      print('selectedIndex is $val');
+    });
 
     // Useful for navigating to different data
     // if(val == 0) {
@@ -492,59 +492,6 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
     );
   }
 
-  List<DataColumn> _createColumns_30Q() {
-    return [
-      const DataColumn(
-        numeric: true,
-        label: Text(
-          'No',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 18.0,
-          ),
-        ),
-      ),
-      const DataColumn(
-        numeric: true,
-        label: Text(
-          'Queue',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 18.0,
-          ),
-        ),
-      ),
-      const DataColumn(
-        label: Text(
-          'Expiration Date',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 18.0,
-          ),
-        ),
-      ),
-      const DataColumn(
-        label: Text(
-          'LOT',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 18.0,
-          ),
-        ),
-      ),
-      const DataColumn(
-        numeric: true,
-        label: Text(
-          'Received Qty',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 18.0,
-          ),
-        ),
-      ),
-    ];
-  }
-
   List<DataRow> _createRows_30Q(lotWarehousingLists) {
 
     int selectedIndex = -1;
@@ -701,11 +648,11 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
             ),
             //..getRcvwork8010F_20Q('20211230', '2')
             BlocProvider<ReceivingListDetailCubit>(
-              create: (context) => ReceivingListDetailCubit()..getRcvwork8010F_20Q('', ''),
+              create: (context) => ReceivingListDetailCubit(),
             ),
             //..getRcvWork8010F_30Q('20211230', '2', '1')
             BlocProvider<LotWarehousingListsCubit>(
-              create: (context) => LotWarehousingListsCubit()..getRcvWork8010F_30Q('', '', ''),
+              create: (context) => LotWarehousingListsCubit(),
             ),
           ],
           child: Column(
