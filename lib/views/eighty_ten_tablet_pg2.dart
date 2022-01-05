@@ -701,11 +701,11 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
             ),
             //..getRcvwork8010F_20Q('20211230', '2')
             BlocProvider<ReceivingListDetailCubit>(
-              create: (context) => ReceivingListDetailCubit(),
+              create: (context) => ReceivingListDetailCubit()..getRcvwork8010F_20Q('', ''),
             ),
             //..getRcvWork8010F_30Q('20211230', '2', '1')
             BlocProvider<LotWarehousingListsCubit>(
-              create: (context) => LotWarehousingListsCubit(),
+              create: (context) => LotWarehousingListsCubit()..getRcvWork8010F_30Q('', '', ''),
             ),
           ],
           child: Column(
