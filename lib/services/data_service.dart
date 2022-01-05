@@ -225,7 +225,7 @@ class DataService {
 
       List<dynamic> json = jsonDecode(response.body)["dataset"]["ds_master_10Q"];
 
-      print('getRcvWork8011P json response: $json');
+      //print('getRcvWork8011P json response: $json');
       final rcvLists = json.map((rcvJson) => ReceivingList.fromJson(rcvJson)).toList();
       //print('runtimeType is: ${rcvLists.runtimeType}');
 
@@ -251,6 +251,7 @@ class DataService {
 
       MESServerConnection mesConn = MESServerConnection();
       String address = _baseUrl+"/rcvwork8010FManagement/getRcvwork8010F_10Q;jsessionid=${extractJsessionId}";
+
       final response = await mesConn.connectAPI(HttpMethod.POST, address, {
         "paramMap":{},
         "dataSetMap":{
@@ -260,15 +261,22 @@ class DataService {
           }]
         }
       });
+      if( response == null) {
+        print('response is null!');
+        print('response is null!');
+      }
 
       List<dynamic> json = jsonDecode(response.body)["dataset"]["ds_master_fields_10Q"];
 
-      //print('getRcvwork8010F_10Q json response: $json');
+      print('getRcvwork8010F_10Q json response: $json');
       final receivingList = json.map((receivingListJson) => ReceivingList.fromJson(receivingListJson)).toList();
       //print('runtimeType is: ${rcvLists.runtimeType}');
+      print("response.statusCode: ${response.statusCode}");
 
       if (response.statusCode == 200) {
         return receivingList;
+      } else if(response.statusCode == 401) {
+        return [];
       } else {
         return <ReceivingList>[];
       }

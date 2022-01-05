@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 
 class CustomDatePicker extends StatefulWidget {
   final TextEditingController controller;
-  const CustomDatePicker({Key? key, required this.controller}) : super(key: key);
+
+  final ValueChanged<String> onDateTimeChanged;
+
+  const CustomDatePicker({Key? key, required this.controller, required this.onDateTimeChanged}) : super(key: key);
 
   @override
   _CustomDatePickerState createState() => _CustomDatePickerState();
@@ -11,6 +14,7 @@ class CustomDatePicker extends StatefulWidget {
 class _CustomDatePickerState extends State<CustomDatePicker> {
 
   String dateNowString = DateTime.now().toString();
+  static String dateStr = '';
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +39,9 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
               firstDate:DateTime(1900),
               lastDate: DateTime(2100));
           widget.controller.text = startDate.toString().substring(0,10);
+          dateStr = widget.controller.text;
+          print('dateStr: $dateStr');
+          widget.onDateTimeChanged(dateStr);
         },
       ),
     );

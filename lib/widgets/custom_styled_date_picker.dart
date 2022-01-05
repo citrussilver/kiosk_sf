@@ -15,7 +15,7 @@ class CustomStyledDatePicker extends StatefulWidget {
 class _CustomStyledDatePickerState extends State<CustomStyledDatePicker> {
 
 
-  static String dateT = '';
+  static String dateStr = '';
 
   @override
   Widget build(BuildContext context) {
@@ -55,9 +55,9 @@ class _CustomStyledDatePickerState extends State<CustomStyledDatePicker> {
                       firstDate:DateTime(1900),
                       lastDate: DateTime(2100));
                   widget.controller.text = selectedDate.toString().substring(0,10);
-                  dateT = widget.controller.text;
-                  print('dateT: $dateT');
-                  widget.onDateTimeChanged(dateT);
+                  dateStr = widget.controller.text;
+                  print('dateStr: $dateStr');
+                  widget.onDateTimeChanged(dateStr);
                 },
                 // onChanged: (dt) {
                 //   dateT = widget.controller.text;

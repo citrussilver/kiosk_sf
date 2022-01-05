@@ -4,6 +4,7 @@ import 'package:kiosk_sf/route/route.dart' as route;
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+//cubits
 import 'package:kiosk_sf/cubits/8010/receiving_lists_cubit.dart';
 import 'package:kiosk_sf/cubits/8010/receiving_lists_states.dart';
 import 'package:kiosk_sf/cubits/8010/receiving_list_detail_cubit.dart';
@@ -11,7 +12,12 @@ import 'package:kiosk_sf/cubits/8010/receiving_list_detail_states.dart';
 import 'package:kiosk_sf/cubits/8010/lot_warehousing_lists_cubit.dart';
 import 'package:kiosk_sf/cubits/8010/lot_warehousing_lists_states.dart';
 
+//widgets
 import 'package:kiosk_sf/widgets/custom_progress_indicator.dart';
+import 'package:kiosk_sf/widgets/custom_dialog_info.dart';
+
+//variables
+import 'package:kiosk_sf/variables/8010/eighty_ten_columns.dart';
 
 class EightyTenTabletPg2 extends StatefulWidget {
   late String recvNo;
@@ -31,7 +37,7 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
   var datamap10Q = {};
   var datamap20Q = {};
   var combinedMap = {};
-  var dataList20Q = [];
+  List<dynamic> dataList20Q = [];
 
   List<String> addLotDataList = [];
 
@@ -49,11 +55,13 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
 
   int selectedIndex = -1;
 
-  void handleSelectedIndex(int val) {
-    setState(() {
-      selectedIndex = val;
-      print('selectedIndex is $val');
-    });
+  void handleSelectedIndex(int val, String origin) {
+    print('val: $val\norigin: $origin');
+    // setState(() {
+    //   selectedIndex = val;
+    //   print('selectedIndex is $val');
+    // });
+
     // Useful for navigating to different data
     // if(val == 0) {
     //   Navigator.pushNamed(context, route.eightyTenTabletPg2)
@@ -136,7 +144,7 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
 
     if(receivingList.length > 0) {
       for(int x=0; x < receivingList.length; x++ ) {
-
+        datamap10Q = {};
         datamap10Q['rcv_dt'] = receivingList[x].rcv_dt;
         datamap10Q['rcv_seq']  = receivingList[x].rcv_seq.toString();
         print("datamap10Q: ${datamap10Q['rcv_dt']} ${datamap10Q['rcv_seq']}");
@@ -144,7 +152,7 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
         rcvRows.add(
             DataRow(
                 onSelectChanged: (val) {
-                  handleSelectedIndex((x+1));
+                  handleSelectedIndex((x+1), '10Q');
                 },
                 cells: [
                   DataCell(
@@ -193,11 +201,20 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
     return rcvRows;
   }
 
+  List<DataColumn> getColumns(List<String> columns) => columns.map((String column) => DataColumn(
+    label: Text(column),
+  )).toList();
+
+
+
   DataTable _createDataTable_10Q(state) {
     return DataTable(
       // showCheckboxColumn: false,
-      columns: _createColumns_10Q(),
+      columns:  getColumns(EightyTenColumns().columns_10Q),
       rows: _createRows_10Q(state.rcvLists),
+      onSelectAll: (isSelectedAll) {
+        // Utils.showSnackBar(context, 'All Selected: $isSelectedAll');
+      },
       dividerThickness: 5,
       dataRowHeight: 80,
       showBottomBorder: true,
@@ -360,7 +377,8 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
 
     if(rcvListDetail.length > 0) {
       for(int x=0; x < rcvListDetail.length; x++ ) {
-
+        datamap20Q = {};
+        combinedMap = {};
         datamap20Q['dtlSeq'] = rcvListDetail[x].dtl_seq.toString();
         combinedMap['rcv_dt'] = datamap10Q['rcv_dt'];
         combinedMap['rcv_seq'] = datamap10Q['rcv_seq'];
@@ -368,14 +386,15 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
         combinedMap['lot_seq'] = '';
         combinedMap['item_cd'] = rcvListDetail[x].item_cd;
         dataList20Q.add(combinedMap);
+        //dataList20Q[x] = combinedMap;
         //print('combinedMap: $combinedMap');
-        //print('dataList20Q: $dataList20Q');
+        print('dataList20Q: $dataList20Q');
         //print('dataList20Q[0].item_cd: ${dataList20Q[0]['item_cd']}');
 
         rcvDetailRows.add(
             DataRow(
                 onSelectChanged: (val) {
-                  handleSelectedIndex((x+1));
+                  handleSelectedIndex((x+1),'20Q');
                 },
                 cells: [
                   DataCell(
@@ -448,7 +467,7 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
 
   DataTable _createDataTable_20Q(state) {
     return DataTable(
-      columns: _createColumns_20Q(),
+      columns: getColumns(EightyTenColumns().columns_20Q),
       rows: _createRows_20Q(state.rcvListDetail),
       dividerThickness: 5,
       dataRowHeight: 80,
@@ -473,7 +492,7 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
     );
   }
 
-  List<DataColumn> _createLotWarehousingColumns() {
+  List<DataColumn> _createColumns_30Q() {
     return [
       const DataColumn(
         numeric: true,
@@ -526,7 +545,7 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
     ];
   }
 
-  List<DataRow> _createLotWarehousingRows(lotWarehousingLists) {
+  List<DataRow> _createRows_30Q(lotWarehousingLists) {
 
     int selectedIndex = -1;
 
@@ -537,10 +556,10 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
           DataRow(
               selected: x == selectedIndex,
               onSelectChanged: (val) {
-                // handleSelectedIndex((x+1));
-                setState(() {
-                  selectedIndex = x;
-                });
+                handleSelectedIndex((x+1),'30Q');
+                // setState(() {
+                //   selectedIndex = x;
+                // });
               },
               cells: [
                 DataCell(
@@ -568,11 +587,11 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
     return lotWarehousingRows;
   }
 
-  DataTable _createLotWarehousingDataTable(state) {
-    
+  DataTable _createDataTable_30Q(state) {
+
     return DataTable(
-      columns: _createLotWarehousingColumns(),
-      rows: _createLotWarehousingRows(state.lotWarehousingLists),
+      columns: getColumns(EightyTenColumns().columns_30Q),
+      rows: _createRows_30Q(state.lotWarehousingLists),
       dividerThickness: 5,
       dataRowHeight: 80,
       showBottomBorder: true,
@@ -656,8 +675,8 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
   void selectedItem(BuildContext context, int index) {
     switch (index) {
       case 4:
-        print('Index is: $index');
-        Navigator.pushNamed(context, route.eightyTenAddLot, arguments: dataList20Q[0]);
+        print('Index is: $index\ndataList20Q: ${dataList20Q}');
+        Navigator.pushNamed(context, route.eightyTenAddLot, arguments: dataList20Q);
         break;
       default:
         throw('The route does not exist yet.');
@@ -682,11 +701,11 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
             ),
             //..getRcvwork8010F_20Q('20211230', '2')
             BlocProvider<ReceivingListDetailCubit>(
-              create: (context) => ReceivingListDetailCubit()..getRcvwork8010F_20Q('', ''),
+              create: (context) => ReceivingListDetailCubit(),
             ),
             //..getRcvWork8010F_30Q('20211230', '2', '1')
             BlocProvider<LotWarehousingListsCubit>(
-              create: (context) => LotWarehousingListsCubit()..getRcvWork8010F_30Q('', '', ''),
+              create: (context) => LotWarehousingListsCubit(),
             ),
           ],
           child: Column(
@@ -695,21 +714,24 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
               Builder(
                 builder: (context) {
                   return SingleChildScrollView(
-                      child: BlocConsumer<ReceivingListsCubit, ReceivingListsStates>(
-                        listener: (context, state) {
-                          if (state is rlLoadedState) {
-                            context.read<ReceivingListDetailCubit>().getRcvwork8010F_20Q(datamap10Q['rcv_dt'], datamap10Q['rcv_seq']);
-                            print("10Q listener\ndatamap10Q['rcv_dt']: ${datamap10Q['rcv_dt']}");
-                            //context.read<ReceivingListsCubit>().getRcvwork8010F_10Q(widget.recvNo);
-                          }
-                        },
+                      child: BlocBuilder<ReceivingListsCubit, ReceivingListsStates>(
+                        // listener: (context, state) {
+                        //   if (state is rlLoadedState) {
+                        //     context.read<ReceivingListDetailCubit>().getRcvwork8010F_20Q(datamap10Q['rcv_dt'], datamap10Q['rcv_seq']);
+                        //     print("10Q listener\ndatamap10Q['rcv_dt']: ${datamap10Q['rcv_dt']}");
+                        //     context.read<ReceivingListDetailCubit>().getRcvwork8010F_20Q(datamap10Q['rcv_dt'], datamap10Q['rcv_seq']);
+                        //   }
+                        // },
                         builder: (context, state) {
                           context.read<ReceivingListDetailCubit>().getRcvwork8010F_20Q(datamap10Q['rcv_dt'], datamap10Q['rcv_seq']);
                           if(state is rlLoadingState) {
                             return const CustomProgressIndicator();
                           } else if(state is rlLoadedState) {
                             return _createDataTable_10Q(state);
-                          } else {
+                            //return _buildDataTable(state, '10Q');
+                          } else if(state is rlSessionExpired) {
+                            return CustomDialogInfo();
+                          }  else {
                             return Text('No Rows to show');
                           }
                         },
@@ -790,6 +812,7 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
                         //   }
                         // },
                         builder: (context, state) {
+                          context.read<LotWarehousingListsCubit>().getRcvWork8010F_30Q(datamap10Q['rcv_dt'], datamap10Q['rcv_seq'], datamap20Q['dtlSeq']);
                           if(state is rldLoadingState) {
                             return const CustomProgressIndicator();
                           } else if(state is rldLoadedState) {
@@ -862,7 +885,7 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
                       if(state is lwlLoadingState) {
                         return const CustomProgressIndicator();
                       } else if(state is lwlLoadedState) {
-                        return _createLotWarehousingDataTable(state);
+                        return _createDataTable_30Q(state);
                       } else {
                         return const Text('No Rows to show');
                       }

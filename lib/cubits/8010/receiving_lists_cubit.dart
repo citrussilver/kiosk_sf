@@ -26,9 +26,14 @@ class ReceivingListsCubit extends Cubit<ReceivingListsStates> {
       emit(rlLoadingState());
       late final List<ReceivingList> rcvLists;
       rcvLists = await _dataService.getRcvwork8010F_10Q(rcvNo);
-      emit(rlLoadedState(rcvLists));
+
+      if(rcvLists != null) {
+        emit(rlLoadedState(rcvLists));
+      } else {
+        emit(rlSessionExpired());
+      }
     } catch(e) {
-      rethrow;
+      throw e;
     }
   }
 
