@@ -15,8 +15,8 @@ class MESServerConnection {
     try {
       switch (method) {
         case HttpMethod.POST:
-          response =
-              await http.post(uri, headers: header, body: jsonEncode(data));
+          //response = await http.post(uri, headers: header, body: jsonEncode(data));
+          response = await http.post(uri, headers: header, body: jsonEncode(data));
           break;
 
         case HttpMethod.GET:

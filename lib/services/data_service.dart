@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
+
 import 'package:kiosk_sf/services/mes_server_connection.dart';
 import 'package:kiosk_sf/models/gms_user.dart';
 
@@ -14,20 +15,19 @@ import 'package:kiosk_sf/models/8010/receiving_list_detail.dart';
 import 'package:kiosk_sf/models/8010/lot_warehousing_list.dart';
 import 'package:kiosk_sf/models/post.dart';
 
+// rst model
+import 'package:kiosk_sf/models/rst/rst_response.dart';
+
 import 'package:kiosk_sf/models/user.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DataService {
-  // Future<String> makeApiRequest() async {
-  //   final uri = Uri.https('jsonplaceholder.typicode.com', '/posts');
-  //   final response = await http.get(uri);
-  //   return response.body;
-  // }
 
   String loginMSG = "";
   String lang = "ENG";
   String _baseUrl = "http://192.168.0.188:8081/iUp_MES";
+  //String _baseUrl = "http://192.168.0.188:8081/MES/";
   //String _baseUrl = "http://factopia.co.kr/MESCloud";
 
   final _jsonplaceholderUrl = 'jsonplaceholder.typicode.com';
@@ -45,8 +45,6 @@ class DataService {
         "LOGINYN": "Y"
       }
     });
-
-    //print('response statusCode is : ${response.statusCode}');
 
     if (response.statusCode == 200) {
       Map<String, dynamic> reqInfo = jsonDecode(response.body);
@@ -100,53 +98,94 @@ class DataService {
     return isSuccess;
   }
 
-  Future<List<ReceivingList>> eighty10_40W(jsessionid, String mngDateStr, String vldDateStr, String lot, String inspectedQty) async {
+  Future<List<RstResponse>> addLotRcvwork8010F_40W(String mngDate, String vldDate, String lotNo, String inspectedQty, String rcvDt, int dtlSeq, String itemCd) async {
     try {
-      // final uri = Uri.https( _baseUrl, '/posts');
-      // final response = await http.get(uri);
-      // final json = jsonDecode(response.body) as List;
-      // final rcvLists = json.map((postJson) => ReceivingList.fromJson(postJson)).toList();
-      // return rcvLists;
 
       SharedPreferences loginInfoSession = await SharedPreferences.getInstance();
       String? extractJsessionId = loginInfoSession.getString('jsessionid');
       String? ctkey = loginInfoSession.getString('ctkey');
 
-      print('jsessionid: $jsessionid\nmngDateStr: $mngDateStr\nexpiryDateStr: $vldDateStr\nLot: $lot\ninspected qty: $inspectedQty');
+      print('jsessionid: $extractJsessionId\nmngDateStr: $mngDate\nexpiryDateStr: $vldDate\nLot: $lotNo\ninspected qty: $inspectedQty');
 
       MESServerConnection mesConn = MESServerConnection();
-      String address = "http://192.168.0.188:8081/iUp_MES/rcvwork8010FManagement/saveRcvwork8010F_40W;jsessionid=${extractJsessionId}";
-      final response = await mesConn.connectAPI(HttpMethod.POST, address, {
+      String address = _baseUrl + "/rcvwork8010FManagement/saveRcvwork8010F_40W;jsessionid=${extractJsessionId}";
+      final http.Response response = await mesConn.connectAPI(HttpMethod.POST, address, {
         "paramMap":{},
         "dataSetMap":{
           "ds_master_40W":[{
-            "MNG_DT": mngDateStr,
-            "VLD_DT": vldDateStr,
-            "LOT_NO": lot,
+            "MNG_DT": mngDate,
+            "VLD_DT": vldDate,
+            "LOT_NO": lotNo,
             "RCV_QTY": inspectedQty,
             "COMP_CD": ctkey,
-            "RCV_DT":"20210908",
+            "RCV_DT":rcvDt,
             "RCV_SEQ":1,
-            "DTL_SEQ":1,
+            "DTL_SEQ":dtlSeq,
             "LOT_SEQ":"",
-            "ITEM_CD":"11000002",
+            "ITEM_CD":itemCd,
             "PD_MODE":"C",
             "ROWTYPE":1
           }]
         }
       });
 
-      List<dynamic> json = jsonDecode(response.body)["dataset"]["ds_master_40W"];
+      Map<String, dynamic> reqInfo = jsonDecode(utf8.decode(response.bodyBytes));
+      List<dynamic> json = reqInfo["dataset"]["ds_master_40W"];
 
-      print('json is: $json');
-      final rcvLists = json.map((rcvJson) => ReceivingList.fromJson(rcvJson)).toList();
+      print('40W response: $json');
+      final rstResponse = json.map((rstResponse) => RstResponse.fromJson(rstResponse)).toList();
       //print('runtimeType is: ${rcvLists.runtimeType}');
 
 
       if (response.statusCode == 200) {
-        return rcvLists;
+        return rstResponse;
       } else {
-        return <ReceivingList>[];
+        return <RstResponse>[];
+      }
+
+      //return 'test';
+
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<List<RstResponse>> delLotRcvwork8010F_40W(String rcvDt, int rcvSeq, int dtlSeq, int lotSeq) async {
+    try {
+
+      SharedPreferences loginInfoSession = await SharedPreferences.getInstance();
+      String? extractJsessionId = loginInfoSession.getString('jsessionid');
+      String? ctkey = loginInfoSession.getString('ctkey');
+
+      MESServerConnection mesConn = MESServerConnection();
+      String address = _baseUrl + "/rcvwork8010FManagement/saveRcvwork8010F_40W;jsessionid=${extractJsessionId}";
+      final http.Response response = await mesConn.connectAPI(HttpMethod.POST, address, {
+        "paramMap":{},
+        "dataSetMap":{
+          "ds_master_40W":[{
+            "COMP_CD": ctkey,
+            "RCV_DT":rcvDt,
+            "RCV_SEQ":rcvSeq, //previously default to 1
+            "DTL_SEQ":dtlSeq,
+            "LOT_SEQ":lotSeq, //previously blank
+            "ROWTYPE":3,
+            "PD_MODE":"D",
+          }]
+        }
+      });
+
+      Map<String, dynamic> reqInfo = jsonDecode(utf8.decode(response.bodyBytes));
+      List<dynamic> json = reqInfo["dataset"]["ds_master_40W"];
+
+      print('40W response: $json');
+      final rstResponse = json.map((rstResponse) => RstResponse.fromJson(rstResponse)).toList();
+      //print('runtimeType is: ${rcvLists.runtimeType}');
+
+
+      if (response.statusCode == 200) {
+        return rstResponse;
+      } else {
+        return <RstResponse>[];
       }
 
       //return 'test';
@@ -175,7 +214,10 @@ class DataService {
         }
       });
 
-      List<dynamic> json = jsonDecode(response.body)["dataset"]["ds_cond_CustPopup"];
+      Map<String, dynamic> reqInfo = jsonDecode(utf8.decode(response.bodyBytes));
+      List<dynamic> json = reqInfo["dataset"]["ds_cond_CustPopup"];
+
+      //List<dynamic> json = jsonDecode(response.body)["dataset"]["ds_cond_CustPopup"];
 
       print('getComCust0120_10Q json response: $json');
       final acctInfoLists = json.map((acctInfoJson) => AcctInfoList.fromJson(acctInfoJson)).toList();
@@ -193,13 +235,8 @@ class DataService {
   }
 
   Future<List<ReceivingList>> getRcvWork8011P_10Q(startDate, endDate, rcvTypeNm, custCd) async {
-    try {
-      // final uri = Uri.https( _baseUrl, '/posts');
-      // final response = await http.get(uri);
-      // final json = jsonDecode(response.body) as List;
-      // final rcvLists = json.map((postJson) => ReceivingList.fromJson(postJson)).toList();
-      // return rcvLists;
 
+    try {
       SharedPreferences loginInfoSession = await SharedPreferences.getInstance();
       String? extractJsessionId = loginInfoSession.getString('jsessionid');
       String? ctkey = loginInfoSession.getString('ctkey');
@@ -223,9 +260,13 @@ class DataService {
         }
       });
 
-      List<dynamic> json = jsonDecode(response.body)["dataset"]["ds_master_10Q"];
+      Map<String, dynamic> reqInfo = jsonDecode(utf8.decode(response.bodyBytes));
+      List<dynamic> json = reqInfo["dataset"]["ds_master_10Q"];
+
+      //List<dynamic> json = jsonDecode(response.body)["dataset"]["ds_master_10Q"];
 
       //print('getRcvWork8011P json response: $json');
+
       final rcvLists = json.map((rcvJson) => ReceivingList.fromJson(rcvJson)).toList();
       //print('runtimeType is: ${rcvLists.runtimeType}');
 
@@ -265,8 +306,12 @@ class DataService {
         print('response is null!');
         print('response is null!');
       }
+      Map<String, dynamic> reqInfo = jsonDecode(utf8.decode(response.bodyBytes));
+      print('reqInfo: $reqInfo');
 
-      List<dynamic> json = jsonDecode(response.body)["dataset"]["ds_master_fields_10Q"];
+      List<dynamic> json = reqInfo["dataset"]["ds_master_fields_10Q"];
+
+      //List<dynamic> json = jsonDecode(response.body)["dataset"]["ds_master_fields_10Q"];
 
       print('getRcvwork8010F_10Q json response: $json');
       final receivingList = json.map((receivingListJson) => ReceivingList.fromJson(receivingListJson)).toList();
@@ -308,7 +353,10 @@ class DataService {
         }
       });
 
-      List<dynamic> json = jsonDecode(response.body)["dataset"]["ds_master_20Q"];
+      Map<String, dynamic> reqInfo = jsonDecode(utf8.decode(response.bodyBytes));
+      List<dynamic> json = reqInfo["dataset"]["ds_master_20Q"];
+
+      //List<dynamic> json = jsonDecode(response.body)["dataset"]["ds_master_20Q"];
 
       //print('getRcvwork8010F_20Q json response: $json');
       final receivingListDetailLists = json.map((receivingListDetailJson) => ReceivingListDetail.fromJson(receivingListDetailJson)).toList();
@@ -346,8 +394,9 @@ class DataService {
           }]
         }
       });
-
-      List<dynamic> json = jsonDecode(response.body)["dataset"]["ds_master_30Q"];
+      Map<String, dynamic> reqInfo = jsonDecode(utf8.decode(response.bodyBytes));
+      List<dynamic> json = reqInfo["dataset"]["ds_master_30Q"];
+      //List<dynamic> json = jsonDecode(response.body)["dataset"]["ds_master_30Q"];
 
       //print('getRcvWork8010F_30Q json response: $json');
       final lotWarehousingLists = json.map((lotWarehousingJson) => LotWarehousingList.fromJson(lotWarehousingJson)).toList();
@@ -359,49 +408,6 @@ class DataService {
         return <LotWarehousingList>[];
       }
 
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-
-
-  Future<List<ReceivingList>> getRcvLists() async {
-    try {
-      final uri = Uri.https( _jsonplaceholderUrl, '/posts');
-      final response = await http.get(uri);
-      final json = jsonDecode(response.body) as List;
-      final rcvLists = json.map((postJson) => ReceivingList.fromJson(postJson)).toList();
-      return rcvLists;
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  Future<List<Post>> getPosts() async {
-    try {
-      final uri = Uri.https( _jsonplaceholderUrl, '/posts/?_limit=8');
-      final response = await http.get(uri);
-      final json = jsonDecode(response.body) as List;
-      final posts = json.map((postJson) => Post.fromJson(postJson)).toList();
-      return posts;
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  final _usersBaseUrl = 'jsonplaceholder.typicode.com';
-
-  Future<List<User>> getUsers() async {
-    try {
-      final uri = Uri.https(_usersBaseUrl, '/users');
-      final response = await http.get(uri);
-      final json = jsonDecode(response.body) as List;
-      //print('json is: ${json.toString()}');
-      final users = json.map((postJson) => User.fromJson(postJson)).toList();
-      //print('users are: ${users.toString()}');
-
-      return users;
     } catch (e) {
       rethrow;
     }

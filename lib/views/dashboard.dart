@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kiosk_sf/cubits/posts_cubit.dart';
 import 'package:kiosk_sf/route/route.dart' as route;
 import 'package:kiosk_sf/navbar.dart';
 
