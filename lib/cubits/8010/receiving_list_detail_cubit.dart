@@ -3,7 +3,7 @@ import 'package:kiosk_sf/cubits/8010/receiving_list_detail_states.dart';
 import 'package:kiosk_sf/services/data_service.dart';
 
 class ReceivingListDetailCubit extends Cubit<ReceivingListDetailStates> {
-  ReceivingListDetailCubit() : super(InitialState()){
+  ReceivingListDetailCubit() : super(rldInitialState()){
     emit(rldReadyState());
   }
 

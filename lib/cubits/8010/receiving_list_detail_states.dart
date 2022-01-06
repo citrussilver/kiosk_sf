@@ -3,7 +3,7 @@ import 'package:kiosk_sf/models/8010/receiving_list_detail.dart';
 
 abstract class ReceivingListDetailStates extends Equatable{}
 
-class InitialState extends ReceivingListDetailStates {
+class rldInitialState extends ReceivingListDetailStates {
   @override
   // TODO: implement props
   List<Object> get props => [];

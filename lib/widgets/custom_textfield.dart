@@ -41,6 +41,11 @@ class _CustomTextFieldState extends State<CustomTextField> {
           margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           child: TextFormField(
             controller: widget.controller,
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'Required input';
+              }
+            },
             style: const TextStyle(
               fontSize: 22.0,
             ),

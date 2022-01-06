@@ -11,6 +11,7 @@ import 'package:kiosk_sf/cubits/8010/receiving_list_detail_cubit.dart';
 import 'package:kiosk_sf/cubits/8010/receiving_list_detail_states.dart';
 import 'package:kiosk_sf/cubits/8010/lot_warehousing_lists_cubit.dart';
 import 'package:kiosk_sf/cubits/8010/lot_warehousing_lists_states.dart';
+import 'package:kiosk_sf/cubits/rst/rst_response_cubit.dart';
 
 //widgets
 import 'package:kiosk_sf/widgets/custom_progress_indicator.dart';
@@ -34,9 +35,11 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
   String accountName = 'jpim';
   String accountEmail = 'jpim@test.com';
 
-  var datamap10Q = {};
-  var datamap20Q = {};
-  var combinedMap = {};
+  Map<String, dynamic> datamap_10Q = {};
+  Map<String, dynamic> datamap_20Q = {};
+  Map<String, dynamic> datamap_30Q = {};
+  Map<String, dynamic> combinedMap = {};
+  List<dynamic> selectedRows_30Q = [];
   List<dynamic> dataList20Q = [];
 
   List<String> addLotDataList = [];
@@ -53,12 +56,13 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
     super.dispose();
   }
 
-  int selectedIndex = -1;
+  int selectedIndex_10Q = -1;
+  int selectedIndex_20Q = -1;
+  int selectedIndex_30Q = -1;
 
   void handleSelectedIndex(int val, String origin) {
     print('val: $val\norigin: $origin');
     setState(() {
-      selectedIndex = val;
       print('selectedIndex is $val');
     });
 
@@ -144,15 +148,20 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
 
     if(receivingList.length > 0) {
       for(int x=0; x < receivingList.length; x++ ) {
-        datamap10Q = {};
-        datamap10Q['rcv_dt'] = receivingList[x].rcv_dt;
-        datamap10Q['rcv_seq']  = receivingList[x].rcv_seq.toString();
-        print("datamap10Q: ${datamap10Q['rcv_dt']} ${datamap10Q['rcv_seq']}");
+
 
         rcvRows.add(
             DataRow(
+                selected: 0 == 0,
                 onSelectChanged: (val) {
-                  handleSelectedIndex((x+1), '10Q');
+                  setState(() {
+                    datamap_10Q = {};
+                    datamap_10Q['rcv_dt'] = receivingList[x].rcv_dt;
+                    datamap_10Q['rcv_seq']  = receivingList[x].rcv_seq;
+                    //print("datamap10Q: ${datamap10Q['rcv_dt']} ${datamap10Q['rcv_seq']}");
+                    selectedIndex_10Q = 0;
+                  });
+                  // handleSelectedIndex((x+1), '10Q');
                 },
                 cells: [
                   DataCell(
@@ -377,24 +386,30 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
 
     if(rcvListDetail.length > 0) {
       for(int x=0; x < rcvListDetail.length; x++ ) {
-        datamap20Q = {};
-        combinedMap = {};
-        datamap20Q['dtlSeq'] = rcvListDetail[x].dtl_seq.toString();
-        combinedMap['rcv_dt'] = datamap10Q['rcv_dt'];
-        combinedMap['rcv_seq'] = datamap10Q['rcv_seq'];
-        combinedMap['dtlSeq'] = datamap20Q['dtlSeq'];
-        combinedMap['lot_seq'] = '';
-        combinedMap['item_cd'] = rcvListDetail[x].item_cd;
-        dataList20Q.add(combinedMap);
-        //dataList20Q[x] = combinedMap;
-        //print('combinedMap: $combinedMap');
-        print('dataList20Q: $dataList20Q');
-        //print('dataList20Q[0].item_cd: ${dataList20Q[0]['item_cd']}');
 
         rcvDetailRows.add(
             DataRow(
+                // onSelectChanged: (val) {
+                //   handleSelectedIndex((x+1),'20Q');
+                // },
+                selected: x == selectedIndex_20Q,
                 onSelectChanged: (val) {
-                  handleSelectedIndex((x+1),'20Q');
+                  setState(() {
+                    datamap_20Q = {};
+                    combinedMap = {};
+                    datamap_20Q['dtl_seq'] = rcvListDetail[x].dtl_seq;
+                    combinedMap['rcv_dt'] = datamap_10Q['rcv_dt'];
+                    combinedMap['rcv_seq'] = datamap_10Q['rcv_seq'];
+                    combinedMap['dtl_seq'] = datamap_20Q['dtl_seq'];
+                    combinedMap['lot_seq'] = '';
+                    combinedMap['item_cd'] = rcvListDetail[x].item_cd;
+                    dataList20Q.add(combinedMap);
+                    //dataList20Q[x] = combinedMap;
+                    //print('combinedMap: $combinedMap');
+                    print('dataList20Q: $dataList20Q');
+                    //print('dataList20Q[0].item_cd: ${dataList20Q[0]['item_cd']}');
+                    selectedIndex_20Q = x;
+                  });
                 },
                 cells: [
                   DataCell(
@@ -467,6 +482,11 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
 
   DataTable _createDataTable_20Q(state) {
     return DataTable(
+      onSelectAll: (val) {
+        setState(() {
+          selectedIndex_20Q = -1;
+        });
+      },
       columns: getColumns(EightyTenColumns().columns_20Q),
       rows: _createRows_20Q(state.rcvListDetail),
       dividerThickness: 5,
@@ -494,19 +514,21 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
 
   List<DataRow> _createRows_30Q(lotWarehousingLists) {
 
-    int selectedIndex = -1;
-
     List<DataRow> lotWarehousingRows = [];
 
     for(int x=0; x < lotWarehousingLists.length; x++ ) {
       lotWarehousingRows.add(
           DataRow(
-              selected: x == selectedIndex,
+              //selected: selectedRows_30Q.contains(lotWarehousingLists[x].lot_seq.toString()),
+              selected: x == selectedIndex_30Q,
               onSelectChanged: (val) {
-                handleSelectedIndex((x+1),'30Q');
-                // setState(() {
-                //   selectedIndex = x;
-                // });
+                setState(() {
+                  datamap_30Q = {};
+                  datamap_30Q['lot_seq'] = lotWarehousingLists[x].lot_seq;
+                  //selectedRows_30Q.add(lotWarehousingLists[x].lot_seq.toString());
+                  print("datamap_30Q['lot_seq']: ${datamap_30Q['lot_seq']}");
+                  selectedIndex_30Q = x;
+                });
               },
               cells: [
                 DataCell(
@@ -537,6 +559,11 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
   DataTable _createDataTable_30Q(state) {
 
     return DataTable(
+      onSelectAll: (val) {
+        setState(() {
+          selectedIndex_30Q = -1;
+        });
+      },
       columns: getColumns(EightyTenColumns().columns_30Q),
       rows: _createRows_30Q(state.lotWarehousingLists),
       dividerThickness: 5,
@@ -574,22 +601,44 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
       appliedColor = Colors.red;
     }
 
-    return SizedBox(
-      height: 50,
-      child: ElevatedButton(
-        child: Text(
-          text,
-          style: const TextStyle(
-            fontSize: 22.0,
-            fontWeight: FontWeight.bold,
+    if(text.contains('Add')) {
+      return SizedBox(
+        height: 50,
+        child: ElevatedButton.icon(
+          label: Text(
+            text,
+            style: const TextStyle(
+              fontSize: 22.0,
+              fontWeight: FontWeight.bold,
+            ),
           ),
+          style: ElevatedButton.styleFrom(
+            primary: appliedColor,
+          ),
+          icon: const Icon(Icons.add_circle_outline),
+          onPressed: onTap,
         ),
-        style: ElevatedButton.styleFrom(
-          primary: appliedColor,
+      );
+    } else {
+      return SizedBox(
+        height: 50,
+        child: ElevatedButton(
+          child: Text(
+            text,
+            style: const TextStyle(
+              fontSize: 22.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          style: ElevatedButton.styleFrom(
+            primary: appliedColor,
+          ),
+          onPressed: onTap,
         ),
-        onPressed: onTap,
-      ),
-    );
+      );
+    }
+
+
   }
 
   Widget buildDatePicker({
@@ -625,6 +674,10 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
         print('Index is: $index\ndataList20Q: ${dataList20Q}');
         Navigator.pushNamed(context, route.eightyTenAddLot, arguments: dataList20Q);
         break;
+      case 6:
+        print('Index is: $index\ndataList20Q: ${dataList20Q}');
+
+        break;
       default:
         throw('The route does not exist yet.');
     }
@@ -654,132 +707,52 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
             BlocProvider<LotWarehousingListsCubit>(
               create: (context) => LotWarehousingListsCubit(),
             ),
+            BlocProvider<RstResponseCubit>(
+              create: (context) => RstResponseCubit(),
+            ),
           ],
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Builder(
-                builder: (context) {
-                  return SingleChildScrollView(
-                      child: BlocBuilder<ReceivingListsCubit, ReceivingListsStates>(
-                        // listener: (context, state) {
-                        //   if (state is rlLoadedState) {
-                        //     context.read<ReceivingListDetailCubit>().getRcvwork8010F_20Q(datamap10Q['rcv_dt'], datamap10Q['rcv_seq']);
-                        //     print("10Q listener\ndatamap10Q['rcv_dt']: ${datamap10Q['rcv_dt']}");
-                        //     context.read<ReceivingListDetailCubit>().getRcvwork8010F_20Q(datamap10Q['rcv_dt'], datamap10Q['rcv_seq']);
-                        //   }
-                        // },
-                        builder: (context, state) {
-                          context.read<ReceivingListDetailCubit>().getRcvwork8010F_20Q(datamap10Q['rcv_dt'], datamap10Q['rcv_seq']);
-                          if(state is rlLoadingState) {
-                            return const CustomProgressIndicator();
-                          } else if(state is rlLoadedState) {
-                            return _createDataTable_10Q(state);
-                            //return _buildDataTable(state, '10Q');
-                          } else if(state is rlSessionExpired) {
-                            return CustomDialogInfo();
-                          }  else {
-                            return Text('No Rows to show');
-                          }
-                        },
-                      )
-                  );
-                }
-              ),
-              const SizedBox(
-                height: 20.0,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 20.0),
-                child: Row(
-                  children: [
-                    // Star
-                    Expanded(
-                      child: Row(
-                        children: const [
-                          Icon(
-                              Icons.star,
-                              color: Colors.red
-                          ),
-                          Text(
-                            'Items Ordered To Be Received',
-                            style: TextStyle(
-                              fontSize: 22.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          buildCommonBtn(
-                              text: 'Issue LOT Label',
-                              color: '',
-                              onTap: () => selectedItem(context, 1)
-                          ),
-                          const SizedBox(
-                            width: 80.0,
-                          ),
-                          buildCommonBtn(
-                              text: 'Confirmation',
-                              color: '',
-                              onTap: () => selectedItem(context, 1)
-                          ),
-                          const SizedBox(
-                            width: 30.0,
-                          ),
-                          buildCommonBtn(
-                              text: 'Insp Cancel',
-                              color: 'red',
-                              onTap: () => selectedItem(context, 1)
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 10.0,
-              ),
-              Flexible(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 20.0),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: BlocBuilder<ReceivingListDetailCubit, ReceivingListDetailStates>(
-                        // listener: (context, state) {
-                        //   if(state is rldLoadedState) {
-                        //     print('listener 20Q');
-                        //     print("datamap10Q['rcv_dt']: ${datamap10Q['rcv_dt']}");
-                        //
-                        //   }
-                        // },
-                        builder: (context, state) {
-                          context.read<LotWarehousingListsCubit>().getRcvWork8010F_30Q(datamap10Q['rcv_dt'], datamap10Q['rcv_seq'], datamap20Q['dtlSeq']);
-                          if(state is rldLoadingState) {
-                            return const CustomProgressIndicator();
-                          } else if(state is rldLoadedState) {
-                            return _createDataTable_20Q(state);
-                          } else {
-                            return Text('No Rows to show');
-                          }
-                        }
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 15.0,
-              ),
-              Column(children: [
+          child: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
                 SizedBox(
-                  width: 650,
+                  height: 10.0,
+                ),
+                Builder(
+                  builder: (context) {
+                    return BlocBuilder<ReceivingListsCubit, ReceivingListsStates>(
+                      // listener: (context, state) {
+                      //   if (state is rlLoadedState) {
+                      //     context.read<ReceivingListDetailCubit>().getRcvwork8010F_20Q(datamap_10Q['rcv_dt'], datamap_10Q['rcv_seq']);
+                      //     print("10Q listener\ndatamap_10Q['rcv_dt']: ${datamap_10Q['rcv_dt']}");
+                      //     //context.read<ReceivingListDetailCubit>().getRcvwork8010F_20Q(datamap10Q['rcv_dt'], datamap_10Q['rcv_seq']);
+                      //   }
+                      // },
+                      builder: (context, state) {
+                        context.read<ReceivingListDetailCubit>().getRcvwork8010F_20Q(datamap_10Q['rcv_dt'], datamap_10Q['rcv_seq']);
+                        if(state is rlLoadingState) {
+                          return const CustomProgressIndicator();
+                        } else if(state is rlLoadedState) {
+                          return _createDataTable_10Q(state);
+                          //return _buildDataTable(state, '10Q');
+                        } else if(state is rlSessionExpired) {
+                          return CustomDialogInfo();
+                        }  else {
+                          return Text('No Rows to show');
+                        }
+                      },
+                    );
+                  }
+                ),
+                const SizedBox(
+                  height: 20.0,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 20.0),
                   child: Row(
                     children: [
+                      // Star
                       Expanded(
                         child: Row(
                           children: const [
@@ -788,7 +761,7 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
                                 color: Colors.red
                             ),
                             Text(
-                              'LOT Warehousing',
+                              'Items Ordered To Be Received',
                               style: TextStyle(
                                 fontSize: 22.0,
                                 fontWeight: FontWeight.bold,
@@ -802,20 +775,26 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: <Widget>[
                             buildCommonBtn(
-                                text: 'Add LOT',
+                                text: 'Issue LOT Label',
                                 color: '',
-                                onTap: () => selectedItem(context, 4)
+                                onTap: () => selectedItem(context, 1)
                             ),
                             const SizedBox(
-                                width: 25.0
+                              width: 80.0,
                             ),
-                            //CommonButton(title: 'Delete LOT', buttonType: buttonType.delete, onPressed: () {  }),
                             buildCommonBtn(
-                                text: 'Delete LOT',
-                                color: 'red',
-                                onTap: () => selectedItem(context, 6)
+                                text: 'Confirmation',
+                                color: '',
+                                onTap: () => selectedItem(context, 1)
                             ),
-                            //CommonButton(title: 'Delete LOT', buttonType: ButtonType.normal, onPressed: () => {} )
+                            const SizedBox(
+                              width: 30.0,
+                            ),
+                            buildCommonBtn(
+                                text: 'Insp Cancel',
+                                color: 'red',
+                                onTap: () => selectedItem(context, 1)
+                            ),
                           ],
                         ),
                       ),
@@ -826,22 +805,132 @@ class _EightyTenTabletPg2State extends State<EightyTenTabletPg2> {
                   height: 10.0,
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 20.0),
-                  child: BlocBuilder<LotWarehousingListsCubit, LotWarehousingListsStates>(
-                    builder: (context, state) {
-                      if(state is lwlLoadingState) {
-                        return const CustomProgressIndicator();
-                      } else if(state is lwlLoadedState) {
-                        return _createDataTable_30Q(state);
-                      } else {
-                        return const Text('No Rows to show');
-                      }
-                    }
+                  padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 20.0),
+                  child: SingleChildScrollView(
+                    physics: BouncingScrollPhysics(),
+                    scrollDirection: Axis.horizontal,
+                    child: BlocBuilder<ReceivingListDetailCubit, ReceivingListDetailStates>(
+                        // listener: (context, state) {
+                        //   if(state is rldLoadedState) {
+                        //     print('listener 20Q');
+                        //     print("datamap_10Q['rcv_dt']: ${datamap_10Q['rcv_dt']}\ndatamap10Q['rcv_seq']: ${datamap_10Q['rcv_seq']}\ndatamap20Q['dtl_seq']: ${datamap_20Q['dtl_seq']}");
+                        //     //context.read<ReceivingListDetailCubit>().getRcvwork8010F_20Q(datamap10Q['rcv_dt'], datamap_10Q['rcv_seq']);
+                        //     context.read<LotWarehousingListsCubit>().getRcvWork8010F_30Q(datamap_10Q['rcv_dt'], datamap_10Q['rcv_seq'], datamap_20Q['dtl_seq']);
+                        //   }
+                        // },
+                        builder: (context, state) {
+                          context.read<LotWarehousingListsCubit>().getRcvWork8010F_30Q(datamap_10Q['rcv_dt'], datamap_10Q['rcv_seq'], datamap_20Q['dtl_seq']);
+                          if(state is rldLoadingState) {
+                            return const CustomProgressIndicator();
+                          } else if(state is rldLoadedState) {
+                            return _createDataTable_20Q(state);
+                          } else {
+                            return Text('No Rows to show');
+                          }
+                        }
+                    ),
                   ),
                 ),
+                const SizedBox(
+                  height: 15.0,
+                ),
+                Column(children: [
+                  SizedBox(
+                    width: 700,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Row(
+                            children: const [
+                              Icon(
+                                  Icons.star,
+                                  color: Colors.red
+                              ),
+                              Text(
+                                'LOT Warehousing',
+                                style: TextStyle(
+                                  fontSize: 22.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              buildCommonBtn(
+                                  text: 'Add LOT',
+                                  color: '',
+                                  onTap: () => selectedItem(context, 4)
+                              ),
+                              const SizedBox(
+                                  width: 25.0
+                              ),
+                              SizedBox(
+                                height: 50, //height of button
+                                child: Builder(
+                                    builder: (context) {
+                                      return ElevatedButton.icon(
+                                          label: const Text(
+                                            'Delete Lot',
+                                            style: TextStyle(
+                                              fontSize: 22.0,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          style: ElevatedButton.styleFrom(
+                                            primary: Colors.red,
+                                          ),
+                                          icon: const Icon(Icons.delete),
+                                          onPressed: () {
+                                            print("datamap_10Q['rcv_dt']: ${datamap_10Q['rcv_dt']}\ndatamap_10Q['rcv_seq']: ${datamap_10Q['rcv_seq'].toString()}\ndatamap_20Q['dtl_seq']: ${datamap_20Q['dtl_seq'].toString()}\ndatamap_30Q['lot_seq']: ${datamap_30Q['lot_seq'].toString()}");
+                                            BlocProvider.of<RstResponseCubit>(context).delLotRcvwork8010F_40W(datamap_10Q['rcv_dt'], datamap_10Q['rcv_seq'], datamap_20Q['dtl_seq'], datamap_30Q['lot_seq']);
+                                          }
+                                      );
+                                    }
+                                ),
+                              ),
+                              // buildCommonBtn(
+                              //     text: 'Delete LOT',
+                              //     color: 'red',
+                              //     onTap: () => selectedItem(context, 6)
+                              // ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10.0,
+                  ),
+                  SingleChildScrollView(
+                    physics: BouncingScrollPhysics(),
+                    // scrollDirection: Axis.vertical,
+                    child: BlocBuilder<LotWarehousingListsCubit, LotWarehousingListsStates>(
+                      // listener: (context, state) {
+                      //   if(state is lwlLoadedState) {
+                      //     print('listener 30Q');
+                      //     //context.read<LotWarehousingListsCubit>().getRcvWork8010F_30Q(datamap_10Q['rcv_dt'], datamap_10Q['rcv_seq'], datamap_20Q['dtl_seq']);
+                      //   }
+                      // },
+                      builder: (context, state) {
+                        if(state is lwlLoadingState) {
+                          return const CustomProgressIndicator();
+                        } else if(state is lwlLoadedState) {
+                          return _createDataTable_30Q(state);
+                        } else {
+                          return const Text('No Rows to show');
+                        }
+                      }
+                    ),
+                  ),
+                ],
+                )
               ],
-              )
-            ],
+            ),
           ),
         ),
       ),
